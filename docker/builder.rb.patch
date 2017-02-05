@@ -1,0 +1,15 @@
+--- builder.rb	2016-10-23 16:57:03.416000000 +0900
++++ builder.rb	2016-10-23 16:57:10.824000000 +0900
+@@ -404,6 +404,12 @@
+         " set output \"#{file_path}\"\n#{line}' | gnuplot",
+         :blockdiag => "echo '#{line}' "+
+         "| blockdiag -a -T #{image_ext} -o #{file_path} /dev/stdin",
++        :seqdiag => "echo '#{line}' "+
++        "| seqdiag -a -T #{image_ext} -o #{file_path} /dev/stdin",
++        :actdiag => "echo '#{line}' "+
++        "| actdiag -a -T #{image_ext} -o #{file_path} /dev/stdin",
++        :nwdiag => "echo '#{line}' "+
++        "| nwdiag -a -T #{image_ext} -o #{file_path} /dev/stdin",
+         :aafigure => "echo '#{line}' | aafigure -t#{image_ext} -o#{file_path}",
+       }
+       cmd = cmds[command.to_sym]

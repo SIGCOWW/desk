@@ -1,0 +1,25 @@
+ a [X] Essential programs and files      A [ ] Indic scripts
+ b [ ] BibTeX additional styles          B [ ] Italian
+ c [ ] TeX auxiliary programs            C [X] Japanese
+ d [ ] ConTeXt and packages              D [ ] Korean
+ e [ ] Additional fonts                  E [ ] Other languages
+ f [X] Recommended fonts                 F [ ] Polish
+ g [ ] Graphics and font utilities       G [ ] Portuguese
+ h [ ] Additional formats                H [ ] Spanish
+ i [ ] Games typesetting                 I [X] LaTeX fundamental packages
+ j [ ] Generic additional packages       J [X] LaTeX additional packages
+ k [ ] Generic recommended packages      K [X] LaTeX recommended packages
+ l [ ] HTML/SGML/XML support             L [ ] LuaTeX packages
+ m [ ] Humanities packages               M [ ] Mathematics packages
+ n [ ] African scripts                   N [ ] MetaPost and Metafont packages
+ o [ ] Arabic                            O [ ] Music packages
+ p [ ] Chinese                           P [ ] Omega packages
+ s [X] Chinese/Japanese/Korean (base)    S [ ] Graphics, pictures, diagrams
+ t [ ] Cyrillic                          T [ ] Plain TeX packages
+ u [ ] Czech/Slovak                      U [ ] PSTricks
+ v [X] US and UK English                 V [ ] Publisher styles, theses, etc.
+ w [ ] Other European languages          W [ ] Natural and computer sciences
+ x [ ] French                            X [ ] Windows-only support programs
+ y [ ] German                            Y [X] XeTeX and packages
+ z [ ] Greek
+ Z [ ] TeXworks editor; TL includes only the Windows binary
