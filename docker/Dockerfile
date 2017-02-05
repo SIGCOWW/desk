@@ -18,9 +18,9 @@ RUN apk add --update python ruby zip libc6-compat py-pillow py-setuptools graphv
 	&& mv "SourceHanSansJP-Medium.otf" "SourceHanSansJP-Bold.otf" "/usr/local/texlive/texmf-local/fonts/opentype/"	\
 	&& mkdir -p "/usr/local/texlive/texmf-local/fonts/map/dvipdfmx"	\
 	&& mv "otf-up-source.map" "/usr/local/texlive/texmf-local/fonts/map/dvipdfmx/"	\
-	&& ln -s "/usr/local/texlive/2016/texmf-dist/fonts/map/dvipdfmx/jfontmaps/ipaex/ptex-ipaex.map" "/usr/local/texlive/texmf-local/fonts/map/dvipdfmx/ptex-source.map"	\
-	&& ln -s "/usr/local/texlive/2016/texmf-dist/fonts/map/dvipdfmx/jfontmaps/ipaex/uptex-ipaex.map" "/usr/local/texlive/texmf-local/fonts/map/dvipdfmx/uptex-source.map"	\
-	&& ln -s "/usr/local/texlive/2016/texmf-dist/fonts/map/dvipdfmx/jfontmaps/ipaex/otf-ipaex.map" "/usr/local/texlive/texmf-local/fonts/map/dvipdfmx/otf-source.map"	\
+	&& ln -s `kpsewhich ptex-ipaex.map` "/usr/local/texlive/texmf-local/fonts/map/dvipdfmx/ptex-source.map"	\
+	&& ln -s `kpsewhich uptex-ipaex.map` "/usr/local/texlive/texmf-local/fonts/map/dvipdfmx/uptex-source.map"	\
+	&& ln -s `kpsewhich otf-ipaex.map` "/usr/local/texlive/texmf-local/fonts/map/dvipdfmx/otf-source.map"	\
 	&& mktexlsr	\
 	&& kanji-config-updmap-sys source	\
 	&& sed -ie "s/^\(  \/\(Courier\|Helvetica\|Times-Roman\|Symbol\) \/.*\)/%\1/" /usr/share/ghostscript/*/Resource/Init/gs_pdfwr.ps	\
