@@ -28,10 +28,10 @@ else
 \documentclass[uplatex,dvipdfmx,b5paper,oneside]{jsbook}
 \usepackage{pdfpages}
 \pagestyle{empty}
-\advance \stockwidth 6truemm
-\advance \stockheight 6truemm
+\advance \paperwidth 6truemm
+\advance \paperheight 6truemm
 \begin{document}
-\includepdf[pages=-,noautoscale,offset=3truemm -3truemm]{${TMPNAME}-gray.pdf}
+\includepdf[pages=-,noautoscale]{${TMPNAME}-gray.pdf}
 \end{document}
 EOF
 fi
