@@ -44,11 +44,12 @@ def convert(catalog, builder)
 					if builder === 'latex'
 						system("pdfcrop #{file} #{dest}.pdf")
 					elsif builder === 'html'
-						system("convert -trim -density 300 #{file} #{dest}.png")
+						system("convert -density 300 #{file} #{dest}.png")
+						system("mogrify -trim #{dest}.png")
 					end
 				when '.png' then
 					if builder === 'latex'
-						system("convert -trim #{file} \( +clone -alpha opaque -fill white -colorize 100% \) +swap -geometry +0+0 -compose Over -composite -alpha off #{dest}.png")
+						system("convert #{file} -background white -alpha deactivate -flatten #{dest}.png")
 					end
 				when '.jpg' then
 					system("convert -auto-orient -strip #{file} #{dest}.jpg")
