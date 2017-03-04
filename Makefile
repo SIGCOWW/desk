@@ -1,4 +1,4 @@
-NAME := sigcoww/desk
+NAME := lrks/desk
 TAG := debug
 
 .PHONY: build run

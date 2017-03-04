@@ -1,13 +1,16 @@
 #!/bin/sh
-# binding.sh COVER BODY BACK_COVER OUTPUT
+#
+# binding.sh cover body back_cover output offset
+#
+set -exu
+cover=$1
+body=$2
+back_cover=$3
+output=$4
+offset=$5
+tmpname=$(basename "$(mktemp -u bindingXXXXXX)")
 
-COVER=$1
-BODY=$2
-BACK=$3
-OUTPUT=$4
-TMPNAME=`basename $(mktemp -u bindingXXXXXX)`
-
-cat << EOF > "${TMPNAME}.tex"
+cat << EOF > "${tmpname}.tex"
 \documentclass[uplatex,dvipdfmx,b5paper,oneside]{jsbook}
 \usepackage{pdfpages}
 \usepackage{xcolor}
@@ -20,28 +23,27 @@ cat << EOF > "${TMPNAME}.tex"
 	\pagecolor{white}}
 \pagestyle{empty}
 \begin{document}
-\includepdf{$COVER}
+\includepdf{$cover}
 \blankpage
 EOF
 
-PAGES=`pdfinfo $BODY | grep 'Pages:' | sed -e 's/Pages:\s*//'`
-for i in `seq 1 $PAGES`; do
-	OFFSET="-3truemm"
-	if [ `expr $i % 2` -eq 0 ]; then OFFSET="3truemm"; fi
-	echo "\includepdf[pages=${i},noautoscale,offset=${OFFSET} 0]{${BODY}}" >> "${TMPNAME}.tex"
+pages=$(pdfinfo "$body" | grep 'Pages:' | sed -e 's/Pages:\s*//')
+for i in $(seq 1 "$pages"); do
+	ofs="-${offset}"
+	if [ "$((i % 2))" -eq 0 ]; then ofs=$offset; fi
+	echo "\includepdf[pages=${i},noautoscale,offset=${ofs} 0]{${body}}" >> "${tmpname}.tex"
 done
 
-cat << EOF >> "${TMPNAME}.tex"
+cat << EOF >> "${tmpname}.tex"
 \blankpage
-\includepdf{$BACK}
+\includepdf{$back_cover}
 \end{document}
 EOF
 
-uplatex $TMPNAME
-dvipdfmx $TMPNAME
+uplatex "$tmpname"
+dvipdfmx "$tmpname"
 
 gs	\
 	-dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dEmbedAllFonts=true	\
-	-sOutputFile=$OUTPUT -f "${TMPNAME}.pdf"
-rm -rf ${TMPNAME}.*
-
+	-sOutputFile="$output" -f "${tmpname}.pdf"
+rm -rf "${tmpname}."*

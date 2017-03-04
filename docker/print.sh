@@ -1,48 +1,51 @@
 #!/bin/sh
-# print.sh INPUT TYPE OUTPUT
+#
+# print.sh input type output
+#
 
-INPUT=$1
-TYPE=$2
-OUTPUT=$3
-TMPNAME=`basename $(mktemp -u printXXXXXX)`
+set -exu
+input=$1
+type=$2
+output=$3
+tmpname=$(basename "$(mktemp -u printXXXXXX)")
+
 gs	\
-	-sOutputFile="${TMPNAME}-gray.pdf"	\
+	-sOutputFile="${tmpname}-gray.pdf"	\
 	-sDEVICE=pdfwrite	\
 	-sColorConversionStrategy=Gray	\
 	-dProcessColorModel=/DeviceGray	\
 	-dCompatibilityLevel=1.5	\
 	-dNOPAUSE	\
-	-dBATCH $INPUT
+	-dBATCH "$input"
 
-if [ "$TYPE" = "tombo" ]; then
-	cat << EOF > "${TMPNAME}.tex"
+if [ "$type" = "tombo" ]; then
+	cat << EOF > "${tmpname}.tex"
 \documentclass[uplatex,dvipdfmx,b5paper,oneside,tombow]{jsbook}
 \usepackage{pdfpages}
 \pagestyle{empty}
 \begin{document}
-\includepdf[pages=-,noautoscale,offset=1in -1in]{${TMPNAME}-gray.pdf}
+\includepdf[pages=-,noautoscale,offset=1in -1in]{${tmpname}-gray.pdf}
 \end{document}
 EOF
 else
-	cat << EOF > "${TMPNAME}.tex"
+	cat << EOF > "${tmpname}.tex"
 \documentclass[uplatex,dvipdfmx,b5paper,oneside]{jsbook}
 \usepackage{pdfpages}
 \pagestyle{empty}
 \advance \paperwidth 6truemm
 \advance \paperheight 6truemm
 \begin{document}
-\includepdf[pages=-,noautoscale]{${TMPNAME}-gray.pdf}
+\includepdf[pages=-,noautoscale]{${tmpname}-gray.pdf}
 \end{document}
 EOF
 fi
 
-uplatex $TMPNAME
-dvipdfmx $TMPNAME
-if [ `echo "$OUTPUT" | grep -c '\.ps$'` -ne 0 ]; then
-	pdf2ps "${TMPNAME}.pdf" "${TMPNAME}.ps"
-	mv "${TMPNAME}.ps" $OUTPUT
+uplatex "$tmpname"
+dvipdfmx "$tmpname"
+if [ "$(echo "$output" | grep -c '\.ps$')" -ne 0 ]; then
+	pdf2ps "${tmpname}.pdf" "${tmpname}.ps"
+	mv "${tmpname}.ps" "$output"
 else
-	mv "${TMPNAME}.pdf" $OUTPUT
+	mv "${tmpname}.pdf" "$output"
 fi
-rm -rf ${TMPNAME}.* ${TMPNAME}-gray.pdf
-
+rm -rf "${tmpname}."* "${tmpname}-gray.pdf"
