@@ -1,12 +1,10 @@
 #!/bin/sh
+set -eu
 #
-# print.sh input type output
+# print.sh input output
 #
-
-set -exu
 input=$1
-type=$2
-output=$3
+output=$2
 tmpname=$(basename "$(mktemp -u printXXXXXX)")
 
 gs	\
@@ -14,20 +12,11 @@ gs	\
 	-sDEVICE=pdfwrite	\
 	-sColorConversionStrategy=Gray	\
 	-dProcessColorModel=/DeviceGray	\
+	-dEmbedAllFonts=true	\
 	-dCompatibilityLevel=1.5	\
 	-dNOPAUSE	\
-	-dBATCH "$input"
+	-dBATCH -q "$input"
 
-if [ "$type" = "tombo" ]; then
-	cat << EOF > "${tmpname}.tex"
-\documentclass[uplatex,dvipdfmx,b5paper,oneside,tombow]{jsbook}
-\usepackage{pdfpages}
-\pagestyle{empty}
-\begin{document}
-\includepdf[pages=-,noautoscale,offset=1in -1in]{${tmpname}-gray.pdf}
-\end{document}
-EOF
-else
 	cat << EOF > "${tmpname}.tex"
 \documentclass[uplatex,dvipdfmx,b5paper,oneside]{jsbook}
 \usepackage{pdfpages}
@@ -35,10 +24,9 @@ else
 \advance \paperwidth 6truemm
 \advance \paperheight 6truemm
 \begin{document}
-\includepdf[pages=-,noautoscale]{${tmpname}-gray.pdf}
+\includepdf[pages=-,noautoscale,offset=-0in 0in]{${tmpname}-gray.pdf}
 \end{document}
 EOF
-fi
 
 uplatex "$tmpname"
 dvipdfmx "$tmpname"

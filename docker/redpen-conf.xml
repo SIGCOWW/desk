@@ -45,14 +45,14 @@
         <validator name="GappedSection" />
 
         <symbols>
-            <symbol name="EXCLAMATION_MARK" value="！" />
+            <symbol name="EXCLAMATION_MARK" value="！" invalid-chars="!" />
             <symbol name="NUMBER_SIGN" value="#" invalid-chars="＃" />
             <symbol name="DOLLAR_SIGN" value="$" invalid-chars="＄" />
             <symbol name="PERCENT_SIGN" value="%" invalid-chars="％" />
-            <symbol name="QUESTION_MARK" value="？" />
+            <symbol name="QUESTION_MARK" value="？" invalid-chars="?" />
             <symbol name="AMPERSAND" value="&amp;" invalid-chars="＆" />
-            <symbol name="LEFT_PARENTHESIS" value="(" invalid-chars="（" />
-            <symbol name="RIGHT_PARENTHESIS" value=")" invalid-chars="）" />
+            <symbol name="LEFT_PARENTHESIS" value="（" invalid-chars="(" />
+            <symbol name="RIGHT_PARENTHESIS" value="）" invalid-chars=")" />
             <symbol name="ASTERISK" value="*" invalid-chars="＊" />
             <symbol name="PLUS_SIGN" value="+" invalid-chars="＋" />
             <symbol name="HYPHEN_SIGN" value="ー" />
@@ -69,11 +69,13 @@
             <symbol name="RIGHT_CURLY_BRACKET" value="}" invalid-chars="｝" />
             <!--<symbol name="VERTICAL_VAR" value="|" invalid-chars="｜" />-->
             <symbol name="TILDE" value="~" />
-            <symbol name="FULL_STOP" value="。" invalid-chars="．" />
-            <symbol name="COMMA" value="、" invalid-chars="，" />
+            <symbol name="FULL_STOP" value="。" />
+            <symbol name="COMMA" value="，" />
         </symbols>
 
         <!--Load JavaScript validators-->
-        <!--<validator name="JavaScript" />-->
+        <validator name="JavaScript">
+		    <property name="script-path" value="/redpen/js" />
+		</validator>
     </validators>
 </redpen-conf>
