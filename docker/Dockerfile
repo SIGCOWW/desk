@@ -3,13 +3,13 @@ FROM alpine:3.5
 ENV LANG=ja_JP.UTF-8	\
 	PATH=$PATH:/usr/local/texlive/2016/bin/x86_64-linux
 
-COPY texlive.profile otf-up-source.map jumoline.sty redpen-conf.xml ku1010.js typo.js print.sh binding.sh check.sh compile.rb tex2svg.rb pdfcrop.sh /
+COPY texlive.profile otf-up-source.map jumoline.sty redpen-conf.xml ku1010.js typo.js print.sh binding.sh check.sh compile.rb tex2png.rb pdfcrop.sh /
 
-RUN apk add --update ruby zip libc6-compat openjdk8-jre fontconfig ghostscript imagemagick poppler-utils ruby-json nodejs inkscape \
+RUN apk add --update ruby zip libc6-compat openjdk8-jre fontconfig ghostscript imagemagick poppler-utils ruby-json nodejs \
 	&& apk add --virtual build-builddeps wget xz coreutils ca-certificates fontconfig binutils findutils git perl \
 	&& ln -s /lib/ /lib64 \
 	&& mkdir -p /usr/local/bin \
-	&& mv print.sh check.sh binding.sh compile.rb tex2svg.rb pdfcrop.sh /usr/local/bin/ \
+	&& mv print.sh check.sh binding.sh compile.rb tex2png.rb pdfcrop.sh /usr/local/bin/ \
 	&& wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz \
 	&& tar zxvf install-tl-unx.tar.gz \
 	&& ./install-tl-*/install-tl --profile="texlive.profile" \

@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
 #
-# $ cat eq.tex | tex2svg.rb | tee output.svg
+# $ cat eq.tex | tex2png.rb | base64 -d > output.png
 #
 require 'fileutils'
 require 'securerandom'
+require 'base64'
 
 if __FILE__ == $0
 	eq = $stdin.read
@@ -41,8 +42,9 @@ EOF
 	File.write('eq.tex', tex)
 	system("uplatex eq.tex > /dev/null")
 	system("xdvipdfmx eq.dvi > /dev/null")
-	system("pdfcrop.sh eq.pdf eq-crop.pdf > /dev/null")
-	system("inkscape --without-gui --file=eq-crop.pdf --export-plain-svg=eq.svg > /dev/null")
-	puts(File.read('eq.svg'))
+	system("convert -antialias -density 300 -trim +repage eq.pdf eq.png")
+
+	png = File.binread("eq.png")
+	puts Base64.encode64(png)
 	FileUtils.rm_rf(tmpdir, :secure => true)
 end

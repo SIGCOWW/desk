@@ -14,14 +14,23 @@ TMPDIR = 'tmp' + SecureRandom.hex(8)
 ERR_MSG_FILE = SecureRandom.hex(8) + '.re'
 
 
-def preprocess(catalog)
+def preprocess(catalog, builder)
 	catalog.each_value do | value |
 		next if value.nil?
 		value.each do | filename |
-			txt = File.read("articles/#{filename}")
+			txt = File.read("articles/#{filename}").gsub(/\r\n/, "\n")
 			txt = txt.gsub(/^(\/\/\w+raw(?:\[\S+?\])*{\s*)(.+?)(\s*\/\/})$/m) { $1 + Base64.encode64($2).delete('=') + $3 }
+			txt.gsub!(/^@<author>{.+}$/, '') if (builder === 'epub')
 			File.write(filename, txt)
 		end
+	end
+
+	return unless builder === "epub"
+	Dir.glob("./images/*/*").each do | file |
+		next if File.ftype(file) === 'file'
+		next if File.ftype(file) === 'directory' && File.dirname(file) === 'html'
+		puts file
+		FileUtils.rm_rf(file, :secure => true)
 	end
 end
 
@@ -53,6 +62,7 @@ def convert(catalog, builder)
 			system("convert -trim +repage #{src} #{dst_id}.png") if margin?(src)
 		when '.jpg', '.jpeg'
 			system("convert -auto-orient -strip #{src} #{dst_id}.jpg")
+			FileUtils.rm_f(src)
 		end
 	end
 
@@ -80,6 +90,9 @@ def compile(catalog, builder)
 	catalog = Marshal.load(Marshal.dump(catalog))
 	FileUtils.mv('catalog.yml', TMPDIR)
 
+	maker = builder
+	builder = 'pdf' if maker === 'pubpdf'
+
 	code = nil
 	5.times do | i |
 		File.write('catalog.yml', catalog.to_yaml)
@@ -88,7 +101,8 @@ def compile(catalog, builder)
 			value.each { |f| system("review-preproc --replace #{f}") }
 		end
 
-		stdout, stderr, status = Open3.capture3("review-#{builder}maker config.yml")
+		env = (maker === 'pubpdf') ? 'env ONESIDE=1 ' : ''
+		stdout, stderr, status = Open3.capture3("#{env}review-#{builder}maker config.yml")
 		STDOUT.print(stdout)
 		STDERR.print(stderr)
 		code = status.exitstatus
@@ -96,17 +110,17 @@ def compile(catalog, builder)
 		errors = stderr.scan(/compile error in (.+?)\.(?:re|tex)/).map{|v| v[0]+'.re'}
 		break if errors.length === 0
 
-		puts('RETRY')
+		puts "RETRY"
 		catalog.each_key do | key |
 			next if catalog[key].nil?
 			catalog[key].select!{ |v| not errors.include?(v) }
 		end
 		catalog.delete_if { |k, v| v.nil? || v.empty? }
-		break catalog.empty?
+		break if catalog.empty?
 
 		first = catalog.first
 		catalog[first[0]].unshift(ERR_MSG_FILE) if !first.nil? && !catalog[first[0]].include?(ERR_MSG_FILE)
-		File.write(ERR_MSG_FILE, "= WARNING#{i}\n//emlist{{\n#{stderr}//}}")
+		File.write(ERR_MSG_FILE, "= WARNING#{i}\n//emlist{\n#{stderr}//}")
 	end
 
 	return code
@@ -117,10 +131,11 @@ if __FILE__ == $0
 	exit 1 if ARGV.length != 2
 	catalog = YAML.load_file('catalog.yml')
 	FileUtils.mkdir_p(TMPDIR)
+	FileUtils.cp_r('./images', TMPDIR, :preserve => true)
 
 	begin
-		preprocess(catalog)
-		convert(catalog, ARGV[0] === 'pdf' ? 'latex' : (ARGV[0] === 'epub' ? 'html' : ARGV[0]))
+		preprocess(catalog, ARGV[0])
+		convert(catalog, ARGV[0] === 'epub' ? 'html' : 'latex')
 		status = compile(catalog, ARGV[0])
 		File.write(ARGV[1], status / 256)
 	rescue => e
@@ -131,8 +146,8 @@ if __FILE__ == $0
 
 	# Recovery
 	FileUtils.mv("#{TMPDIR}/catalog.yml", './') if FileTest.exist?("#{TMPDIR}/catalog.yml")
-	FileUtils.rm_rf('./images/latex', :secure => true)
-	FileUtils.rm_rf('./images/html', :secure => true)
+	FileUtils.rm_rf('./images', :secure => true)
+	FileUtils.mv("#{TMPDIR}/images", './images')
 	FileUtils.rm_f(ERR_MSG_FILE)
 	FileUtils.rm_rf(TMPDIR, :secure => true)
 	catalog.each_value do | value |
