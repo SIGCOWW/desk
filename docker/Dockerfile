@@ -58,9 +58,9 @@ RUN apk add --update ruby zip openjdk8-jre fontconfig ghostscript imagemagick po
 #
 # Debug
 #
-COPY ku1010.js typo.js print.sh binding.sh check.sh compile.rb tex2png.rb pdfcrop.sh /
+COPY ku1010.js typo.js build.rb /
 RUN mv ku1010.js typo.js /redpen/js \
-	&& mv print.sh check.sh binding.sh compile.rb tex2png.rb pdfcrop.sh /usr/local/bin/ \
+	&& mv build.rb /usr/local/bin/ \
 #	&& cd /usr/local/texlive/2*/texmf-dist/ \
 #	&& rm -rf ./fonts/map/dvips ./fonts/pk/ljfour/public/cm \
 #		./fonts/source ./dvips/ ./fonts/tfm/ptex-fonts/standard/ \
