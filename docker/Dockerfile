@@ -58,9 +58,13 @@ RUN apk add --update ruby zip openjdk8-jre fontconfig ghostscript imagemagick po
 #
 # Debug
 #
-COPY ku1010.js typo.js build.rb /
+RUN wget -q https://github.com/jgm/pandoc/releases/download/1.19.2.1/pandoc-1.19.2.1-1-amd64.deb -O pandoc.deb \
+	&& ar vx pandoc.deb \
+	&& tar zxvf data.tar.gz './usr/bin/pandoc'
+
+COPY ku1010.js typo.js build.rb reviewhook.rb /
 RUN mv ku1010.js typo.js /redpen/js \
-	&& mv build.rb /usr/local/bin/ \
+	&& mv build.rb reviewhook.rb /usr/local/bin/ \
 #	&& cd /usr/local/texlive/2*/texmf-dist/ \
 #	&& rm -rf ./fonts/map/dvips ./fonts/pk/ljfour/public/cm \
 #		./fonts/source ./dvips/ ./fonts/tfm/ptex-fonts/standard/ \
