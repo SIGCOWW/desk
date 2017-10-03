@@ -3,8 +3,8 @@ ENV LANG=ja_JP.UTF-8	\
 	PATH=$PATH:/usr/local/texlive/2017/bin/x86_64-linux
 
 COPY texlive.profile otf-up-source.map jumoline.sty redpen-conf.xml *.js *.rb /
-RUN apk add --update ruby zip openjdk8-jre fontconfig ghostscript imagemagick poppler-utils ruby-json nodejs \
-	&& apk add --virtual build-builddeps wget xz coreutils ca-certificates fontconfig binutils findutils git perl gcc nodejs-npm \
+RUN apk add --update ruby zip openjdk8-jre fontconfig ghostscript imagemagick poppler-utils ruby-json nodejs perl \
+	&& apk add --virtual build-builddeps wget xz coreutils ca-certificates fontconfig binutils findutils git nodejs-npm \
 	&& mkdir -p /usr/local/bin \
 	&& mkdir -p /extensions \
 	&& wget -q http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz \
@@ -33,7 +33,7 @@ RUN apk add --update ruby zip openjdk8-jre fontconfig ghostscript imagemagick po
 	&& rm -rf /usr/local/texlive/201*/install-tl \
 	&& rm -rf /usr/local/texlive/201*/release-texlive.txt \
 	&& rm -rf /usr/local/texlive/201*/texmf-dist/fonts/truetype/public/baekmuk/ \
-	&& rm -rf /usr/local/texlive/2017/texmf-dist/scripts \
+	&& rm -rf /usr/local/texlive/201*/texmf-dist/scripts/tlcockpit \
 	&& rm -rf /usr/local/texlive/201*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf \
 	&& rm -rf /usr/local/texlive/201*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf \
 	&& rm -rf /usr/local/texlive/201*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf \
