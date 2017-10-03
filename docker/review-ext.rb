@@ -1,0 +1,8 @@
+require './author'
+require './blockw'
+require './imagew'
+require './pandoc'
+require './profile'
+require './patch'
+require './tabooular'
+require './subfig'

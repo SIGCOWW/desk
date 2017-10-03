@@ -105,7 +105,7 @@ EOF
     dummy_image('cover.png', 'COVER')
     dummy_image('back.png', 'BACK')
     tmp = `convert cover.png -colors 256 -depth 8 -format %c histogram:info: | sort -r -k 1`
-    r, g, b = tmp.match(/\(([0-9]+),([0-9]+),([0-9]+)\)/)[1..3].map{|v| v.to_f / 255}
+    r, g, b = tmp.match(/\(([0-9]+),\s*([0-9]+),\s*([0-9]+)/)[1..3].map{|v| v.to_f / 255}
     max = [r, g, b].max
     min = [r, b, g].min
     d = max - min
@@ -122,7 +122,7 @@ EOF
     #s = d / max
     #v = max
 
-    file.write('publish-tmp.tex', <<eof
+    File.write('publish-tmp.tex', <<eof
 \\documentclass[uplatex,dvipdfmx,#{@papersize}paper,oneside]{jsbook}
 \\usepackage{pdfpages}
 \\pagestyle{empty}
@@ -158,16 +158,17 @@ eof
 
   def clean()
     header("Cleaning")
-    #unless @is_verbose
-    #  artifacts = ['original.pdf', 'honbun.pdf', 'publish.pdf', 'publish.epub']
-    #  Dir.glob('*').each do | file |
-    #    next if artifacts.include?(file)
-    #    FileUtils.rm_rf(file)
-    #  end
-    #end
+    unless @is_verbose
+      artifacts = ['original.pdf', 'honbun.pdf', 'publish.pdf', 'publish.epub']
+      Dir.glob('*').each do | file |
+        next if artifacts.include?(file)
+        FileUtils.rm_rf(file)
+      end
+    end
     stat = File.stat('../')
     FileUtils.chown_R(stat.uid, stat.gid, './')
 
+    @exitstatuses['rescue'] = 1 if @exitstatuses.empty?
     result = @exitstatuses.values.inject(:+)
     msg = @exitstatuses.select{|k, v| v != 0 }.keys.join(', ')
     File.write(".exitstatus", "#{result}\n#{msg}\n")
@@ -179,6 +180,7 @@ eof
     header("Preprocessing", 2)
     articles = {}
     newcatalog = {}
+    FileUtils.cp_r(Dir.glob('/extensions/*.rb'), './')
     FileUtils.cp_r(Dir.glob('../extensions/*.rb'), './')
     FileUtils.cp_r(['config.yml', 'layouts/'].map{|v| "../#{v}"}, './')
     FileUtils.mv(['locale.yml', 'style.css'].map{|v| "layouts/#{v}"}, './', {:force => true})
@@ -357,7 +359,7 @@ eof
               str = io.readline
               next if str.nil? || str.empty?
               if io === stdout
-                STDERR.print(str) if @is_verbose
+                STDOUT.print(str) if @is_verbose
               elsif io === stderr
                 [ /^.+\.dvi -> .+\.pdf$/, /^(\[[0-9]+\])+$/, /^[0-9]+ bytes? written$/ ].each do | pat |
                   next unless str =~ pat
@@ -367,7 +369,7 @@ eof
                 end
                 next if str.nil?
 
-                STDOUT.print(str)
+                STDERR.print(str)
                 errors += str.scan(/compile error in (.+?)\.(?:re|tex)/).map{|v| v[0]+'.re'}
               end
             end
@@ -426,11 +428,16 @@ if __FILE__ == $0
   FileUtils.rm_rf(dirname)
   FileUtils.mkdir_p(dirname)
   Dir::chdir(dirname) do
-    build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'])
-    build.redpen() if params['redpen']
-    build.pdf(params['pdf4print'])
-    build.pdf4publish() if params['pdf4publish']
-    build.epub() if params['epub']
-    build.clean()
+    begin
+      build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'])
+      build.redpen() if params['redpen']
+      build.pdf(params['pdf4print'])
+      build.pdf4publish() if params['pdf4publish']
+      build.epub() if params['epub']
+    rescue RuntimeError => e
+      STDERR.puts "#{e.backtrace.first}: #{e.message} (#{e.class})"
+    ensure
+      build.clean()
+    end
   end
 end

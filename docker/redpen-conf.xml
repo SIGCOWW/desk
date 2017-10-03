@@ -46,14 +46,14 @@
         <validator name="GappedSection" />
 
         <symbols>
-            <symbol name="EXCLAMATION_MARK" value="！" invalid-chars="!" />
+            <symbol name="EXCLAMATION_MARK" value="！" />
             <symbol name="NUMBER_SIGN" value="#" invalid-chars="＃" />
             <symbol name="DOLLAR_SIGN" value="$" invalid-chars="＄" />
             <symbol name="PERCENT_SIGN" value="%" invalid-chars="％" />
-            <symbol name="QUESTION_MARK" value="？" invalid-chars="?" />
+            <symbol name="QUESTION_MARK" value="？" />
             <symbol name="AMPERSAND" value="&amp;" invalid-chars="＆" />
-            <symbol name="LEFT_PARENTHESIS" value="（" invalid-chars="(" />
-            <symbol name="RIGHT_PARENTHESIS" value="）" invalid-chars=")" />
+            <symbol name="LEFT_PARENTHESIS" value="（" />
+            <symbol name="RIGHT_PARENTHESIS" value="）" />
             <symbol name="ASTERISK" value="*" invalid-chars="＊" />
             <symbol name="PLUS_SIGN" value="+" invalid-chars="＋" />
             <symbol name="HYPHEN_SIGN" value="ー" />
