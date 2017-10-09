@@ -9,7 +9,6 @@ clean() {
 	rm -rf "$TMPDIR"
 	exit
 }
-trap 'clean' ERR
 
 
 # Clone
@@ -39,6 +38,7 @@ set -e
 if [ "$ret" ]; then git apply "$DIFF"; fi
 
 # Build
+trap 'clean' ERR
 ./make.sh "build"
 file="working_temporary_directory/original.pdf"
 if [ -f "$file" ]; then
