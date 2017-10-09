@@ -54,5 +54,33 @@ module ReVIEW
       image_header id, caption
       puts %Q[</div>]
     end
+
+    def make_math_image(str, path, fontsize = 12)
+      fontsize2 = (fontsize * 1.2).round.to_i
+      texsrc = <<-EOB
+\\documentclass[12pt]{article}
+\\usepackage[utf8x]{inputenc}
+\\usepackage{amsmath}
+\\usepackage{amsthm}
+\\usepackage{amssymb}
+\\usepackage{amsfonts}
+\\usepackage{anyfontsize}
+\\usepackage{bm}
+\\usepackage{mathrsfs}
+\\usepackage{exscale}
+\\usepackage{textcomp}
+\\usepackage{mathtools}
+\\pagestyle{empty}
+\\begin{document}
+\\fontsize{#{fontsize}}{#{fontsize2}}\\selectfont #{str}
+\\end{document}
+      EOB
+      Dir.mktmpdir do |tmpdir|
+        tex_path = File.join(tmpdir, 'tmpmath.tex')
+        dvi_path = File.join(tmpdir, 'tmpmath.dvi')
+        File.write(tex_path, texsrc)
+        system("latex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} && dvipng -T tight -z9 -o #{path} #{dvi_path}")
+      end
+    end
   end
 end

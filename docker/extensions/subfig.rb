@@ -12,20 +12,23 @@ module ReVIEW
   end
 
   class LATEXBuilder
+    @subfigenv = nil
     def beginsubfig(env, caption)
-      puts '\let\temp\reviewsubfig'
-      puts '\let\endtemp\endreviewsubfig'
-      if env == 'subfigw'
-        puts '\let\reviewsubfig\reviewsubfigw'
-        puts '\let\endreviewsubfig\endreviewsubfigw'
+      @subfigenv = env
+      if @subfigenv == 'subfigw'
+        puts '\swap\reviewsubfig\reviewsubfigw'
+        puts '\swap\endreviewsubfig\endreviewsubfigw'
       end
       puts "\\begin{reviewsubfig}{#{escape(caption)}}"
     end
 
     def endsubfig()
-      puts "\\end{reviewsubfig}"
-      puts '\let\reviewsubfig\temp'
-      puts '\let\endreviewsubfig\endtemp'
+      puts '\end{reviewsubfig}'
+      if @subfigenv == 'subfigw'
+        puts '\swap\reviewsubfig\reviewsubfigw'
+        puts '\swap\endreviewsubfig\endreviewsubfigw'
+      end
+      @subfigenv = nil
     end
   end
 end

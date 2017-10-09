@@ -32,17 +32,13 @@ module ReVIEW
   end
 
   class LATEXBuilder
-    def tabletabooular(lines, id, caption, env='tabooular')
+    def tabletabooular(lines, id, caption)
       begin
-        puts '\begin{table}[!htbp]'
-        puts '\centering' if env === 'tabooular'
-        puts '\begin{'+env+'}'
-        puts '\centering' if env === 'tabooular*'
+        puts '\begin{tabooular}'
         puts macro('reviewtablecaption', compile_inline(caption))
         puts macro('label', table_label(id))
         puts tabooular_to('latex', lines)
-        puts '\end{'+env+'}'
-        puts '\end{table}'
+        puts '\end{tabooular}'
         blank
       rescue KeyError
         error "no such table: #{id}"
@@ -50,7 +46,11 @@ module ReVIEW
     end
 
     def tabletabooularw(lines, id, caption)
-      tabletabooular(lines, id, caption, 'tabooular*')
+      puts '\swap\tabooular\tabooularw'
+      puts '\swap\endtabooular\endtabooularw'
+      tabletabooular(lines, id, caption)
+      puts '\swap\tabooularw\tabooular'
+      puts '\swap\endtabooularw\endtabooular'
     end
   end
 

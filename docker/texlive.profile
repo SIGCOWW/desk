@@ -11,7 +11,7 @@ TEXMFSYSVAR /usr/local/texlive/2017/texmf-var
 TEXMFVAR ~/.texlive2017/texmf-var
 binary_x86_64-linux 1
 collection-basic 1
-collection-binextra 1
+collection-binextra 0
 collection-fontsrecommended 1
 collection-langcjk 1
 collection-langenglish 1

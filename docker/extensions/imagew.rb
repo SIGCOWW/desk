@@ -11,13 +11,11 @@ module ReVIEW
 
   class LATEXBuilder
     def imagew(lines, id, caption, metric = nil)
-      puts '\let\temp\reviewimage'
-      puts '\let\endtemp\endreviewimage'
-      puts '\let\reviewimage\reviewimagew'
-      puts '\let\endreviewimage\endreviewimagew'
+      puts '\swap\reviewimage\reviewimagew'
+      puts '\swap\endreviewimage\endreviewimagew'
       image(lines, id, caption, metric)
-      puts '\let\reviewimage\temp'
-      puts '\let\endreviewimage\endtemp'
+      puts '\swap\reviewimagew\reviewimage'
+      puts '\swap\endreviewimagew\endreviewimage'
     end
   end
 end

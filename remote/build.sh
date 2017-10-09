@@ -9,7 +9,7 @@ clean() {
 	rm -rf "$TMPDIR"
 	exit
 }
-#trap 'clean' ERR
+trap 'clean' ERR
 
 
 # Clone
@@ -33,7 +33,10 @@ cd "../"
 cp -a "${repo}/." "$TMPDIR"
 cd "$TMPDIR"
 git checkout "$origin"
-git apply "$DIFF"
+set +e
+ret=$(grep -v '^\s*#' .temporary.diff | sed 's/\s//g')
+set -e
+if [ "$ret" ]; then git apply "$DIFF"; fi
 
 # Build
 ./make.sh "build"

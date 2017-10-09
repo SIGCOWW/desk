@@ -159,7 +159,7 @@ eof
   def clean()
     header("Cleaning")
     unless @is_verbose
-      artifacts = ['original.pdf', 'honbun.pdf', 'publish.pdf', 'publish.epub']
+      artifacts = ['original.pdf', 'honbun.pdf', 'publish-tmp.pdf', 'publish.pdf', 'publish.epub']
       Dir.glob('*').each do | file |
         next if artifacts.include?(file)
         FileUtils.rm_rf(file)
@@ -396,7 +396,7 @@ eof
 
   def dummy_image(path, text)
     return if FileTest.file?(path)
-    run("convert -size 850x1200 -background gray -fill red -gravity center label:#{text} #{path}")
+    run("convert -size 850x1200 xc:blue #{path}")
   end
 
   def run(cmd)
