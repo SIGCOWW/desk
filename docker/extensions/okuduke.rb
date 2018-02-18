@@ -3,6 +3,7 @@ module ReVIEW
     def make_colophon
       super
 
+      ENV['TZ'] = 'Asia/Tokyo'
       rows = [
         ['発行日', Date.parse(@config["date"]).strftime("%Y年%-m月%-d日")],
         ['発　行', @config["pbl"].to_s],
@@ -13,6 +14,7 @@ module ReVIEW
         ['', `review-pdfmaker --version`],
         ['', `uplatex --version | head -n1`],
         ['', "Alpine Linux #{`cat /etc/alpine-release`.strip} (Linux Kernel #{`uname -r`.strip})"],
+        ['', "SIGCOWW/desk \\url{https://hub.docker.com/r/lrks/desk/}"]
       ]
 
       ret = ''

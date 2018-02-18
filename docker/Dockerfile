@@ -46,11 +46,45 @@ RUN apk add nodejs
 RUN apk add nodejs-npm
 RUN npm install -g tabooular
 RUN npm install -g prh
-RUN apk add ghc
-RUN apk add cabal
-RUN git clone --depth 1 https://github.com/jgm/pandoc.git /pandoc
-RUN apk add musl-dev
-RUN cd /pandoc && cabal update && cd /
-RUN cd /pandoc && cabal install --only-dependencies && cd /
-RUN cd /pandoc && cabal configure --disable-library-vanilla --enable-shared --enable-executable-dynamic --flags=-https && cd /
-RUN cd /pandoc && cabal build && cd /
+RUN apk add gzip
+RUN wget -q https://github.com/jgm/pandoc/releases/download/2.1.1/pandoc-2.1.1-1-amd64.deb
+RUN ar x pandoc-*.deb
+RUN tar Jxf data.tar.xz "./usr/bin/pandoc"
+RUN gzexe /usr/bin/pandoc
+RUN tlmgr install dvipng seqsplit float caption bigfoot xcolor framed wrapfig multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox mathtools listings pgfornament calrsfs calligra cancel mathcomp oubraces spalign systeme trfsigns witharrows mathtools tensor doublestroke
+RUN tlmgr install etoolbox kastrup
+RUN wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.5.zip -O BXcoloremoji.zip
+RUN unzip -q BXcoloremoji.zip
+RUN mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
+RUN mv BXcoloremoji*/*.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
+RUN mv BXcoloremoji*/emoji_images $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
+RUN mktexlsr
+RUN apk add python
+RUN apk add pkgconfig
+RUN apk add cairo-dev
+RUN apk add make
+RUN apk add g++
+RUN apk add libjpeg-turbo-dev
+RUN cd /usr/lib/ && npm install canvas && cd /
+RUN npm install -g colibrijs
+ENV NODE_PATH=/usr/lib/node_modules
+RUN git clone --depth 1 https://github.com/prh/rules.git
+RUN gem install diff-lcs --no-rdoc --no-ri
+RUN apk add openssh-client
+RUN tlmgr install ec
+RUN tlmgr install ucs
+RUN tlmgr install environ
+RUN tlmgr install trimspaces
+RUN tlmgr install palatino
+RUN tlmgr install helvetic
+RUN tlmgr install mathpazo
+RUN tlmgr install pdfpages
+RUN mkdir -p /usr/local/bin
+COPY *.rb /
+RUN mv build.rb /usr/local/bin/
+RUN mkdir -p /extensions
+COPY extensions/*.rb /
+COPY locale.yml /
+RUN mv *.rb locale.yml /extensions
+COPY colorpicker.js /
+RUN mv colorpicker.js /usr/local/bin/

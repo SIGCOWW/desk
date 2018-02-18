@@ -26,6 +26,10 @@ module ReVIEW
         '\nobreak' + macro('footnote', compile_inline(@chapter.footnote(id).content.strip))
       end
     end
+
+    def lead(lines)
+      latex_block 'leadw', lines
+    end
   end
 
   class HTMLBuilder

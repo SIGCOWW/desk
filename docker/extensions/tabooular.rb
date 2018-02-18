@@ -9,6 +9,22 @@ module ReVIEW
   end
 
   class Builder
+    def tabletabooular(lines, id, caption)
+      begin
+        table_header id, caption if caption.present?
+      rescue KeyError
+        error "no such table: #{id}"
+      end
+
+      table_begin(123)
+      puts Base64.decode64(lines.join(''))
+      table_end
+    end
+
+    def tabletabooularw(lines, id, caption)
+      tabletabooular(lines, id, caption)
+    end
+
     protected
     def tabooular_to(format, lines)
       def compile(row)
@@ -29,7 +45,7 @@ module ReVIEW
 
       return Open3.capture3("tabooular -if json -of #{format}", :stdin_data => JSON.generate(json))[0]
     end
-  end
+ end
 
   class LATEXBuilder
     def tabletabooular(lines, id, caption)
@@ -64,10 +80,6 @@ module ReVIEW
       rescue KeyError
         error "no such table: #{id}"
       end
-    end
-
-    def tabletabooularw(lines, id, caption)
-      tabletabooular(lines, id, caption)
     end
   end
 end

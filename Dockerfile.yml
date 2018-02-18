@@ -3,7 +3,7 @@
 - env: PATH=$PATH:/usr/local/texlive/2017/bin/x86_64-linux
 
 
-# LaTeX
+# Core
 - apk: git
 - apk: perl
 - dev: wget
@@ -41,7 +41,6 @@
 - run: 'ln -s $(kpsewhich -var-value TEXMFLOCAL)/fonts/truetype/public/ipaex/ipaexg.ttf /usr/share/fonts/ipaexg.ttf'
 - run: 'fc-cache -fv'
 
-# Re:VIEW
 - apk: ruby
 - apk: zip
 - apk: ruby-json
@@ -50,31 +49,41 @@
 - dev: nodejs-npm
 - run: 'npm install -g tabooular'
 - run: 'npm install -g prh'
-- dev: ghc
-- dev: cabal
-- run: 'git clone --depth 1 https://github.com/jgm/pandoc.git /pandoc'
-- dev: musl-dev
-- run: 'cd /pandoc && cabal update && cd /'
-- run: 'cd /pandoc && cabal install --only-dependencies && cd /'
-- run: 'cd /pandoc && cabal configure --disable-library-vanilla --enable-shared --enable-executable-dynamic --flags=-https && cd /'
-- run: 'cd /pandoc && cabal build && cd /'
+- apk: gzip
+- run: 'wget -q https://github.com/jgm/pandoc/releases/download/2.1.1/pandoc-2.1.1-1-amd64.deb'
+- run: 'ar x pandoc-*.deb'
+- run: 'tar Jxf data.tar.xz "./usr/bin/pandoc"'
+- run: 'gzexe /usr/bin/pandoc'
+
+- run: 'tlmgr install dvipng seqsplit float caption bigfoot xcolor framed wrapfig
+    multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox
+    mathtools listings pgfornament calrsfs calligra cancel mathcomp oubraces
+    spalign systeme trfsigns witharrows mathtools tensor doublestroke'
+- run: 'tlmgr install etoolbox kastrup'
+- run: 'wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.5.zip -O BXcoloremoji.zip'
+- run: 'unzip -q BXcoloremoji.zip'
+- run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
+- run: 'mv BXcoloremoji*/*.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
+- run: 'mv BXcoloremoji*/emoji_images $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
+- run: 'mktexlsr'
+
+- dev: python
+- dev: pkgconfig
+- dev: cairo-dev
+- dev: make
+- dev: g++
+- dev: libjpeg-turbo-dev
+- run: 'cd /usr/lib/ && npm install canvas && cd /'
+- run: 'npm install -g colibrijs'
+- env: NODE_PATH=/usr/lib/node_modules
+- run: git clone --depth 1 https://github.com/prh/rules.git
+- run: 'gem install diff-lcs --no-rdoc --no-ri'
+
+# Circle CI
+- apk: openssh-client
 
 
-#- apk: openjdk8-jre
-#- run: 'wget -q https://github.com/redpen-cc/redpen/releases/download/redpen-1.9.0/redpen-1.9.0.tar.gz'
-#- run: 'tar zxf redpen-*.tar.gz'
-#- run: 'mv redpen-distribution-*/ redpen/'
-#- run: 'rm -rf /redpen/js'
-#- run: 'git clone --depth 1 https://github.com/kongou-ae/redpen-validator.git /redpen/js'
-#- run: 'wget -q https://github.com/jgm/pandoc/releases/download/1.19.2.1/pandoc-1.19.2.1-1-amd64.deb'
-#- run: 'ar x pandoc-*.deb'
-#- run: 'tar zxf data.tar.gz "./usr/bin/pandoc"'
-#
-## tlmgr
-#- run: 'tlmgr install pdfcrop'
-#- run: 'tlmgr install dvipng'
-#
-### Cleaning
+## Cleaning
 #- run: 'rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl*'
 #- run: 'rm -rf /install-tl* /texlive.profile'
 #- run: 'rm -rf /usr/local/texlive/20*/tlpkg/'
@@ -93,7 +102,8 @@
 #- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/opentype'
 #- run: 'rm -rf /redpen/bin/redpen-server* /redpen/sample-doc/ /redpen-*.tar.gz'
 #- run: 'rm -rf /redpen/js/symbol.js'
-#- run: 'rm -rf pandoc-*.deb data.tar.gz debian-binary data.tar.gz'
+#- run: 'rm -rf pandoc-*.deb data.tar.xz debian-binary control.tar.gz'
+#- run: 'rm -rf BXcoloremoji*'
 #- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/map/dvips'
 #- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm'
 #- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/source'
@@ -133,9 +143,9 @@
 #  - name: '*.ins'
 #  - name: '*.gif'
 #  - name: '*.jpg'
-#  - name: '*.png'
+#  - name: '*.png'  # emojiで使っとるがな...
 #  - name: '*.ico'
-#  - name: '*.pdf'
+#  - name: '*.pdf'  # だぶんこれも...
 #  - name: '*.zip'
 #  - name: '*.exe'
 #  - name: '*.*gz'
@@ -168,15 +178,25 @@
 #  - name: '*.eps'
 #- run: find / -name "*.cls" -type f | grep -v "jsbook" | grep -v "article" | xargs rm -rf
 #- run: 'find /usr/ -empty -type d | xargs rm -rf'
-#
-## Utility
-#- copy: redpen-conf.xml
-#- run: 'mv /redpen-conf.xml /redpen/bin/'
-#- copy: '*.js'
-#- run: 'mv ku1010.js typo.js /redpen/js'
-#- run: 'mkdir -p /usr/local/bin'
-#- copy: '*.rb'
-#- run: 'mv build.rb reviewhook.rb /usr/local/bin/'
-#- run: 'mkdir -p /extensions'
-#- copy: 'extensions/*.rb'
-#- run: 'mv *.rb /extensions'
+
+
+# DEBUG
+- run: 'tlmgr install ec'
+- run: 'tlmgr install ucs'
+- run: 'tlmgr install environ'
+- run: 'tlmgr install trimspaces'
+- run: 'tlmgr install palatino'
+- run: 'tlmgr install helvetic'
+- run: 'tlmgr install mathpazo'
+- run: 'tlmgr install pdfpages'
+
+# Utility
+- run: 'mkdir -p /usr/local/bin'
+- copy: '*.rb'
+- run: 'mv build.rb /usr/local/bin/'
+- run: 'mkdir -p /extensions'
+- copy: 'extensions/*.rb'
+- copy: 'locale.yml'
+- run: 'mv *.rb locale.yml /extensions'
+- copy: 'colorpicker.js'
+- run: 'mv colorpicker.js /usr/local/bin/'

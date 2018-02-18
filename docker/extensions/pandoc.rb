@@ -7,6 +7,10 @@ module ReVIEW
   end
 
   class Builder
+    def pandoc(lines, from)
+      puts pandoc_from_to(lines, from, 'plain')
+    end
+
     protected
     def pandoc_from_to(lines, from, to)
       plain = Base64.decode64(lines.join(''))

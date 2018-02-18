@@ -26,7 +26,7 @@ module ReVIEW
 
     def emlistw(lines, caption = nil, lang = nil)
       print '\blockmargin\begin{widepage}'
-      emlistw(lines, caption, lang)
+      emlist(lines, caption, lang)
       print '\end{widepage}\unblockmargin'
     end
 

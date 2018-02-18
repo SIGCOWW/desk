@@ -7,6 +7,13 @@ module ReVIEW
     defblock :profile, 0..1, true
   end
 
+  class Builder
+    def profile(lines, author='')
+      puts author
+      puts lines
+    end
+  end
+
   class LATEXBuilder
     def profile(lines, author='')
       puts "\\begin{profile}{#{escape(author)}}"

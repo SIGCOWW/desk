@@ -5,6 +5,7 @@ require 'yaml'
 require 'fileutils'
 require 'base64'
 require 'open3'
+require 'diff-lcs'
 
 class Build
   def initialize(papersize, margin, is_strict, is_verbose)
@@ -16,23 +17,22 @@ class Build
 
     @articles, @catalog = preprocess()
     convert_articles()
-    FileUtils.mv('../cover.png', './', {:force => true})
-    FileUtils.mv('../back.png', './', {:force => true})
-
     @imgcache = nil
     @exitstatuses = {}
   end
 
-  def redpen()
-    header("RedPen")
-    breakdoc = false
-    @articles.each_key do | chapid |
-      dir = "/redpen/bin"
-      path = "../articles/#{chapid}/#{chapid}.re"
+  def proof()
+    header("Proofreading")
 
-      breakline = false
-      Open3.popen3("#{dir}/redpen -c #{dir}/redpen-conf.xml -r plain2 -l 1000 #{path}") do |stdin, stdout, stderr, th|
+    first = true
+    @articles.each_key do | chapid |
+      path = "../articles/#{chapid}/#{chapid}.re"
+      Open3.popen3("prh --rules /rules/media/techbooster.yml #{path}") do |stdin, stdout, stderr, th|
         stdin.close_write
+        puts "" unless first
+        puts "\033[30;43m--- #{chapid}.re ---\033[m"
+        first = false
+
         begin
           loop do
             break unless th.alive?
@@ -45,22 +45,21 @@ class Build
                 next unless @is_verbose
                 STDERR.print(str)
               when stdout
-                str.strip!
-                if str.include?('Document:')
-                  #print "\n\n" if breakdoc
-                  puts "\033[33;41m--- #{str} ---\033[m"
-                  breakdoc = true
-                elsif str.include?('Line:')
-                  #print "\n" if breakline
-                  puts "\033[32m#{str}\033[m"
-                  breakline = true
-                elsif str.include?('Sentence:')
-                  slice = str[0..40]
-                  slice += '...' if str != slice
-                  str = slice
-                  puts "  \033[36m#{str}\033[m"
+                if m = str.match(/^#{path}\((\d+),(\d+)\): (.+?) → (.+?)$/)
+                  old = ''
+                  new = ''
+                  Diff::LCS.sdiff(m[3], m[4]) do | ctx |
+                    if ctx.unchanged?
+                      old += ctx.old_element
+                      new += ctx.new_element
+                      next
+                    end
+                    old += "\033[30;41m#{ctx.old_element}\033[m" if !ctx.old_element.nil?
+                    new += "\033[30;42m#{ctx.new_element}\033[m" if !ctx.new_element.nil?
+                  end
+                  puts "L#{m[1].rjust(3)}: #{old} → #{new}"
                 else
-                  puts "    #{str}"
+                  STDOUT.print(str)
                 end
               end
             end
@@ -69,6 +68,9 @@ class Build
         end
       end
     end
+
+    # review-textmaker がリリースされるまで待つ
+    #system("review-compile --target=text")
   end
 
   def pdf(is_print)
@@ -104,32 +106,17 @@ EOF
 
     dummy_image('cover.png', 'COVER')
     dummy_image('back.png', 'BACK')
-    tmp = `convert cover.png -colors 256 -depth 8 -format %c histogram:info: | sort -r -k 1`
-    r, g, b = tmp.match(/\(([0-9]+),\s*([0-9]+),\s*([0-9]+)/)[1..3].map{|v| v.to_f / 255}
-    max = [r, g, b].max
-    min = [r, b, g].min
-    d = max - min
-    case min
-    when max
-      h = 0
-    when b
-      h = 60 * (g-r)/d + 60
-    when r
-      h = 60 * (b-g)/d + 180
-    when g
-      h = 60 * (r-b)/d + 300
-    end
-    #s = d / max
-    #v = max
+    defcolor = `colorpicker.js cover.png`
 
     File.write('publish-tmp.tex', <<eof
 \\documentclass[uplatex,dvipdfmx,#{@papersize}paper,oneside]{jsbook}
 \\usepackage{pdfpages}
 \\pagestyle{empty}
 \\usepackage{xcolor}
-\\definecolor{frontcolor}{hsb}{#{h},0.1,1.0}
+#{defcolor}
 \\newcommand{\\blankpage}{%
-    \\pagecolor{frontcolor}
+    \\pagecolor{bcolor}
+    \\color{fcolor}{TEXT}
     \\mbox{}
     \\clearpage
     \\newpage
@@ -180,9 +167,9 @@ eof
     header("Preprocessing", 2)
     articles = {}
     newcatalog = {}
-    FileUtils.cp_r(Dir.glob('/extensions/*.rb'), './')
+    FileUtils.cp_r(Dir.glob('/extensions/*.*'), './')
     FileUtils.cp_r(Dir.glob('../extensions/*.rb'), './')
-    FileUtils.cp_r(['config.yml', 'layouts/'].map{|v| "../#{v}"}, './')
+    FileUtils.cp_r(['config.yml', 'layouts/', 'cover.png', 'back.png'].map{|v| "../#{v}"}, './')
     FileUtils.mv(['locale.yml', 'style.css'].map{|v| "layouts/#{v}"}, './', {:force => true})
     FileUtils.mkdir_p('sty')
     FileUtils.mv(Dir.glob('layouts/*.sty'), 'sty', {:force => true})
@@ -243,11 +230,11 @@ eof
       # @<author>
       pat = /@<author>{(.+?)}/
       m = txt.match(pat)
-      txt = "#{m[0]}\n\n" + txt.gsub(pat, '') unless m.nil?
+      txt = "#{m[0]}\n" + txt.gsub(pat, '') unless m.nil?
       author = m.nil? ? nil : m[1]
 
       # //profile
-      pat = /^(\/\/profile)(\[\S+?\])?({\s*.+?\s*\/\/}\s*)$/m
+      pat = /^(\/\/profile)(\[[^\r\n\f]+?\])?({\s*.+?\s*\/\/}\s*)$/m
       m = txt.match(pat)
       txt.gsub!(pat, '')
       unless m.nil?
@@ -417,7 +404,7 @@ end
 
 if __FILE__ == $0
   begin
-    params = ARGV.getopts('', 'redpen', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose')
+    params = ARGV.getopts('', 'proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose')
   rescue => e
     puts "#{e}. try \"--help\"."
     exit 1
@@ -428,9 +415,9 @@ if __FILE__ == $0
   FileUtils.rm_rf(dirname)
   FileUtils.mkdir_p(dirname)
   Dir::chdir(dirname) do
+    build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'])
     begin
-      build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'])
-      build.redpen() if params['redpen']
+      build.proof() if params['proof']
       build.pdf(params['pdf4print'])
       build.pdf4publish() if params['pdf4publish']
       build.epub() if params['epub']
