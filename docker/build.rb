@@ -6,6 +6,7 @@ require 'fileutils'
 require 'base64'
 require 'open3'
 require 'diff-lcs'
+require 'shellwords'
 
 class Build
   def initialize(papersize, margin, is_strict, is_verbose)
@@ -27,7 +28,7 @@ class Build
     first = true
     @articles.each_key do | chapid |
       path = "../articles/#{chapid}/#{chapid}.re"
-      Open3.popen3("prh --rules /rules/media/techbooster.yml #{path}") do |stdin, stdout, stderr, th|
+      Open3.popen3('prh', '--rules', '/rules/media/techbooster.yml', path) do |stdin, stdout, stderr, th|
         stdin.close_write
         puts "" unless first
         puts "\033[30;43m--- #{chapid}.re ---\033[m"
@@ -94,7 +95,7 @@ EOF
 )
     run("uplatex honbun-tmp")
     run("dvipdfmx honbun-tmp")
-    run("gs -sOutputFile=honbun.pdf -sDEVICE=pdfwrite -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -dEmbedAllFonts=true -dCompatibilityLevel=1.5 -dNOPAUSE -dBATCH -q honbun-tmp.pdf")
+    run("gs -sOutputFile=honbun.pdf -sDEVICE=pdfwrite -dPDFX -dBATCH -dNOPAUSE -dNOOUTERSAVE -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -dEmbedAllFonts=true -q honbun-tmp.pdf")
   end
 
   def pdf4publish()
@@ -116,7 +117,7 @@ EOF
 #{defcolor}
 \\newcommand{\\blankpage}{%
     \\pagecolor{bcolor}
-    \\color{fcolor}{TEXT}
+    %%%%\\color{fcolor}{TEXT}
     \\mbox{}
     \\clearpage
     \\newpage
@@ -168,7 +169,6 @@ eof
     articles = {}
     newcatalog = {}
     FileUtils.cp_r(Dir.glob('/extensions/*.*'), './')
-    FileUtils.cp_r(Dir.glob('../extensions/*.rb'), './')
     FileUtils.cp_r(['config.yml', 'layouts/', 'cover.png', 'back.png'].map{|v| "../#{v}"}, './')
     FileUtils.mv(['locale.yml', 'style.css'].map{|v| "layouts/#{v}"}, './', {:force => true})
     FileUtils.mkdir_p('sty')
@@ -227,24 +227,27 @@ eof
       txt.gsub!(/^(\/\/(?:tabooularw?|pandoc)(?:\[\S+?\])*{\s*)(.+?)(\s*\/\/}\s*)$/m) { $1 + Base64.encode64($2).delete('=') + $3 }
       txt.gsub!(/^\/\/(tabooularw?(?:\[\S+?\])*{\s*)$/) { '//table' + $1 }
 
-      # @<author>
+      # @<author> (+ title)
+      title = ''
+      tm = txt.match(/^=\s+(.+?)$/)
+      title = tm[1] if not(tm.nil?)
       pat = /@<author>{(.+?)}/
       m = txt.match(pat)
-      txt = "#{m[0]}\n" + txt.gsub(pat, '') unless m.nil?
-      author = m.nil? ? nil : m[1]
+      if not(m.nil?)
+        txt.gsub!(pat, '')
+        txt.sub!(/^=\s+(.+?)$/, '= \1（'+m[1]+' 著）')
+      end
+      author = m.nil? ? '' : m[1]
 
       # //profile
-      pat = /^(\/\/profile)(\[[^\r\n\f]+?\])?({\s*.+?\s*\/\/}\s*)$/m
+      pat = /^(\/\/profile)(\[[^\r\n\f]+?\])?(\[[^\r\n\f]+?\])?({\s*.+?\s*\/\/}\s*)$/m
       m = txt.match(pat)
       txt.gsub!(pat, '')
       unless m.nil?
         File.open('profile.re', 'a') do | f |
-          if not(m[2].nil?) || author.nil?
-            output = m[0]
-          else
-            output = m[1] + "[#{author}]" + m[3]
-          end
-          f.write(output + "\n\n")
+          one = m[2].nil? ? "[#{author}]" : m[2]
+          two = m[3].nil? ? "[#{title}]" : m[3]
+          f.write("#{m[1]}#{one}#{two}#{m[4]}\n\n")
         end
       end
 
@@ -277,16 +280,21 @@ eof
       input_output.each do | io |
         txt.sub!(io[0], io[1])
       end
+
+      txt.gsub!(/[\u0000-\u0008\u000E-\u001F\u007F-\u0084\u0086-\u009F\u000B\u000C\u0085\u2028\u2029]/, '')
       File.write("#{chapid}.re", txt)
-      run("review-preproc --replace #{chapid}.re")
+      run("review-preproc --replace #{Shellwords.escape(chapid)}.re")
     end
   end
 
   def convert_images(builder)
-    def margin?(path)
-      tmp = Open3.capture3("convert #{path} -crop 1x1+0+0 -format \"%[fx:r],%[fx:g],%[fx:b],%[fx:a]\" info:")[0]
-      rgba = tmp.split(',')
-      return (rgba[3] === '0' || (rgba[0] === '1' && rgba[1] === '1' && rgba[2] === '1'))
+    def resize(path)
+      tmp = Open3.capture3('identify', '-format' '%[height],%[width]', path)[0].split(',')
+      area = tmp[0].to_i * tmp[1].to_i
+      if area >= 4000000
+        scale = (Math.sqrt(4000000.0 / area) * 100).floor
+        run("mogrify -unsharp 1.5x1+0.7+0.02 -resize #{scale}% #{path}")
+      end
     end
 
     header("Converting Images for #{builder}", 2)
@@ -301,26 +309,27 @@ eof
       imgs.each do | img |
         ext = File.extname(img)
         id = File.basename(img, ext)
-        src = "../articles/#{chapid}/images/#{img}"
-        dst = "#{dir}/#{id}"
+        src = Shellwords.escape("../articles/#{chapid}/images/#{img}")
+        dst = Shellwords.escape("#{dir}/#{id}")
 
         case "#{builder}#{ext}"
         when 'latex.pdf'
-          run("pdfcrop #{src} #{dst}.pdf")
+          run("pdfcrop.sh #{src} #{dst}.pdf")
         when 'html.pdf'
           run("convert -antialias -density 300 #{src} #{dst}.png")
-          run("mogrify -trim +repage #{dst}.png") if margin?("#{dst}.png")
+          run("mogrify -trim +repage #{dst}.png")
+          resize("#{dst}.png")
         when 'latex.png'
           run("convert #{src} \\( +clone -alpha opaque -fill white -colorize 100% \\) +swap -geometry +0+0 -compose Over -composite -alpha off #{dst}.png")
-          run("mogrify -trim +repage #{dst}.png") if margin?("#{dst}.png")
+          run("mogrify -trim +repage #{dst}.png")
         when 'html.png'
-          if margin?(src)
-            run("convert -trim +repage #{src} #{dst}.png")
-          else
-            FileUtils.cp_r(src, "#{dst}.png")
-          end
-        when 'latex.jpg', 'html.jpg'
+          run("convert -trim +repage #{src} #{dst}.png")
+          resize("#{dst}.png")
+        when 'latex.jpg'
           run("convert -auto-orient -strip #{src} #{dst}.jpg")
+        when 'html.jpg'
+          run("convert -auto-orient -strip #{src} #{dst}.jpg")
+          resize("#{dst}.jpg")
         end
       end
     end
@@ -348,7 +357,7 @@ eof
               if io === stdout
                 STDOUT.print(str) if @is_verbose
               elsif io === stderr
-                [ /^.+\.dvi -> .+\.pdf$/, /^(\[[0-9]+\])+$/, /^[0-9]+ bytes? written$/ ].each do | pat |
+                [ /^.+\.dvi -> .+\.pdf$/, /^(\[[0-9]+\])+$/, /^[0-9]+ bytes? written$/, /^dvipdfmx:warning: .+? font[ :].+$/ ].each do | pat |
                   next unless str =~ pat
                   STDERR.print(str) if @is_verbose
                   str = nil
@@ -383,7 +392,7 @@ eof
 
   def dummy_image(path, text)
     return if FileTest.file?(path)
-    run("convert -size 850x1200 xc:blue #{path}")
+    run("convert -size 850x1200 xc:blue #{Shellwords.escape(path)}")
   end
 
   def run(cmd)

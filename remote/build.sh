@@ -40,7 +40,7 @@ if [ "$ret" ]; then git apply "$DIFF"; fi
 # Build
 trap 'clean' ERR
 ./make.sh "build"
-file="working_temporary_directory/original.pdf"
+file="src/working_temporary_directory/original.pdf"
 if [ -f "$file" ]; then
 	set +e
 	git diff --no-index --binary /dev/null $file | sed 's/^/+>#/'

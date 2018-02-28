@@ -19,6 +19,11 @@ module ReVIEW
       end
     end
 
+    def inline_tt(str)
+      txt = escape(str).gsub(' ', '\ ')
+      '\texttt{\seqsplit{' + txt + '}}'
+    end
+
     def inline_fn(id)
       if @book.config["footnotetext"]
         macro("footnotemark[#{@chapter.footnote(id).number}]", "")
@@ -29,6 +34,18 @@ module ReVIEW
 
     def lead(lines)
       latex_block 'leadw', lines
+    end
+
+    def compile_href(url, label)
+      if /\A[a-z]+:/ =~ url
+        if label
+          macro('href', escape_url(url), escape(label))
+        else
+          "\\href{#{escape_url(url)}}{\\seqsplit{#{escape(url)}}}"
+        end
+      else
+        macro('ref', url)
+      end
     end
   end
 
@@ -62,18 +79,24 @@ module ReVIEW
     def make_math_image(str, path, fontsize = 12)
       fontsize2 = (fontsize * 1.2).round.to_i
       texsrc = <<-EOB
-\\documentclass[12pt]{article}
-\\usepackage[utf8x]{inputenc}
-\\usepackage{amsmath}
-\\usepackage{amsthm}
-\\usepackage{amssymb}
-\\usepackage{amsfonts}
-\\usepackage{anyfontsize}
-\\usepackage{bm}
-\\usepackage{mathrsfs}
-\\usepackage{exscale}
+\\documentclass[12pt,uplatex]{jsarticle}
 \\usepackage{textcomp}
+\\usepackage[T1]{fontenc}
+\\usepackage{textcomp}
+\\usepackage[utf8x]{inputenc}
+\\usepackage{ascmac}
+\\usepackage{amsmath}
+\\usepackage{amsfonts}
+\\usepackage{bm}
+\\usepackage{exscale}
+\\usepackage{cases}
+\\usepackage{mathrsfs}
 \\usepackage{mathtools}
+\\usepackage{cancel}
+\\usepackage{mathcomp}
+\\usepackage{dsfont}
+\\usepackage{eucal}
+\\usepackage{anyfontsize}
 \\pagestyle{empty}
 \\begin{document}
 \\fontsize{#{fontsize}}{#{fontsize2}}\\selectfont #{str}
@@ -82,8 +105,13 @@ module ReVIEW
       Dir.mktmpdir do |tmpdir|
         tex_path = File.join(tmpdir, 'tmpmath.tex')
         dvi_path = File.join(tmpdir, 'tmpmath.dvi')
+        pdf_path = File.join(tmpdir, 'tmpmath.pdf')
         File.write(tex_path, texsrc)
-        system("latex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} && dvipng -T tight -z9 -o #{path} #{dvi_path}")
+
+        cmd = "uplatex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} 2&>1 /dev/null"
+        cmd += "&& dvipdfmx #{dvi_path} -o #{pdf_path} 2&>1 /dev/null"
+        cmd += "&& convert -antialias -density 300 -trim +repage #{pdf_path} #{path} 2&>1 /dev/null"
+        system(cmd)
       end
     end
   end

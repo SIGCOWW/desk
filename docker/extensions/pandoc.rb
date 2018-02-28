@@ -14,7 +14,7 @@ module ReVIEW
     protected
     def pandoc_from_to(lines, from, to)
       plain = Base64.decode64(lines.join(''))
-      return Open3.capture3("pandoc -f #{from} -t #{to}", :stdin_data => plain)[0]
+      return Open3.capture3('pandoc', '-f', from, '-t', to, :stdin_data => plain)[0]
     end
   end
 
