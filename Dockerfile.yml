@@ -5,7 +5,7 @@
 
 # Core
 - apk: git
-- apk: perl
+- dev: perl
 - dev: wget
 - dev: xz
 - dev: ca-certificates
@@ -44,7 +44,7 @@
 - apk: ruby
 - apk: zip
 - apk: ruby-json
-- run: 'gem install review -v 2.4.0 --no-rdoc --no-ri'
+- run: 'gem install review -v 2.5.0 --no-rdoc --no-ri'
 - apk: nodejs
 - dev: nodejs-npm
 - run: 'npm install -g tabooular'
@@ -70,6 +70,7 @@
 - dev: python
 - dev: pkgconfig
 - dev: cairo-dev
+- dev: pango-dev
 - dev: make
 - dev: g++
 - dev: libjpeg-turbo-dev
@@ -82,101 +83,103 @@
 # Circle CI
 - apk: openssh-client
 
+# Emoji
+- run: 'gem install gemoji --no-rdoc --no-ri'
 
 # Cleaning
-- run: 'rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl*'
-- run: 'rm -rf /install-tl* /texlive.profile'
-- run: 'rm -rf /usr/local/texlive/20*/tlpkg/'
-- run: 'rm -rf /usr/local/texlive/20*/install-tl'
-- run: 'rm -rf /usr/local/texlive/20*/release-texlive.txt'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf'
-- run: 'cd /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ && rm -f ipaexm.ttf && ln -s ipaexg.ttf ipaexm.ttf && cd /'
-- run: 'cd /usr/share/ghostscript/*/Resource/CIDFSubst/ && rm -f DroidSansFallback.ttf && ln -s /usr/share/fonts/ipaexg.ttf DroidSansFallback.ttf && cd /'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/misc'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/opentype'
-- run: 'rm -rf /redpen/bin/redpen-server* /redpen/sample-doc/ /redpen-*.tar.gz'
-- run: 'rm -rf /redpen/js/symbol.js'
-- run: 'rm -rf pandoc-*.deb data.tar.xz debian-binary control.tar.gz'
-- run: 'rm -rf BXcoloremoji*'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/map/dvips'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/source'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/dvips/'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/tfm/ptex-fonts/standard/'
-- rmrf:
-  - '/usr/local/texlive/20*/texmf-dist/'
-  - name: '*korea*'
-  - name: '*chinese*'
-- rmrf:
-  - '/usr/local/texlive/20*/texmf-dist/fonts/'
-  - name: 'times'
-  - name: 'cm-super'
-  - name: 'courier'
-  - name: 'ncntrsbk'
-  - name: 'avantgar'
-  - name: 'bookman'
-  - name: 'zapfchan'
-  - name: 'tex-gyre'
-  - name: 'charter'
-  - name: 'utopia'
-- run: 'strip /usr/bin/getconf /usr/bin/iconv /usr/bin/getent /usr/lib/libxml2.so.*'
-- run: 'rm -rf /usr/share/gtk-doc/'
-- run: 'rm -rf /usr/lib/ruby/gems/*/cache/'
-- run: 'rm -rf /usr/share/X11 /usr/share/alsa'
-- rmrf:
-  - '/'
-  - name: '*.log'
-  - name: '*.html'
-  - name: '*.md'
-  - name: '*.ini'
-  - name: '*.example'
-  - name: '*.lua'
-  - name: '*.c'
-  - name: '*.h'
-  - name: '*.ins'
-  - name: '*.gif'
-  - name: '*.jpg'
-  - name: '*.ico'
-  - name: '*.zip'
-  - name: '*.exe'
-  - name: '*.*gz'
-  - name: '*COPYING*'
-  - name: '*README*'
-  - name: '*LICENSE*'
-  - name: '*.py'
-  - name: '*.pyc'
-  - name: '*hiramin*'
-  - name: '*hirakaku*'
-  - name: '*hiramaru*'
-  - name: '*.svg'
-  - name: 'doc'
-  - name: '*sample*'
-  - name: '*example*'
-  - name: '*manual*'
-  - name: '*beamer*'
-  - name: 'demo'
-  - name: 'tests'
-  - name: 'source'
-  - name: 'lua*tex'
-  - name: 'ptex'
-  - name: 'uptex'
-  - name: 'xe*tex'
-  - name: 'images'
-  - name: 'VLGothic'
-- run: "find / -type d -name BXcoloremoji -prune -o -type f -name '*.png' | xargs rm -rf"
-- run: "find / -type d -name BXcoloremoji -prune -o -type f -name '*.pdf' | xargs rm -rf"
-- rmrf:
-  - '/usr/local/texlive/'
-  - name: '*.ps'
-  - name: '*.eps'
-- run: "find / -name '*.cls' -type f | grep -v jsbook | grep -v jsarticle | xargs rm -rf"
-- run: 'find /usr/ -empty -type d | xargs rm -rf'
+#- run: 'rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl*'
+#- run: 'rm -rf /install-tl* /texlive.profile'
+#- run: 'rm -rf /usr/local/texlive/20*/tlpkg/'
+#- run: 'rm -rf /usr/local/texlive/20*/install-tl'
+#- run: 'rm -rf /usr/local/texlive/20*/release-texlive.txt'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf'
+#- run: 'cd /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ && rm -f ipaexm.ttf && ln -s ipaexg.ttf ipaexm.ttf && cd /'
+#- run: 'cd /usr/share/ghostscript/*/Resource/CIDFSubst/ && rm -f DroidSansFallback.ttf && ln -s /usr/share/fonts/ipaexg.ttf DroidSansFallback.ttf && cd /'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/misc'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/opentype'
+#- run: 'rm -rf /redpen/bin/redpen-server* /redpen/sample-doc/ /redpen-*.tar.gz'
+#- run: 'rm -rf /redpen/js/symbol.js'
+#- run: 'rm -rf pandoc-*.deb data.tar.xz debian-binary control.tar.gz'
+#- run: 'rm -rf BXcoloremoji*'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/map/dvips'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/source'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/dvips/'
+#- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/tfm/ptex-fonts/standard/'
+#- rmrf:
+#  - '/usr/local/texlive/20*/texmf-dist/'
+#  - name: '*korea*'
+#  - name: '*chinese*'
+#- rmrf:
+#  - '/usr/local/texlive/20*/texmf-dist/fonts/'
+#  - name: 'times'
+#  - name: 'cm-super'
+#  - name: 'courier'
+#  - name: 'ncntrsbk'
+#  - name: 'avantgar'
+#  - name: 'bookman'
+#  - name: 'zapfchan'
+#  - name: 'tex-gyre'
+#  - name: 'charter'
+#  - name: 'utopia'
+#- run: 'strip /usr/bin/getconf /usr/bin/iconv /usr/bin/getent /usr/lib/libxml2.so.*'
+#- run: 'rm -rf /usr/share/gtk-doc/'
+#- run: 'rm -rf /usr/lib/ruby/gems/*/cache/'
+#- run: 'rm -rf /usr/share/X11 /usr/share/alsa'
+#- rmrf:
+#  - '/'
+#  - name: '*.log'
+#  - name: '*.html'
+#  - name: '*.md'
+#  - name: '*.ini'
+#  - name: '*.example'
+#  - name: '*.lua'
+#  - name: '*.c'
+#  - name: '*.h'
+#  - name: '*.ins'
+#  - name: '*.gif'
+#  - name: '*.jpg'
+#  - name: '*.ico'
+#  - name: '*.zip'
+#  - name: '*.exe'
+#  - name: '*.*gz'
+#  - name: '*COPYING*'
+#  - name: '*README*'
+#  - name: '*LICENSE*'
+#  - name: '*.py'
+#  - name: '*.pyc'
+#  - name: '*hiramin*'
+#  - name: '*hirakaku*'
+#  - name: '*hiramaru*'
+#  - name: '*.svg'
+#  - name: 'doc'
+#  - name: '*sample*'
+#  - name: '*example*'
+#  - name: '*manual*'
+#  - name: '*beamer*'
+#  - name: 'demo'
+#  - name: 'tests'
+#  - name: 'source'
+#  - name: 'lua*tex'
+#  - name: 'ptex'
+#  - name: 'uptex'
+#  - name: 'xe*tex'
+#  - name: 'images'
+#  - name: 'VLGothic'
+#- run: "find / -type d -name BXcoloremoji -prune -o -type f -name '*.png' | xargs rm -rf"
+#- run: "find / -type d -name BXcoloremoji -prune -o -type f -name '*.pdf' | xargs rm -rf"
+#- rmrf:
+#  - '/usr/local/texlive/'
+#  - name: '*.ps'
+#  - name: '*.eps'
+#- run: "find / -name '*.cls' -type f | grep -v jsbook | grep -v jsarticle | xargs rm -rf"
+#- run: 'find /usr/ -empty -type d | xargs rm -rf'
 
 
 # Utility
