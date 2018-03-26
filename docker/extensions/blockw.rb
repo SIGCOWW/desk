@@ -5,7 +5,6 @@ module ReVIEW
     defblock :listnumw, 2..3
     defblock :emlistnumw, 0..2
     defblock :cmdw, 0..1
-    defblock :sourcew, 0..2
   end
 
   class Builder
@@ -14,7 +13,6 @@ module ReVIEW
     def listnumw(lines, id, caption, lang = nil) listnum(lines, id, caption, lang) end
     def emlistnumw(lines, caption = nil, lang = nil) emlistnum(lines, caption, lang) end
     def cmdw(lines, caption = nil, lang = nil) cmd(lines, caption) end
-    def sourcew(lines, caption, lang = nil) source(lines, caption, lang) end
   end
 
   class LATEXBuilder
@@ -45,12 +43,6 @@ module ReVIEW
     def cmdw(lines, caption = nil, lang = nil)
       print '\blockmargin\begin{widepage}'
       cmd(lines, caption, lang)
-      print '\end{widepage}\unblockmargin'
-    end
-
-    def sourcew(lines, caption, lang = nil)
-      print '\blockmargin\begin{widepage}'
-      source(lines, caption, lang)
       print '\end{widepage}\unblockmargin'
     end
   end

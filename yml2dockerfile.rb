@@ -63,7 +63,7 @@ def release(yml)
   runs.unshift("apk add --update #{apks.join(' ')}",
     "apk add --virtual build-builddeps #{devs.join(' ')}")
   runs << "apk del --purge build-builddeps"
-  runs << "rm -rf /var/cache/apk*"
+  runs << "find / -name apk | xargs rm -rf"
   runs << "rm -rf /tmp/*"
   puts "RUN #{runs.join(" \\\n    && ")}"
 end

@@ -80,9 +80,11 @@ module ReVIEW
       fontsize2 = (fontsize * 1.2).round.to_i
       texsrc = <<-EOB
 \\documentclass[12pt,uplatex]{jsarticle}
+\\usepackage[deluxe,uplatex,jis2004]{otf}
+\\usepackage[prefernoncjk]{pxcjkcat}
+\\cjkcategory{sym18,sym19,grek,sym04,sym08}{cjk}
 \\usepackage{textcomp}
 \\usepackage[T1]{fontenc}
-\\usepackage{textcomp}
 \\usepackage[utf8x]{inputenc}
 \\usepackage{ascmac}
 \\usepackage{amsmath}
@@ -97,6 +99,7 @@ module ReVIEW
 \\usepackage{dsfont}
 \\usepackage{eucal}
 \\usepackage{anyfontsize}
+\\usepackage{bxcoloremoji}
 \\pagestyle{empty}
 \\begin{document}
 \\fontsize{#{fontsize}}{#{fontsize2}}\\selectfont #{str}
@@ -108,11 +111,17 @@ module ReVIEW
         pdf_path = File.join(tmpdir, 'tmpmath.pdf')
         File.write(tex_path, texsrc)
 
-        cmd = "uplatex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} 2&>1 /dev/null"
-        cmd += "&& dvipdfmx #{dvi_path} -o #{pdf_path} 2&>1 /dev/null"
-        cmd += "&& convert -antialias -density 300 -trim +repage #{pdf_path} #{path} 2&>1 /dev/null"
+        cmd = "uplatex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} > /dev/null 2>&1"
+        cmd += "&& dvipdfmx #{dvi_path} -o #{pdf_path} > /dev/null 2>&1"
+        cmd += "&& convert -antialias -density 300 -trim +repage #{pdf_path} #{path} > /dev/null 2>&1"
         system(cmd)
       end
+    end
+  end
+
+  class PLAINTEXTBuilder
+    def escape(str)
+      str
     end
   end
 end

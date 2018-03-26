@@ -12,7 +12,6 @@ if __FILE__ == $0
     txt.gsub!(/(\\end{review(?:list|emlist|cmd|source)})\s(\s*)(\\end{widepage})/m) { $1 + "\n" + $3 + $2 }
     #txt.gsub!(/\s(\\begin{review(?:list|emlist|cmd|source)})/m) { $1 }
     #txt.gsub!(/(\\end{review(?:list|emlist|cmd|source)})\s/m) { $1 }
-
     File.write(file, txt)
   end
 end

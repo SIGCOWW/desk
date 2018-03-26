@@ -5,18 +5,20 @@ module ReVIEW
       t = Time.now
       t.localtime("+09:00")
 
-      rows = [
-        ['発行日', Date.parse(@config["date"]).strftime("%Y年%-m月%-d日")],
-        ['発　行', @config["pbl"].to_s],
-        ['', @config["oth"].to_s],
-        ['連絡先', @config["edt"].to_s],
-        ['印刷所', ENV['ONESIDE'] ? '電子版につき空欄' : @config["prt"].to_s],
-        ['ビルド', t.to_s],
-        ['', `review-pdfmaker --version`],
-        ['', `uplatex --version | head -n1`],
-        ['', "Alpine Linux #{`cat /etc/alpine-release`.strip} (Linux Kernel #{`uname -r`.strip})"],
-        ['', "SIGCOWW/desk https://hub.docker.com/r/lrks/desk/"]
-      ]
+      rows = []
+      rows << ['発行日', Date.parse(@config["date"]).strftime("%Y年%-m月%-d日")]
+      if @config.key?('pbl')
+        rows << ['発　行', @config["pbl"].to_s]
+        rows << ['',       @config["oth"].to_s] if @config.key?('oth')
+      end
+      rows << ['連絡先', @config["edt"].to_s] if @config.key?('edt')
+      rows << ['', @config["feedback"].to_s] if @config.key?('feedback')
+      rows << ['印刷所', @config["prt"].to_s] if (@config.key('prt') and not(ENV['ONESIDE']))
+      rows << ['ビルド', t.to_s]
+      rows << ['', `review-pdfmaker --version`]
+      rows << ['', `uplatex --version | head -n1`]
+      rows << ['', "Alpine Linux #{`cat /etc/alpine-release`.strip} (Linux Kernel #{`uname -r`.strip})"]
+      rows << ['', "SIGCOWW/desk https://hub.docker.com/r/lrks/desk/"]
 
       ret = ''
       rows.each do | r |

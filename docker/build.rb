@@ -70,8 +70,7 @@ class Build
       end
     end
 
-    # review-textmaker がリリースされるまで待つ
-    #system("review-compile --target=text")
+    compile('textmaker -n', nil)
   end
 
   def pdf(is_print)
@@ -147,7 +146,7 @@ eof
   def clean()
     header("Cleaning")
     unless @is_verbose
-      artifacts = ['original.pdf', 'honbun.pdf', 'publish-tmp.pdf', 'publish.pdf', 'publish.epub']
+      artifacts = ['original.pdf', 'honbun.pdf', 'publish-tmp.pdf', 'publish.pdf', 'publish.epub', 'book-text']
       Dir.glob('*').each do | file |
         next if artifacts.include?(file)
         FileUtils.rm_rf(file)
@@ -388,8 +387,11 @@ eof
         catalog[key].select!{ |v| not errors.include?(v) }
       end
     end
-    src = (maker === 'pdfmaker') ? 'book.pdf' : 'book.epub'
-    FileUtils.mv(src, dst, {:force => true}) if src != dst
+
+    unless dst.nil?
+      src = (maker === 'pdfmaker') ? 'book.pdf' : 'book.epub'
+      FileUtils.mv(src, dst, {:force => true}) if src != dst
+    end
 
     return exitstatus.to_i
   end
