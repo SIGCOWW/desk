@@ -1,6 +1,7 @@
 booktitle: "COSMIC L0 Vol.0"
 aut: [ "SIGCOWW" ]
 date: "2016-08-16"
+history: [["2016-08-16", "初版第2刷の日付"], ["第2版第1刷の日付"]]
 prt: "同人誌印刷 銀河出版"
 pbl: "SIGCOWW"
 oth: "https://sigcoww.herokuapp.com/"

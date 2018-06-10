@@ -27,6 +27,10 @@ ucharな三点リーダー@<uchar>{2026}
 α世界線とβ世界線
 @<m>{\alpha}世界線と@<m>{\beta}世界線
 
+@<ruby>{Le temps de la rentrée, ル トン ドゥ ラ ロントレ}
+
+サロゲートペアのテスト。@<uchar>{d842}@<uchar>{df9f}る。
+
 
 == 箇条書き
 * あいうえお
@@ -195,6 +199,16 @@ hogehoge
 //image[subb][それぞれで調整する][scale=0.2]
 
 //image[subc][自動調整はされない][scale=0.5]
+//}
+
+//subfig[連続subfigのテスト1]{
+//image[suba1][検証中A1][scale=0.1]
+//image[subb1][検証中B1][scale=0.1]
+//}
+これは正式な文章の代わりに入れて使うダミーテキストです。
+//subfig[連続subfigのテスト2]{
+//image[suba2][検証中A2][scale=0.1]
+//image[subb2][検証中B2][scale=0.1]
 //}
 これは正式な文章の代わりに入れて使うダミーテキストです。
 //image[pdfimage][はい画像][scale=1]
