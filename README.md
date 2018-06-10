@@ -51,7 +51,8 @@ EPUB(publish.epub)を作成する。
   * `make build` すると `docker/Dockerfile` が作成されて、Dockerイメージができる
   * `make release` するとRUNをチェインしたDockerfileでイメージを作る
     * どっちで作ったDockerfileをリポジトリにpushしても問題ない
-	* どうせ「リリース準備」とか言って直すので
+      * 開発中は`make build`で作ったほうしかテストしない(単体テスト扱い)
+      * 「リリース準備」とか言ったときに`make release`する(結合テスト扱い)
   * `make run` するとコンテナ内でシェルを立ち上げる
 * `Dockerfile.yml` に出てくるキーワードの意味
   * `env` ... 環境変数設定。`ENV` と同じ。Releaseの際はDockerfileの先頭にまとめて出力される。
@@ -65,7 +66,7 @@ EPUB(publish.epub)を作成する。
 
 ## Contribution
 * fork して pull request してもらえたらと思います。
-* もしリポジトリへのWrite権限があれば、forkせず直接ブランチを切ってもらっても構いません。
+* SIGCOWWメンバーなど、既にリポジトリへのWrite権限があれば、forkせず直接ブランチを切ってもらっても構いません。
 
 
 ## License
