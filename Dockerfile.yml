@@ -26,7 +26,9 @@
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/fonts/opentype'
 - run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/OTF/Japanese/SourceHanSans-Medium.otf?raw=true" -O SourceHanSans-Medium.otf'
 - run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/OTF/Japanese/SourceHanSans-Bold.otf?raw=true" -O SourceHanSans-Bold.otf'
+- run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/raw/master/LICENSE.txt" -O SourceHanSans-LICENSE.txt'
 - run: 'wget -q "https://github.com/adobe-fonts/source-han-serif/blob/release/OTF/Japanese/SourceHanSerif-Regular.otf?raw=true" -O SourceHanSerif-Regular.otf'
+- run: 'wget -q "https://github.com/adobe-fonts/source-han-serif/raw/master/LICENSE.txt" -O SourceHanSerif-LICENSE.txt'
 - run: 'mv SourceHan*.otf $(kpsewhich -var-value TEXMFLOCAL)/fonts/opentype/'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/fonts/map/dvipdfmx'
 - copy: otf-up-source.map
@@ -64,6 +66,7 @@
 - run: 'unzip -q BXcoloremoji.zip'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
 - run: 'mv BXcoloremoji*/*.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
+- run: 'mv BXcoloremoji*/LICENSE $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
 - run: 'mv BXcoloremoji*/emoji_images $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
 - run: 'mktexlsr'
 
@@ -152,9 +155,7 @@
   - name: '*.zip'
   - name: '*.exe'
   - name: '*.*gz'
-  - name: '*COPYING*'
   - name: '*README*'
-  - name: '*LICENSE*'
   - name: '*.py'
   - name: '*.pyc'
   - name: '*hiramin*'

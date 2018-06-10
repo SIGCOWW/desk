@@ -45,11 +45,34 @@ EPUB(publish.epub)を作成する。
 
 
 ## ライセンス
-本ソフトウェアはLGPLで提供されています。
-また、本ソフトウェアは以下のオープンソースソフトウェアを利用しています。
+本ソフトウェアは LGPL v2.1 で提供されています。
+```
+Copyright (c) 2017-2018 SIGCOWW.
+```
+
+本ソフトウェアのリポジトリには、下記ソフトウェアの一部または全部が含まれます。
 
 ### [Re:VIEW](https://github.com/kmuto/review)
-GNU Lesser General Public License v2.1 [COPYING](https://github.com/kmuto/review/blob/master/COPYING)
+GNU Lesser General Public License v2.1 ([COPYING](https://github.com/kmuto/review/blob/master/COPYING))
+```
+Copyright (c) 2006-2018 Minero Aoki, Kenshi Muto, Masayoshi Takahashi, Masanori Kado.
+```
 
 ### [jumoline.sty](http://www.para.media.kyoto-u.ac.jp/latex/)
-The LaTeX Project Public License [LPPL](https://www.latex-project.org/lppl.txt)
+The LaTeX Project Public License ([lppl.txt](https://www.latex-project.org/lppl.txt))
+```
+Copyright (C) 1999-2001  Hiroshi Nakashima
+        (Toyohashi Univ. of Tech.)
+```
+
+### [ReVIEW-Template](https://github.com/TechBooster/ReVIEW-Template)
+The MIT License
+```
+Copyright 2017 TechBooster
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
