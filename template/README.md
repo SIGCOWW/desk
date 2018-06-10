@@ -1,15 +1,13 @@
 # template
-Re:VIEWの原稿を[SIGCOWW/desk](https://github.com/SIGCOWW/desk)でビルドするためのテンプレート。
-deskの紹介と、Re:VIEWの文法も紹介している。
+同人誌のテンプレート。
+サンプル文章として、deskとRe:VIEW文法の紹介が入っている。
 
 
-## 使い方
-Dockerが実行できる環境が必要になる。
+## 利用方法
+deskのDockerコンテナが実行できる環境が必要になる。
 
 ### Linux
 ```
-$ git clone https://github.com/SIGCOWW/template.git
-$ cd template/
 $ ./make.sh install kakuyo
 $ vim src/articles/kakuyo/kakuyo.re
 $ cp ~/dokokano/dir/hoge.png src/article/kakuyo/images/
@@ -19,15 +17,16 @@ $ git add -A
 $ git commit -m "TEST" # or git commit -m "[ci skip] TEST"
 $ git push origin master
 ```
-ビルドのオプションは、deskのREADME.mdで。
+`build`の引数は、desk内の`build.rb`に渡される。
 
 ### その他
-未検証だが、ビルドは以下と同じことをやる。
+その他のOSは未検証。
+ただ、ビルドは下記のような処理が中止なので、手動で叩けば動きそうではある。
 ```
 $ docker pull (.circleci/config.yml の images)
 $ docker run -v "(srcのディレクトリ):/work" (いまpullしたイメージ) /bin/ash -c (.circleci/config.yml の run)
 ```
-WindowsのDocker Toolboxなら、 `(srcのディレクトリ)` を `C:\Users` 配下にすると楽らしい。
+なお、WindowsのDocker Toolboxなら `(srcのディレクトリ)` を `C:\Users` 配下にすると楽らしい。
 
 
 ## ディレクトリ構成
