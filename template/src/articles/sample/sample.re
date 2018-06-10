@@ -29,8 +29,6 @@ ucharな三点リーダー@<uchar>{2026}
 
 @<ruby>{Le temps de la rentrée, ル トン ドゥ ラ ロントレ}
 
-サロゲートペアのテスト。@<uchar>{d842}@<uchar>{df9f}る。
-
 
 == 箇条書き
 * あいうえお

@@ -118,7 +118,7 @@ RUN rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.np
 RUN rm -rf /usr/bin/npm /usr/lib/node_modules/npm
 RUN rm -rf /usr/local/texlive/*/bin/x86_64-linuxmusl/*mpost /usr/local/texlive/*/bin/x86_64-linuxmusl/pdf*tex
 RUN find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf
-RUN find / -xtype l | grep -v '/proc/' | xargs rm -rf
+RUN find / -xtype l | grep -v "/proc/" | xargs rm -rf
 RUN mkdir -p /usr/local/bin
 COPY *.rb /
 RUN mv build.rb /usr/local/bin/
