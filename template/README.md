@@ -45,6 +45,7 @@ src/
      ├─ publish.pdf .... 電子書籍PDF
      └─ publish.epub ... 電子書籍EPUB
 ```
+これを作るのは`tree`コマンドが便利。
 
 ## `config.yml`
 本来のRe:VIEWとは意味を変えている、また独自に追加した項目がある。

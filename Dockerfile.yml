@@ -1,6 +1,6 @@
 - alpine:3.7
 - env: LANG=ja_JP.UTF-8
-- env: PATH=$PATH:/usr/local/texlive/2017/bin/x86_64-linux
+- env: PATH=$PATH:/usr/local/texlive/2018/bin/x86_64-linuxmusl
 
 
 # Core
@@ -16,10 +16,10 @@
 - apk: poppler-utils
 - dev: binutils
 - dev: findutils
+- apk: libc6-compat
 - run: 'wget -q http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz'
 - run: 'tar zxf install-tl-unx.tar.gz'
 - copy: texlive.profile
-- apk: libc6-compat
 - run: './install-tl-*/install-tl -profile texlive.profile'
 - copy: jumoline.sty
 - run: 'mv jumoline.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/local/'
@@ -29,7 +29,7 @@
 - run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/raw/master/LICENSE.txt" -O SourceHanSans-LICENSE.txt'
 - run: 'wget -q "https://github.com/adobe-fonts/source-han-serif/blob/release/OTF/Japanese/SourceHanSerif-Regular.otf?raw=true" -O SourceHanSerif-Regular.otf'
 - run: 'wget -q "https://github.com/adobe-fonts/source-han-serif/raw/master/LICENSE.txt" -O SourceHanSerif-LICENSE.txt'
-- run: 'mv SourceHan*.otf $(kpsewhich -var-value TEXMFLOCAL)/fonts/opentype/'
+- run: 'mv SourceHan*.otf SourceHan*.txt $(kpsewhich -var-value TEXMFLOCAL)/fonts/opentype/'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/fonts/map/dvipdfmx'
 - copy: otf-up-source.map
 - run: 'mv otf-up-source.map $(kpsewhich -var-value TEXMFLOCAL)/fonts/map/dvipdfmx/'
@@ -59,9 +59,8 @@
 
 - run: 'tlmgr install seqsplit caption bigfoot xcolor framed
     multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox
-    mathtools calrsfs calligra cancel mathcomp doublestroke'
-- run: 'tlmgr install lm anyfontsize'
-- run: 'tlmgr install etoolbox kastrup ec ucs environ trimspaces palatino helvetic mathpazo pdfpages'
+    mathtools calrsfs calligra cancel mathcomp doublestroke lm anyfontsize etoolbox
+    kastrup ec ucs environ trimspaces palatino helvetic mathpazo pdfpages'
 - run: 'wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.5.zip -O BXcoloremoji.zip'
 - run: 'unzip -q BXcoloremoji.zip'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
@@ -110,8 +109,6 @@
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm'
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/misc'
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/opentype'
-- run: 'rm -rf /redpen/bin/redpen-server* /redpen/sample-doc/ /redpen-*.tar.gz'
-- run: 'rm -rf /redpen/js/symbol.js'
 - run: 'rm -rf pandoc-*.deb data.tar.xz debian-binary control.tar.gz'
 - run: 'rm -rf BXcoloremoji*'
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/map/dvips'
@@ -195,7 +192,7 @@
 - run: 'find / -executable -type f | xargs file | grep "not stripped" | cut -d":" -f1 | xargs strip'
 - run: 'rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts'
 - run: 'rm -rf /usr/bin/npm /usr/lib/node_modules/npm'
-- run: 'rm -rf /usr/local/texlive/*/bin/x86_64-linux/*mpost /usr/local/texlive/*/bin/x86_64-linux/pdf*tex'
+- run: 'rm -rf /usr/local/texlive/*/bin/x86_64-linuxmusl/*mpost /usr/local/texlive/*/bin/x86_64-linuxmusl/pdf*tex'
 - run: 'find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf'
 - run: 'find / -xtype l | grep -v "/proc/" | xargs rm -rf'
 

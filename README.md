@@ -44,7 +44,31 @@ EPUB(publish.epub)を作成する。
 また、`src/working_temporary_directory/`の中身を整理せず、中間作成物をすべて残すか否かのフラグ。
 
 
-## ライセンス
+## 開発方法
+* Dockerが動くLinux環境があればいい
+* GitHub Flowで開発していく
+* `Dockerfile.yml` をいじると思う
+  * `make build` すると `docker/Dockerfile` が作成されて、Dockerイメージができる
+  * `make release` するとRUNをチェインしたDockerfileでイメージを作る
+    * どっちで作ったDockerfileをリポジトリにpushしても問題ない
+	* どうせ「リリース準備」とか言って直すので
+  * `make run` するとコンテナ内でシェルを立ち上げる
+* `Dockerfile.yml` に出てくるキーワードの意味
+  * `env` ... 環境変数設定。`ENV` と同じ。Releaseの際はDockerfileの先頭にまとめて出力される。
+  * `apk` ... パッケージインストール。`RUN apk add #{val}` を実行。Releaseの際はDockerfile先頭にまとめて出力。
+  * `dev` ... 開発用パッケージインストール。`RUN apk add #{val}` を実行。Releaseの際はまとめて以下略、あと最後で`apk del`される。
+  * `copy` ... ファイルコピー。`COPY #{val} /` を実行。Releaseの際はまとめ以下略。
+  * `run` ... コマンド実行。`RUN #{val}` を実行
+  * `rmrf` ... ファイル削除。`RUN find #{head} -iname #{name1} -o -iname #{name2} ... | grep -v /proc/ | xargs rm -rf` を実行
+* `template/make.sh`を使うと思う
+  * `make build` (= `make`) したなら、`env CONTAINER_VERSION="debug" ./make.sh build --help`で実行できる
+
+## Contribution
+* fork して pull request してもらえたらと思います。
+* もしリポジトリへのWrite権限があれば、forkせず直接ブランチを切ってもらっても構いません。
+
+
+## License
 本ソフトウェアは LGPL v2.1 で提供されています。
 ```
 Copyright (c) 2017-2018 SIGCOWW.

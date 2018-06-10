@@ -13,7 +13,7 @@ module ReVIEW
       end
       rows << ['連絡先', @config["edt"].to_s] if @config.key?('edt')
       rows << ['', @config["feedback"].to_s] if @config.key?('feedback')
-      rows << ['印刷所', @config["prt"].to_s] if (@config.key('prt') and not(ENV['ONESIDE']))
+      rows << ['印刷所', @config["prt"].to_s] if (@config.key?('prt') and not(ENV['ONESIDE']))
       rows << ['ビルド', t.to_s]
       rows << ['', `review-pdfmaker --version`]
       rows << ['', `uplatex --version | head -n1`]

@@ -1,6 +1,6 @@
 #!/bin/sh
 # ex1) $ ./make.sh build --help
-# ex2) $ env CONTAINER_VERSION="debug" ./make.sh build --redpen
+# ex2) $ env CONTAINER_VERSION="debug" ./make.sh build --help
 # PDF/EPUBを作成する
 #  * Dockerコンテナの実行環境が必要
 #  * 結果は make.sh と同じ階層の working_temporary_directory/ に書く
