@@ -63,6 +63,11 @@ EPUB(publish.epub)を作成する。
   * `rmrf` ... ファイル削除。`RUN find #{head} -iname #{name1} -o -iname #{name2} ... | grep -v /proc/ | xargs rm -rf` を実行
 * `template/make.sh`を使うと思う
   * `make build` (= `make`) したなら、`env CONTAINER_VERSION="debug" ./make.sh build --help`で実行できる
+* テストは簡易でいい
+  * `env CONTAINER_VERSION="debug" ./make.sh build --proof --pdf4print --pdf4publish --epub --strict --verbose` な感じ
+  * ぱっと見でエラーが出ていない、かつ出力が想定どおりならOKでいい
+  * それで問題があったら自動テストを用意する
+
 
 ## Contribution
 * fork して pull request してもらえたらと思います。
@@ -74,13 +79,20 @@ EPUB(publish.epub)を作成する。
 ```
 Copyright (c) 2017-2018 SIGCOWW.
 ```
+ただし、 `templete/` ディレクトリ以下は、別のライセンスが適用されています。
 
-本ソフトウェアのリポジトリには、下記ソフトウェアの一部または全部が含まれます。
+また、本ソフトウェアのリポジトリには、下記ソフトウェアの一部または全部が含まれます。
 
 ### [Re:VIEW](https://github.com/kmuto/review)
 GNU Lesser General Public License v2.1 ([COPYING](https://github.com/kmuto/review/blob/master/COPYING))
 ```
 Copyright (c) 2006-2018 Minero Aoki, Kenshi Muto, Masayoshi Takahashi, Masanori Kado.
+```
+
+### [template files for Re:VIEW](https://github.com/kmuto/review/tree/master/templates)
+The MIT License ([LICENSE](https://github.com/kmuto/review/blob/master/templates/LICENSE))
+```
+Copyright (c) 2006-2016 Minero Aoki, Kenshi Muto, Masayoshi Takahashi, Masanori Kado.
 ```
 
 ### [jumoline.sty](http://www.para.media.kyoto-u.ac.jp/latex/)
