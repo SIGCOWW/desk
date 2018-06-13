@@ -356,4 +356,22 @@
 % 便利
 \newcommand{\argmax}{\operatornamewithlimits{\mathrm{arg\,max}}}
 \newcommand{\argmin}{\operatornamewithlimits{\mathrm{arg\,min}}}
+
+% accsupp
+% Heiko Oberdiek https://tex.stackexchange.com/questions/119713/making-equations-copyable-in-pdf/119718#119718
+\newcommand*{\copyable}{%
+  \begingroup
+  \@sanitize
+  \catcode`\%=14 % allow % as comment char, also needed for \%
+  \@copyable
+}
+\newcommand*{\@copyable}[1]{%
+  \endgroup
+  \BeginAccSupp{%
+    ActualText=\detokenize{#1},%
+    method=pdfstringdef,
+  }%
+  \scantokens{#1}%
+  \EndAccSupp{}%
+}
 \makeatother
