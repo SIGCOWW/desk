@@ -1,20 +1,23 @@
-booktitle: "COSMIC L0 Vol.0"
-aut: [ "SIGCOWW" ]
-date: "2016-08-16"
-# historyは任意。省略するとdateが採用される。
-history: [["2016-08-16", "2016-12-29"], ["2018-06-11"]]
-prt: "同人誌印刷 銀河出版"
-pbl: "SIGCOWW"
-oth: "https://sigcoww.herokuapp.com/"
-edt: "sigcoww@sigcoww.org"
-msg: "BOOTHにて既刊取扱中 https://sigcoww.booth.pm/"
-feedback: "https://example.com/"
+booktitle: "COSMIC L0 Vol.0"                            # 本タイトル
+aut: [ "SIGCOWW" ]                                      # 著者リスト (EPUBで使われる)
+date: "2016-08-16"                                      # 発行日
+history: [["2016-08-16", "2016-12-29"], ["2018-06-11"]] # 「第x版」 省略可
+prt: "同人誌印刷 銀河出版"                              # 印刷所
+pbl: "SIGCOWW"                                          # 発行者
+oth: "https://sigcoww.org/"                             #   Webサイト 省略可
+edt: "sigcoww@sigcoww.org"                              # 連絡先 省略可
+feedback: "https://example.com/"                        #   連絡フォーム 省略可
+msg: "Contributor募集中"                                # メッセージ 省略可
+
+container_version: "garei"                              # desk のバージョン
+layout_hash: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"         # layout.tex.erb のMD5ハッシュ
+sty_hash: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"            # sigcoww.sty のMD5ハッシュ
+
 
 debug: true
+language: ja
 review_version: 2.0
 bookname: book
-language: ja
-
 stylesheet: [ "style.css" ]
 epubversion: 3
 htmlversion: 5
@@ -24,17 +27,7 @@ toc: true
 coverimage: epub-cover.png
 titlepage: null
 colophon: true
-
-#highlight:
-#  html: "pygments"
-#  latex: "listings"
-
-# 1ページの行数文字数と1kbごとのページ数を用紙サイズで指定する(A5 or B5)。
-# あるいは、配列で指定することもできる
-# 各数字の意味は、順にリストの行数、リストの1行字数、テキストの行数、テキストの1行字数、1kバイト毎のページ数
 page_metric: B5
-#page_metric: [40,80,40,80,2]
-
 direction: "ltr"
 opf_prefix: {
   ebpaj: "http://www.ebpaj.jp/",
@@ -49,7 +42,6 @@ epubmaker:
   #force_include_images: []
   rename_for_legacy: true
   cover_linear: true
-
 texstyle: sigcoww
 texdocumentclass: ["jsbook", "uplatex,b5j,9pt,12Q,twoside,openany"]
 dvioptions: "-d 5"
