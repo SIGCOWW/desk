@@ -7,6 +7,7 @@ require 'base64'
 require 'open3'
 require 'diff-lcs'
 require 'shellwords'
+require 'digest/md5'
 
 class Build
   def initialize(papersize, margin, is_strict, is_verbose)
@@ -205,6 +206,23 @@ eof
     FileUtils.mv(['locale.yml', 'style.css'].map{|v| "layouts/#{v}"}, './', {:force => true})
     FileUtils.mkdir_p('sty')
     FileUtils.mv(Dir.glob('layouts/*.sty'), 'sty', {:force => true})
+
+    config = YAML.load_file('config.yml')
+    if config.has_key?('layout_hash') && FileTest.file?('layouts/layout.tex.erb')
+      result = Digest::MD5.file('layouts/layout.tex.erb').hexdigest
+      warning("Layout Hash: Verify failed") if config['layout_hash'] != result
+    end
+
+    if config.has_key?('sty_hash') && config.has_key?('texstyle')
+      hashes = config['sty_hash'].instance_of?(Array) ? config['sty_hash'] : [config['sty_hash']]
+      stys = config['texstyle'].instance_of?(Array) ? config['texstyle'] : [config['texstyle']]
+      stys.zip(hashes).each do | sty, hash |
+        break if sty.nil? || sty.nil?
+        next unless FileTest.file?("sty/#{sty}.sty")
+        result = Digest::MD5.file("sty/#{sty}.sty").hexdigest
+        warning(".sty Hash: Verify failed at #{sty}.sty") if hash != result
+      end
+    end
 
     catalog = YAML.load_file('../catalog.yml')
     catalog.each do | k, files |
@@ -458,6 +476,10 @@ eof
     else
       puts "#{'#' * level} #{msg}"
     end
+  end
+
+  def warning(msg)
+    puts "\033[33m\033[41m#{msg}\033[m\033[m"
   end
 end
 
