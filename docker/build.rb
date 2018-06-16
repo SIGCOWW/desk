@@ -140,7 +140,7 @@ EOF
     dummy_image('back.png', 'BACK')
     defcolor = `colorpicker.js cover.png`
 
-    File.write('publish-tmp.tex', <<eof
+    File.write('publish-raw.tex', <<eof
 \\documentclass[uplatex,dvipdfmx,#{@papersize}paper,oneside]{jsbook}
 \\usepackage{pdfpages}
 \\pagestyle{empty}
@@ -162,9 +162,9 @@ EOF
 \\end{document}
 eof
 )
-    run("uplatex publish-tmp")
-    run("dvipdfmx publish-tmp")
-    run("gs -sOutputFile=publish.pdf -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -q -dPDFSETTINGS=/ebook -dDownsampleColorImages=true -dColorImageResolution=300 publish-tmp.pdf")
+    run("uplatex publish-raw")
+    run("dvipdfmx publish-raw")
+    run("gs -sOutputFile=publish-ebook.pdf -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -q -dPDFSETTINGS=/ebook -dDownsampleColorImages=true -dColorImageResolution=300 publish-raw.pdf")
   end
 
   def epub()
@@ -179,7 +179,7 @@ eof
   def clean()
     header("Cleaning")
     unless @is_verbose
-      artifacts = ['original.pdf', 'honbun.pdf', 'publish-tmp.pdf', 'publish.pdf', 'publish.epub', 'book-text']
+      artifacts = ['original.pdf', 'honbun.pdf', 'publish-raw.pdf', 'publish-ebook.pdf', 'publish.epub', 'book-text']
       Dir.glob('*').each do | file |
         next if artifacts.include?(file)
         FileUtils.rm_rf(file)

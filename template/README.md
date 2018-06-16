@@ -42,7 +42,8 @@ src/
 └─ working_temporary_directory/ ..... 成果物ディレクトリ(Git管理外)
      ├─ origin.pdf ..... Re:VIEWによる出力
      ├─ honbun.pdf ..... 入稿用PDF
-     ├─ publish.pdf .... 電子書籍PDF
+     ├─ publish-row.pdf .... 電子書籍PDF（Re:VIEW出力そのまま）
+     ├─ publish-ebook.pdf .... 電子書籍PDF（publish-raw.pdfをghostscriptで最適化…のはずだがテキスト選択に難がある）
      └─ publish.epub ... 電子書籍EPUB
 ```
 これを作るのは`tree`コマンドが便利。
