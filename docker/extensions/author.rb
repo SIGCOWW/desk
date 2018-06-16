@@ -2,6 +2,7 @@ module ReVIEW
   module BuilderAuthor
     def bind(compiler, chapter, location)
       @author = nil
+      @katagaki = nil
       super
     end
 
@@ -9,7 +10,11 @@ module ReVIEW
       m = caption.match(/^(.*)（(.*?) 著）$/)
       if not(m.nil?)
         caption = m[1]
-        @author = escape(m[2])
+        parts = m[2].rpartition(',')
+        if not(parts[0].empty?)
+          @katagaki = escape(parts[0])
+        end
+        @author = escape(parts[2])
       end
       super
     end
@@ -20,8 +25,10 @@ module ReVIEW
   module LATEXBuilderAuthor
     def headline_prefix(level)
       if level === 1
-        str = @author.nil? ? '' : @author + '~著'
-        puts macro('renewcommand', '\\authorname', str)
+        author = @author.nil? ? '' : "\\authorsub{#{@author}}"
+        katagaki = @katagaki.nil? ? '' : "\\katagakisub{#{@katagaki}}"
+        puts macro('renewcommand', '\\authorname', author)
+        puts macro('renewcommand', '\\katagakiname', katagaki)
       end
       super
     end

@@ -265,11 +265,22 @@ eof
       title = tm[1] if not(tm.nil?)
       pat = /@<author>{(.+?)}/
       m = txt.match(pat)
-      if not(m.nil?)
+      if m.nil?
+        author = ''
+      else
         txt.gsub!(pat, '')
-        txt.sub!(/^=\s+(.+?)$/, '= \1（'+m[1]+' 著）')
+
+        parts = m[1].rpartition(',')
+        parts[0].strip!
+        parts[2].strip!
+        if parts[0].empty?
+          emb = parts[2]
+        else
+          emb = "#{parts[0]},#{parts[2]}"
+        end
+        txt.sub!(/^=\s+(.+?)$/, '= \1（'+emb+' 著）')
+        author = parts[2]
       end
-      author = m.nil? ? '' : m[1]
 
       # //profile
       pat = /^(\/\/profile)(\[[^\r\n\f]+?\])?(\[[^\r\n\f]+?\])?({\s*.+?\s*\/\/}\s*)$/m
