@@ -26,8 +26,31 @@
 #
 build() {
 	set +u
-	if [ ! -n "$CONTAINER_VERSION" -a -f ".circleci/config.yml" ]; then
-		CONTAINER_VERSION=$(grep "image:" .circleci/config.yml | sed -r 's/.*?lrks\/desk:(.+?)\s*/\1/');
+	ENV_VER=$CONTAINER_VERSION
+	CFG_VER=$(grep "^\\s*container_version:" src/config.yml | head -1 | sed -r "s/.*?[\"'](.*?)[\"'].*/\\1/")
+	CI_VER=""
+	if [ -f ".circleci/config.yml" ]; then
+		CI_VER=$(grep "image:" .circleci/config.yml | head -1 | sed -r 's/.*?lrks\/desk:(.+?)\s*/\1/')
+	fi
+
+	# array is undefined in POSIX
+	if [ -n "$ENV_VER" ]; then
+		CONTAINER_VERSION=$ENV_VER
+	elif [ -n "$CFG_VER" ]; then
+		CONTAINER_VERSION=$CFG_VER
+	elif [ -n "$CI_VER" ]; then
+		CONTAINER_VERSION=$CI_VER
+	else
+		echo "\\033[33m\\033[41mCONTAINER_VERSION: value is blank\\033[m\\033[m"
+	fi
+
+	# ARRAY IS UNDEFINED IN POSIX
+	if [ -n "$ENV_VER" ] && [ "$ENV_VER" != "$CONTAINER_VERSION" ]; then
+		echo "\\033[33m\\033[41mCONTAINER_VERSION: expected \"${ENV_VER}\" (at \$ENVVAR) but was \"${CONTAINER_VERSION}\"\\033[m\\033[m"
+	elif [ -n "$CFG_VER" ] && [ "$CFG_VER" != "$CONTAINER_VERSION" ]; then
+		echo "\\033[33m\\033[41mCONTAINER_VERSION: expected \"${CFG_VER}\" (at src/config.yml) but was \"${CONTAINER_VERSION}\"\\033[m\\033[m"
+	elif [ -n "$CI_VER" ] && [ "$CI_VER" != "$CONTAINER_VERSION" ]; then
+		echo "\\033[33m\\033[41mCONTAINER_VERSION: expected \"${CI_VER}\" (at .circleci/config.yml) but was \"${CONTAINER_VERSION}\"\\033[m\\033[m"
 	fi
 
 	if [ ${#CONTAINER_VERSION} -eq 64 ]; then
@@ -40,14 +63,15 @@ build() {
 
 	if [ ! -n "$PAPER_MARGIN" ]; then
 		if [ -f ".circleci/config.yml" ]; then
-			PAPER_MARGIN=$(grep "margin" .circleci/config.yml | sed -r 's/.*?(--margin=[0-9]+mm).*/\1/');
+			PAPER_MARGIN=$(grep "margin" .circleci/config.yml | head -1 | sed -r 's/.*?(--margin=[0-9]+mm).*/\1/');
 		else
 			PAPER_MARGIN=""
 		fi
 	fi
 	set -u
 
-	cmd="build.rb ${@} --workdir=/work ${PAPER_MARGIN}"
+
+	cmd="build.rb ${*} --workdir=/work ${PAPER_MARGIN}"
 	echo "\\033[35mcmd: [ ${cmd} ]\\033[m"
 	set +e
 	ret=$(id -Gn | grep "docker")

@@ -14,7 +14,7 @@ module ReVIEW
         end
         tmp = @config['history'].last
         if tmp.length > 1
-          rows << ['', Date.parse(tmp.last).strftime("%Y年%-m月%-d日") + "　第#{@config['history'].length}版 第#{tmp.length}刷"] 
+          rows << ['', Date.parse(tmp.last).strftime("%Y年%-m月%-d日") + "　第#{@config['history'].length}版 第#{tmp.length}刷"]
         end
       end
 
