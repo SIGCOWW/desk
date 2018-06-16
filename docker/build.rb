@@ -20,9 +20,39 @@ class Build
     convert_articles()
     @imgcache = nil
     @exitstatuses = {}
+
+    @is_vm777 = false
+    @is_vmclean = false
+  end
+
+  def setExperiments(vm777, vmchown, vmclean)
+    header("Experiments")
+
+    @is_vm777 = vm777
+    @is_vmchown = vmchown
+    @is_vmclean = vmclean
+  end
+
+  def vmExperiments()
+    if @is_vmclean
+      header("VM Clean", 3)
+      FileUtils.rm_rf('book-pdf')
+    end
+
+    if @is_vm777
+      header("VM 777", 3)
+      FileUtils.chmod_R(0777, './')
+    end
+
+    if @is_vmchown
+      header("VM chown", 3)
+      stat = File.stat('../')
+      FileUtils.chown_R(stat.uid, stat.gid, './')
+    end
   end
 
   def proof()
+    vmExperiments()
     header("Proofreading")
 
     first = true
@@ -74,6 +104,7 @@ class Build
   end
 
   def pdf(is_print)
+    vmExperiments()
     header("Making PDF")
     convert_images('latex')
     @exitstatuses['pdf'] = compile('pdfmaker', 'original.pdf')
@@ -98,6 +129,7 @@ EOF
   end
 
   def pdf4publish()
+    vmExperiments()
     header("Making PDF for Publishment")
     convert_images('latex')
     ENV['ONESIDE'] = '1'
@@ -136,6 +168,7 @@ eof
   end
 
   def epub()
+    vmExperiments()
     header("Making EPUB")
     convert_images('html')
     dummy_image('cover.png', 'COVER')
@@ -412,14 +445,14 @@ eof
     when 1
       puts "\033[32m\# #{msg}\033[m"
     else
-      puts "\#\# #{msg}"
+      puts "#{'#' * level} #{msg}"
     end
   end
 end
 
 if __FILE__ == $0
   begin
-    params = ARGV.getopts('', 'proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose')
+    params = ARGV.getopts('', 'proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean')
   rescue => e
     puts "#{e}. try \"--help\"."
     exit 1
@@ -431,6 +464,7 @@ if __FILE__ == $0
   FileUtils.mkdir_p(dirname)
   Dir::chdir(dirname) do
     build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'])
+    build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'])
     begin
       build.proof() if params['proof']
       build.pdf(params['pdf4print'])
