@@ -133,7 +133,8 @@
     \vspace*{-\headsep}\vspace*{-\headheight}\vbox to\chapterheight{\vfill%
     \ifnum \c@secnumdepth >\m@ne
       \if@mainmatter
-        \LARGE\headfont\textcolor{white}{\@chapapp\thechapter\@chappos}\par\textcolor{white}{\authorname}
+        \LARGE\headfont\textcolor{white}{\@chapapp\thechapter\@chappos}\par%
+		\textcolor{white}{\katagakiname\authorname}%
         \par\nobreak
         \vskip \Cvs
       \fi
@@ -276,6 +277,9 @@
 
 % @<author>{...}
 \newcommand{\authorname}{}
+\newcommand{\authorsub}[1]{\LARGE#1{\large\hspace{1em}著}}
+\newcommand{\katagakiname}{}
+\newcommand{\katagakisub}[1]{\large#1\hspace{1em}}
 
 % //image , //imagew
 \renewenvironment{reviewimage}%
