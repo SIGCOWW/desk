@@ -83,6 +83,7 @@ module ReVIEW
 \\usepackage[deluxe,uplatex,jis2004]{otf}
 \\usepackage[prefernoncjk]{pxcjkcat}
 \\cjkcategory{sym18,sym19,grek,sym04,sym08}{cjk}
+\\usepackage{suffix}
 \\usepackage{textcomp}
 \\usepackage[T1]{fontenc}
 \\usepackage[dvipdfmx,hiresbb]{graphicx}
@@ -90,9 +91,13 @@ module ReVIEW
 \\usepackage[utf8x]{inputenc}
 \\usepackage{ascmac}
 \\usepackage{amsmath}
+\\usepackage{okumacro}
 \\usepackage{amsfonts}
 \\usepackage{bm}
 \\usepackage{exscale}
+\\usepackage{mathpazo}
+\\renewcommand{\\ttdefault}{lmtt}
+\\usepackage[scaled=0.95]{helvet}
 \\usepackage{array}
 \\usepackage{cases}
 \\usepackage{tikz}
@@ -101,7 +106,7 @@ module ReVIEW
 \\usepackage{mathrsfs}
 \\usepackage{mathtools}
 \\usepackage{cancel}
-\\usepackage{mathcomp}
+\\usepackage[ppl]{mathcomp}
 \\usepackage{dsfont}
 \\usepackage{eucal}
 \\usepackage{anyfontsize}
@@ -117,9 +122,9 @@ module ReVIEW
         pdf_path = File.join(tmpdir, 'tmpmath.pdf')
         File.write(tex_path, texsrc)
 
-        cmd = "uplatex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} > /dev/null 2>&1"
-        cmd += "&& dvipdfmx #{dvi_path} -o #{pdf_path} > /dev/null 2>&1"
-        cmd += "&& convert -antialias -density 300 -trim +repage #{pdf_path} #{path} > /dev/null 2>&1"
+        cmd = "uplatex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} 2>&1"# > /dev/null 2>&1"
+        cmd += "&& dvipdfmx #{dvi_path} -o #{pdf_path} 2>&1"# > /dev/null 2>&1"
+        cmd += "&& convert -antialias -density 300 -trim +repage #{pdf_path} #{path} 2>&1"# > /dev/null 2>&1"
         system(cmd)
       end
     end
