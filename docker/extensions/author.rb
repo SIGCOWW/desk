@@ -34,12 +34,4 @@ module ReVIEW
     end
   end
   LATEXBuilder.send(:prepend, LATEXBuilderAuthor) if defined? LATEXBuilder
-
-  module HTMLBuilderAuthor
-    def headline_prefix(level)
-      ret = super
-      return (level != 1 || @author.nil?) ? ret : ["著・#{@author} #{ret[0]}", ret[1]]
-    end
-  end
-  HTMLBuilder.send(:prepend, HTMLBuilderAuthor) if defined? HTMLBuilder
 end

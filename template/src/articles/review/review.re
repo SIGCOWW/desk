@@ -208,11 +208,11 @@ desk特有の機能として、絵文字@<emoji>{sushi}が出力できます。
 記述@<emoji>{notebook}は、@<tt>{@}@<tt>{<emoji>{エイリアス\}}です。
 エイリアス@<emoji>{alien}は、gemoji@<fn>{gemoji}、つまりGitHubのリストを基としています。
 ただし、例外@<emoji>{boom}として@<tt>{:thinking_face:}@<emoji>{thinking_face}のみ@<tt>{:thinking:}@<emoji>{thinking}と同じ扱いにしています。
-また、バックエンド@<emoji>{back}はBXcoloremoji@<fn>{bxcoloremoji}で、Emoji Version 5.0までの絵文字が出力できます。
+また、バックエンド@<emoji>{back}はBXcoloremoji@<fn>{bxcoloremoji}で、Unicode Emoji v11.0の絵文字が出力できます。
 //footnote[gemoji][@<href>{https://github.com/github/gemoji}]
 //footnote[bxcoloremoji][@<href>{https://github.com/zr-tex8r/BXcoloremoji}]
 
-これ以外の登録されていない絵文字、そしてEPUB出力では前後に@<tt>{:}が付いた状態でエイリアスがそのまま出力されます。
+なお、登録されていない絵文字@<emoji>{sos}は前後に@<tt>{:}が付いた状態で、エイリアスがそのまま出力されます。
 毎々お世話になります。首記の件、@<emoji>{haisyo}お願いしたく。調整乞う。
 
 
@@ -241,22 +241,22 @@ Re:VIEWはLaTeXの処理系としてuplatexを用いているため、あまり�
 こんな感じです。
 //list[id0][採番あり・行番号なし]{
  //list[識別子][キャプション]{
- puts puts "現在の時刻は #{Time.now()} です。"
+ puts "現在の時刻は #{Time.now()} です。"
  //}
 //}
 //emlist[採番なし・行番号なし]{
  //emlist[キャプション（省略可能）]{
- puts puts "現在の時刻は #{Time.now()} です。"
+ puts "現在の時刻は #{Time.now()} です。"
  //}
 //}
 //listnum[id1][採番あり・行番号あり]{
  //listnum[識別子][キャプション]{
- puts puts "現在の時刻は #{Time.now()} です。"
+ puts "現在の時刻は #{Time.now()} です。"
  //}
 //}
 //emlistnum[採番なし・行番号あり]{
  //emlistnum[キャプション（省略可能）]{
- puts puts "現在の時刻は #{Time.now()} です。"
+ puts "現在の時刻は #{Time.now()} です。"
  //}
 //}
 
