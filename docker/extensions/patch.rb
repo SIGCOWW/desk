@@ -122,9 +122,9 @@ module ReVIEW
         pdf_path = File.join(tmpdir, 'tmpmath.pdf')
         File.write(tex_path, texsrc)
 
-        cmd = "uplatex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} 2>&1"# > /dev/null 2>&1"
-        cmd += "&& dvipdfmx #{dvi_path} -o #{pdf_path} 2>&1"# > /dev/null 2>&1"
-        cmd += "&& convert -antialias -density 300 -trim +repage #{pdf_path} #{path} 2>&1"# > /dev/null 2>&1"
+        cmd = "uplatex --interaction=nonstopmode --output-directory=#{tmpdir} #{tex_path} > /dev/null 2>&1"
+        cmd += "&& dvipdfmx #{dvi_path} -o #{pdf_path} > /dev/null 2>&1"
+        cmd += "&& convert -antialias -density 300 -trim +repage #{pdf_path} #{path} > /dev/null 2>&1"
         system(cmd)
       end
     end
