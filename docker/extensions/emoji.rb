@@ -7,10 +7,9 @@ module ReVIEW
     def inline_emoji(str)
       ":#{escape(str)}:"
     end
-  end
 
-  class LATEXBuilder
-    def inline_emoji(str)
+    protected
+    def emoji2latex(str)
       require 'gemoji'
 
       emoji_alias = {}
@@ -29,6 +28,18 @@ module ReVIEW
 
       codepoint = emoji.raw.each_codepoint.map{|n| n.to_s(16) }[0].upcase
       return "\\coloremojiucs{#{codepoint}}"
+    end
+  end
+
+  class LATEXBuilder
+    def inline_emoji(str)
+      return emoji2latex(str)
+    end
+  end
+
+  class HTMLBuilder
+    def inline_emoji(str)
+      return inline_m(emoji2latex(str))
     end
   end
 end

@@ -208,11 +208,11 @@ desk特有の機能として、絵文字@<emoji>{sushi}が出力できます。
 記述@<emoji>{notebook}は、@<tt>{@}@<tt>{<emoji>{エイリアス\}}です。
 エイリアス@<emoji>{alien}は、gemoji@<fn>{gemoji}、つまりGitHubのリストを基としています。
 ただし、例外@<emoji>{boom}として@<tt>{:thinking_face:}@<emoji>{thinking_face}のみ@<tt>{:thinking:}@<emoji>{thinking}と同じ扱いにしています。
-また、バックエンド@<emoji>{back}はBXcoloremoji@<fn>{bxcoloremoji}で、Emoji Version 5.0までの絵文字が出力できます。
+また、バックエンド@<emoji>{back}はBXcoloremoji@<fn>{bxcoloremoji}で、Unicode Emoji v11.0の絵文字が出力できます。
 //footnote[gemoji][@<href>{https://github.com/github/gemoji}]
 //footnote[bxcoloremoji][@<href>{https://github.com/zr-tex8r/BXcoloremoji}]
 
-これ以外の登録されていない絵文字、そしてEPUB出力では前後に@<tt>{:}が付いた状態でエイリアスがそのまま出力されます。
+なお、登録されていない絵文字@<emoji>{sos}は前後に@<tt>{:}が付いた状態で、エイリアスがそのまま出力されます。
 毎々お世話になります。首記の件、@<emoji>{haisyo}お願いしたく。調整乞う。
 
 
