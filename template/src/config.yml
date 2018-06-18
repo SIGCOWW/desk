@@ -9,10 +9,10 @@ edt: "sigcoww@sigcoww.org"                              # 連絡先 省略可
 feedback: "https://example.com/"                        #   連絡フォーム 省略可
 msg: "Contributor募集中"                                # メッセージ 省略可
 
-container_version: "garei"                              # desk のバージョン
-layout_hash: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"         # layout.tex.erb のMD5ハッシュ
-sty_hash: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"            # sigcoww.sty のMD5ハッシュ
-
+container_version: "garei"                              # desk のバージョン 省略可
+layout_hash: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"         # layout.tex.erb のMD5ハッシュ 省略可
+sty_hash: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"            # sigcoww.sty のMD5ハッシュ 省略可
+titlepage_pdf: "titlepage.pdf"                          # 扉ページ 省略可
 
 debug: true
 language: ja

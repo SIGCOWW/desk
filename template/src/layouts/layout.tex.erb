@@ -54,6 +54,7 @@
 \usepackage{bxcoloremoji}
 \usepackage{multicol}
 \usepackage{accsupp}
+\usepackage{pdfpages}
 
 \advance \paperwidth 10truemm
 \advance \paperheight 10truemm
@@ -309,6 +310,10 @@
   \end{center}%
 \end{titlepage}
 <%-   end -%>
+<%- end -%>
+
+<%- if @config["titlepage_pdf"] -%>
+\includepdf[offset=-2truemm 2truemm]{../<%= @config["titlepage_pdf"] %>}
 <%- end -%>
 
 \renewcommand{\chaptermark}[1]{{}}
