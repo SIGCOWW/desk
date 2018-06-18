@@ -274,7 +274,7 @@ eof
       txt = File.read("../articles/#{chapid}/#{chapid}.re").gsub(/\r\n/, "\n")
 
       # ~raw
-      txt.gsub!(/^(\/\/(?:tabooularw?|pandoc)(?:\[\S+?\])*{\s*)(.+?)(\s*\/\/}\s*)$/m) { $1 + Base64.encode64($2).delete('=') + $3 }
+      txt.gsub!(/^(\/\/(?:tabooularw?|markdown)(?:\[\S+?\])*{\s*)(.+?)(\s*\/\/}\s*)$/m) { $1 + Base64.encode64($2).delete('=') + $3 }
       txt.gsub!(/^\/\/(tabooularw?(?:\[\S+?\])*{\s*)$/) { '//table' + $1 }
 
       # @<author> (+ title)

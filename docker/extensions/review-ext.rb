@@ -1,7 +1,7 @@
 require './author'
 require './blockw'
 require './imagew'
-require './pandoc'
+require './markdown'
 require './profile'
 require './patch'
 require './tabooular'
