@@ -48,11 +48,6 @@ RUN apk add nodejs
 RUN apk add nodejs-npm
 RUN npm install -g tabooular
 RUN npm install -g prh
-RUN apk add gzip
-RUN wget -q https://github.com/jgm/pandoc/releases/download/2.1.1/pandoc-2.1.1-1-amd64.deb
-RUN ar x pandoc-*.deb
-RUN tar Jxf data.tar.xz "./usr/bin/pandoc"
-RUN gzexe /usr/bin/pandoc
 RUN tlmgr install seqsplit caption bigfoot xcolor framed multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox mathtools calrsfs calligra cancel mathcomp doublestroke lm anyfontsize etoolbox kastrup ec ucs environ trimspaces palatino helvetic mathpazo pdfpages
 RUN wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.5.zip -O BXcoloremoji.zip
 RUN unzip -q BXcoloremoji.zip
@@ -76,6 +71,11 @@ RUN unzip -q rules.zip
 RUN mv rules-master/ rules
 RUN rm -rf rules.zip
 RUN gem install diff-lcs --no-rdoc --no-ri
+RUN wget -q https://github.com/faelys/libsoldout/archive/trunk.zip
+RUN unzip trunk.zip
+RUN cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/lib/ && mv mkd2html mkd2latex /usr/bin/
+RUN strip `which mkd2html`
+RUN strip `which mkd2latex`
 RUN apk add openssh-client
 RUN gem install gemoji --no-rdoc --no-ri
 RUN apk add file
@@ -95,7 +95,7 @@ RUN cd /usr/share/ghostscript/*/Resource/CIDFSubst/ && rm -f DroidSansFallback.t
 RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm
 RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/misc
 RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/opentype
-RUN rm -rf pandoc-*.deb data.tar.xz debian-binary control.tar.gz
+RUN rm -rf trunk.zip libsoldout-trunk/
 RUN rm -rf BXcoloremoji*
 RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/map/dvips
 RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm
@@ -112,13 +112,14 @@ RUN find / -name '*.pdf' -type f | grep -v BXcoloremoji | xargs rm -rf
 RUN find /usr/local/texlive/ -iname "*.ps" -o -iname "*.eps" | grep -v '/proc/' | xargs rm -rf
 RUN find / -name '*.cls' -type f | grep -v jsbook | grep -v jsarticle | xargs rm -rf
 RUN find /usr/ -empty -type d | xargs rm -rf
-RUN rm -rf /usr/bin/pandoc~
 RUN find / -executable -type f | xargs file | grep "not stripped" | cut -d":" -f1 | xargs strip
 RUN rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts
 RUN rm -rf /usr/bin/npm /usr/lib/node_modules/npm
 RUN rm -rf /usr/local/texlive/*/bin/x86_64-linuxmusl/*mpost /usr/local/texlive/*/bin/x86_64-linuxmusl/pdf*tex
 RUN find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf
 RUN find / -xtype l | grep -v "/proc/" | xargs rm -rf
+RUN rm -rf /usr/x86_64-alpine-linux-musl/
+RUN rm -rf /usr/local/texlive/2018/bin/x86_64-linuxmusl/*mendex
 RUN mkdir -p /usr/local/bin
 COPY *.rb /
 RUN mv build.rb /usr/local/bin/

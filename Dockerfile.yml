@@ -51,12 +51,6 @@
 - dev: nodejs-npm
 - run: 'npm install -g tabooular'
 - run: 'npm install -g prh'
-- apk: gzip
-- run: 'wget -q https://github.com/jgm/pandoc/releases/download/2.1.1/pandoc-2.1.1-1-amd64.deb'
-- run: 'ar x pandoc-*.deb'
-- run: 'tar Jxf data.tar.xz "./usr/bin/pandoc"'
-- run: 'gzexe /usr/bin/pandoc'
-
 - run: 'tlmgr install seqsplit caption bigfoot xcolor framed
     multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox
     mathtools calrsfs calligra cancel mathcomp doublestroke lm anyfontsize etoolbox
@@ -85,6 +79,13 @@
 - run: 'rm -rf rules.zip'
 - run: 'gem install diff-lcs --no-rdoc --no-ri'
 
+- run: 'wget -q https://github.com/faelys/libsoldout/archive/trunk.zip'
+- run: 'unzip trunk.zip'
+- run: 'cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/lib/ && mv mkd2html mkd2latex /usr/bin/'
+- run: 'strip `which mkd2html`'
+- run: 'strip `which mkd2latex`'
+
+
 # Circle CI
 - apk: openssh-client
 
@@ -109,7 +110,7 @@
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm'
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/misc'
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/opentype'
-- run: 'rm -rf pandoc-*.deb data.tar.xz debian-binary control.tar.gz'
+- run: 'rm -rf trunk.zip libsoldout-trunk/'
 - run: 'rm -rf BXcoloremoji*'
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/map/dvips'
 - run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm'
@@ -188,13 +189,14 @@
   - name: '*.eps'
 - run: "find / -name '*.cls' -type f | grep -v jsbook | grep -v jsarticle | xargs rm -rf"
 - run: 'find /usr/ -empty -type d | xargs rm -rf'
-- run: 'rm -rf /usr/bin/pandoc~'
 - run: 'find / -executable -type f | xargs file | grep "not stripped" | cut -d":" -f1 | xargs strip'
 - run: 'rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts'
 - run: 'rm -rf /usr/bin/npm /usr/lib/node_modules/npm'
 - run: 'rm -rf /usr/local/texlive/*/bin/x86_64-linuxmusl/*mpost /usr/local/texlive/*/bin/x86_64-linuxmusl/pdf*tex'
 - run: 'find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf'
 - run: 'find / -xtype l | grep -v "/proc/" | xargs rm -rf'
+- run: 'rm -rf /usr/x86_64-alpine-linux-musl/'
+- run: 'rm -rf /usr/local/texlive/2018/bin/x86_64-linuxmusl/*mendex'
 
 # Utility
 - run: 'mkdir -p /usr/local/bin'

@@ -340,12 +340,11 @@ GID  | Name   & Age & Gender  ; ヘッダ。中央揃えになる。
 tabooularには、@<tt>{w}な命令もあります。
 そして、いずれの場合も参照は従来どおり@<tt>{@}@<tt>{<table>{\}}で可能です。
 
-=== Pandoc
-これもdesk特有の機能ですが、Pandocを動かすブロック命令を追加しています。
-第一引数に変換元を指定することで機能します。
+=== Markdown
+これもdesk特有の機能ですが、libsoldout@<fn>{libsoldout}のmkd2latexやmkd2htmlを動かすブロック命令を追加しています。
 こんな感じです。
 //emlist{
- //pandoc[markdown]{
+ //markdown{
  1. これは
      * Markdown
      * です
@@ -353,6 +352,7 @@ tabooularには、@<tt>{w}な命令もあります。
      * LaTeXまたはHTMLで適切に行われます
  //}
 //}
+//footnote[libsoldout][@<href>{https://github.com/faelys/libsoldout}]
 
 中身はRe:VIEW側から隔離されます。
 どんなコードが吐き出されるか不明なので、少し怖い気もします。
