@@ -57,7 +57,12 @@ src/
 * `feedback` ... 連絡フォーム(感想)
 * `msg` ... なんかメッセージ
 
-がある。いずれもコメントアウトすれば出力されない。
+* `container_version` ... deskのバージョン
+* `layout_hash` ... layout.tex.erb のMD5ハッシュ
+* `sty_hash` ... sigcoww.sty のMD5ハッシュ
+* `titlepage_pdf` ... layout/以下にある扉ページのパス
+
+がある。いずれも省略可能。
 
 
 ## 注意
