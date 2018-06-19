@@ -224,6 +224,10 @@ eof
       end
     end
 
+    if config.has_key?('titlepage_pdf')
+      FileUtils.mv("layouts/#{config['titlepage_pdf']}", './')
+    end
+
     catalog = YAML.load_file('../catalog.yml')
     catalog.each do | k, files |
       newcatalog[k] = []
