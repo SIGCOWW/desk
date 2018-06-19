@@ -29,7 +29,7 @@ module ReVIEW
       rows << ['', `review-pdfmaker --version`]
       rows << ['', `uplatex --version | head -n1`]
       rows << ['', "Alpine Linux #{`cat /etc/alpine-release`.strip} (Linux Kernel #{`uname -r`.strip})"]
-      rows << ['', "SIGCOWW/desk https://github.com/SIGCOWW/desk"]
+      rows << ['', "desk ←←←←← 熱烈歓迎Contribution https://github.com/SIGCOWW/desk"]
 
       ret = ''
       rows.each do | r |

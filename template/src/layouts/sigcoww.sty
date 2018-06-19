@@ -92,13 +92,13 @@
 
 \newcommand{\tume}{\if@mainmatter\if@twoside%
   \checkoddpage\ifoddpage%
-    \def\tumewidth@{-4mm-5mm}\def\tumeorigin@{east}%
+    \def\tumewidth@{-5mm-5mm}\def\tumeorigin@{east}%
   \else%
-    \def\tumewidth@{4mm+5mm}\def\tumeorigin@{west}%
+    \def\tumewidth@{5mm+5mm}\def\tumeorigin@{west}%
   \fi%
   \count@\value{chapter}\advance\count@ by -1%
   \begin{tikzpicture}[remember picture, overlay]\begin{scope}[shift={($%
-    (current page.north \tumeorigin@)+(-6pt,-59pt-5mm-\chapterheight-6pt-5mm)+\count@*(0,-10mm)$)}]%
+    (current page.north \tumeorigin@)+(-6pt,-59pt-5mm-\chapterheight-6pt-10mm)+\count@*(0,-10mm)$)}]%
       \fill[yryrblack] (0, 0) rectangle (\tumewidth@, -10mm);%
     \end{scope}%
   \end{tikzpicture}\fi\fi}
@@ -153,6 +153,16 @@
 	 \vskip 2\Cvs}}
 
 % toc
+\newcommand{\@orgtocbg}{yryrwhite}
+\newcommand{\@orgtoccolor}{yryrblack}
+\newcommand{\@orgtocfont}{}
+\newcommand{\@tocbg}{\@orgtocbg}
+\newcommand{\@toccolor}{\@orgtoccolor}
+\newcommand{\@tocfont}{\@orgtocfont}
+\newcommand{\@ctocbg}{yryrblack}
+\newcommand{\@ctoccolor}{white}
+\newcommand{\@ctocfont}{\large\headfont}
+\def\numberline#1{\hb@xt@\@lnumwidth{\colorbox{\@tocbg}{\textcolor{\@toccolor}{\@tocfont#1}}\hfil}\hspace{0pt}}
 \renewcommand*{\l@chapter}[2]{%
   \ifnum \c@tocdepth >\m@ne
 	\begin{widepage}{\Large%
@@ -162,7 +172,9 @@
       \parindent\z@\rightskip\@tocrmarg\parfillskip-\rightskip\leavevmode\bfseries
       \setlength\@lnumwidth{\jsc@tocl@width}\advance\@lnumwidth 2.683zw
       \advance\leftskip\@lnumwidth \hskip-\leftskip
-      #1\nobreak\dotfill\nobreak\hbox to\@pnumwidth{\hss#2}\par
+      \let\@tocbg\@ctocbg\let\@toccolor\@ctoccolor\let\@tocfont\@ctocfont#1%
+      \let\@tocbg\@orgtocbg\let\@toccolor\orgtoccolor\let\@tocfont\@orgtocfont%
+      \nobreak\dotfill\nobreak\hbox to\@pnumwidth{\hss#2}\par
       \penalty\@highpenalty
     \endgroup
     }\end{widepage}\vskip1.25\baselineskip
