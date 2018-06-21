@@ -190,15 +190,8 @@
 
 
 % \section{}
-\renewcommand{\section}{%
-  \@startsection{section}{1}{\z@}%
-  {\Cvs \@plus.5\Cdp \@minus.2\Cdp}%
-  {.5\Cvs \@plus.3\Cdp}%
-  {\normalfont\Large\headfont\raggedright
-    \begin{tikzpicture}
-      \useasboundingbox (0,0) rectangle (0,0);
-      \fill[yryrblack] (0,-8.4pt) rectangle (\textwidth, -7.65pt);
-	\end{tikzpicture}}}
+\titleformat{\section}[hang]{\normalfont\Large\headfont}%
+  {\raisebox{0.6pt}{\colorbox{yryrblack}{\textcolor{white}{\large\,\thesection\,}}}}{0.5zw}{}[]
 
 % \subsection{}
 \renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
@@ -303,10 +296,11 @@
     \end{tabular}}
 
 % profile
-\newenvironment{profile}[2]{\vspace{\baselineskip}\begin{widepage*}\begin{tcolorbox}[%
-  colframe=yryrblack,colback=white,colbacktitle=yryrwhite,coltitle=black,fonttitle=\headfont\large,%
-  title={\vspace{.5zw}#1\hfill{}{\small\sffamily\textcolor{yryrblack}{#2}}\vspace{.5zw}},%
-  boxrule=.75pt,top=.5zw,left=.5zw,bottom=.5zw,right=.5zw]}{\end{tcolorbox}\end{widepage*}}
+\newenvironment{profile}[2]%
+  {\vspace{2\baselineskip}\begin{widepage*}\setlength{\parindent}{1zw}%
+    \noindent\colorbox{yryrblack}{\textcolor{white}{\large\headfont\mathstrut\,#1\,}}%
+    \hspace{0.5zw}\raisebox{0.22pt}{\underline{\small\sffamily\strut\,#2\,}}\vspace{0.4\baselineskip}\par}
+  {\end{widepage*}}
 
 % subfig
 \newenvironment{reviewsubfig}[1]%
@@ -317,7 +311,8 @@
   {\caption{\@tempcaption}\end{reviewimagew}}
 
 % tabooular
-\providecommand{\toprule}{\hline\hline}
+\newcommand{\tabooularhead}[1]{\sffamily#1}
+\providecommand{\toprule}{\hline\rowcolor{yryrwhite}}
 \providecommand{\midrule}{\hline}
 \providecommand{\bottomrule}{\hline}
 \newenvironment{tabooular}{%
@@ -332,7 +327,7 @@
   \end{widepage*}\end{table}}
 
 % codeblock系
-% https://github.com/TechBooster/C89-FirstStepReVIEW-v2/blob/master/articles/sty/techbooster-doujin.sty を改造
+% https://github.com/TechBooster/ReVIEW-Template/blob/master/articles/sty/techbooster-doujin.sty を改変
 \renewenvironment{shaded}{%
  \begin{tcolorbox}[colback=yryrwhite,colframe=yryrwhite,boxrule=1pt,top=.5zw,left=.5zw,bottom=.5zw,right=.5zw]}{\end{tcolorbox}}
 \renewenvironment{shadedb}{%
@@ -387,5 +382,5 @@
 
 % kusodeka
 \newcommand{\kusodeka}[1]{\vspace{-\baselineskip}\begin{center}\resizebox{\textwidth}{!}{#1}\end{center}}
-\newcommand{\kusodekaw}[1]{\begin{center}\begin{widepage}\resizebox{\textwidth}{!}{#1}\end{widepage}\end{center}}
+\newcommand{\kusodekaw}[1]{\vspace{-\baselineskip}\begin{center}\begin{widepage}\resizebox{\textwidth}{!}{#1}\end{widepage}\end{center}}
 \makeatother
