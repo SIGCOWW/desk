@@ -33,7 +33,9 @@ module ReVIEW
 
       ret = ''
       rows.each do | r |
-        ret += "{\\bfseries #{r[0]}} & \\textgt{#{escape_latex(r[1])}} \\\\\n"
+        key = r[0].empty? ? '' : "\\underline{\\mathstrut\\bfseries #{r[0]}}"
+        value = "#{escape_latex(r[1])}"
+        ret += "#{key} & #{value} \\\\\n"
       end
       return ret.strip
     end
