@@ -29,7 +29,7 @@
 \usepackage{exscale}
 \usepackage{mathpazo}
 \renewcommand{\ttdefault}{lmtt}
-\usepackage[scaled=0.95]{helvet}
+\usepackage[scaled=0.97]{helvet}
 \usepackage{cases}
 \usepackage{tikz}
 \usetikzlibrary{calc}
@@ -55,6 +55,8 @@
 \usepackage{multicol}
 \usepackage{accsupp}
 \usepackage{pdfpages}
+\usepackage{titlesec}
+\usepackage{colortbl}
 
 \advance \paperwidth 10truemm
 \advance \paperheight 10truemm
@@ -377,7 +379,7 @@
 
 \vspace*{\fill}
 \begin{widepage}
-{\noindent\headfont\Large <%= escape_latex(@config.name_of("booktitle")) %>} \\
+\colorbox{yryrblack}{\noindent\headfont\Large\strut\;\textcolor{white}{<%= escape_latex(@config.name_of("booktitle")) %>}\;}\vspace*{0.7\baselineskip}\\
 \rule[0pt]{\maxtextwidth}{1pt}
 \begin{center}
 \begin{tabular}{ll}

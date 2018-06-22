@@ -113,3 +113,18 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
+
+### [jsclasses](https://github.com/texjporg/jsclasses)
+BSD 2-Clause "Simplified" License ([LICENSE](https://github.com/texjporg/jsclasses/blob/master/LICENSE))
+```
+pLaTeX2ε新ドキュメントクラス（日本語 TeX 開発コミュニティ版）
+原作者：奥村晴彦 <okumura@okumuralab.org>
+
+Copyright 1993-2016
+The LaTeX3 Project and any individual authors listed elsewhere
+in this file.
+
+Copyright 1995-1999 ASCII Corporation.
+Copyright 1999-2016 Haruhiko Okumura
+Copyright 2016-2018 Japanese TeX Development Community
+```

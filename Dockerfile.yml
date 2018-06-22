@@ -54,7 +54,7 @@
 - run: 'tlmgr install seqsplit caption bigfoot xcolor framed
     multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox
     mathtools calrsfs calligra cancel mathcomp doublestroke lm anyfontsize etoolbox
-    kastrup ec ucs environ trimspaces palatino helvetic mathpazo pdfpages'
+    kastrup ec ucs environ trimspaces palatino helvetic mathpazo pdfpages titlesec'
 - run: 'wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.5.zip -O BXcoloremoji.zip'
 - run: 'unzip -q BXcoloremoji.zip'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'

@@ -34,11 +34,18 @@ module ReVIEW
         end
       end
 
+      def header(row)
+        row.each do | col |
+          next unless col['type'] === 'cell'
+          col['data'] = "\\tabooularhead{#{compile_inline(col['data'])}}"
+        end
+      end
+
       plain = Base64.decode64(lines.join(''))
       stdout = Open3.capture3("tabooular -if plain -of json", :stdin_data => plain)[0]
 
       json = JSON.parse(stdout)
-      (json['head'] || []).each{ |row| compile(row) }
+      (json['head'] || []).each{ |row| (format == 'latex') ? header(row) : compile(row) }
       json['body'].each do | rows |
         rows.each{ |row| compile(row) }
       end
