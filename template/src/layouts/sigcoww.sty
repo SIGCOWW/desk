@@ -155,7 +155,7 @@
 % toc
 \newcommand{\@defaulttoc}[1]{\textcolor{yryrblack}{\underline{\mathstrut{\sffamily\textcolor{black}{\,#1\,}}}}}
 \let\@sigcowwtoc\@defaulttoc
-\newcommand{\@customtoc}[1]{\raisebox{1.2pt}{\colorbox{yryrblack}{\textcolor{white}{\large\headfont\,#1\,}}}}
+\newcommand{\@customtoc}[1]{\raisebox{1.0pt}{\colorbox{yryrblack}{\textcolor{white}{\large\headfont\,#1\,}}}}
 \def\numberline#1{\hb@xt@\@lnumwidth{\@sigcowwtoc{#1}\hfil}\hspace{0pt}}
 \renewcommand*{\l@chapter}[2]{%
   \ifnum \c@tocdepth >\m@ne
@@ -189,9 +189,36 @@
    \par\vskip1.5\baselineskip}\fi}
 
 
+
+
 % \section{}
+\def\@startsection#1#2#3#4#5#6{%
+  \if@noskipsec \leavevmode \fi
+  \par
+  \@tempskipa #4\relax
+  \if@english \@afterindentfalse \else \@afterindenttrue \fi
+  \ifdim \@tempskipa <\z@
+    \@tempskipa -\@tempskipa \@afterindentfalse
+  \fi
+  \if@nobreak
+    \everypar{}%
+  \else
+    \addpenalty\@secpenalty
+    \ifdim \@tempskipa >\z@
+      \vskip\@tempskipa
+      \if@slide\else
+        \null
+        \vspace{-\baselineskip}%
+      \fi
+    \fi
+  \fi
+  \noindent
+  \@ifstar
+    {\@ssect{#3}{#4}{#5}{#6}}%
+    {\@dblarg{\@sect{#1}{#2}{#3}{#4}{#5}{#6}}}}
 \titleformat{\section}[hang]{\normalfont\Large\headfont}%
-  {\raisebox{0.6pt}{\colorbox{yryrblack}{\textcolor{white}{\large\,\thesection\,}}}}{0.5zw}{}[]
+  {\raisebox{0.7pt}{\colorbox{yryrblack}{\textcolor{white}{\large\,\thesection\,}}}}{0.5zw}{}[]
+\titlespacing*{\section}{\z@}{\Cvs \@plus.5\Cdp \@minus.2\Cdp}{.5\Cvs \@plus.3\Cdp}[\z@]
 
 % \subsection{}
 \renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
@@ -297,9 +324,9 @@
 
 % profile
 \newenvironment{profile}[2]%
-  {\vspace{2\baselineskip}\begin{widepage*}\setlength{\parindent}{1zw}%
+  {\vspace{2\Cvs \@plus.5\Cdp \@minus.2\Cdp}\begin{widepage*}\setlength{\parindent}{1zw}%
     \noindent\colorbox{yryrblack}{\textcolor{white}{\large\headfont\mathstrut\,#1\,}}%
-    \hspace{0.5zw}\raisebox{0.22pt}{\underline{\small\sffamily\strut\,#2\,}}\vspace{0.4\baselineskip}\par}
+    \hspace{0.5zw}\raisebox{0.22pt}{\underline{\small\sffamily\strut\,#2\,}}\vspace{.4\Cvs \@plus.3\Cdp}\par}
   {\end{widepage*}}
 
 % subfig
@@ -382,5 +409,4 @@
 
 % kusodeka
 \newcommand{\kusodeka}[1]{\vspace{-\baselineskip}\begin{center}\resizebox{\textwidth}{!}{#1}\end{center}}
-\newcommand{\kusodekaw}[1]{\vspace{-\baselineskip}\begin{center}\begin{widepage}\resizebox{\textwidth}{!}{#1}\end{widepage}\end{center}}
 \makeatother

@@ -33,13 +33,6 @@ Re:VIEW拡張や数式の中で、パッケージを使いたい場合は@<tt>{s
 
 なお、パッケージがインストールされているか否か、またあるファイルがどのパッケージに含まれるかは、desk内のシェル（ash）から@<tt>{kpsewhich}や@<tt>{tlmgr info}を実行すると分かります。
 
-== その他
-desk本体の要望・質問は、Issuesへ@<fn>{desk}。
-組版に関する要望・質問は、templateのIssuesへ@<fn>{template}
-どちらか分からなければ、それっぽいところへ。
-//footnote[desk][@<href>{https://github.com/SIGCOWW/desk/issues}]
-//footnote[template][@<href>{https://github.com/SIGCOWW/template/issues}]
-
 //profile[机の上の次郎]{
 著者名を変えてみました。
 //}

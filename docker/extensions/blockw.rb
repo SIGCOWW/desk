@@ -19,31 +19,31 @@ module ReVIEW
     def listw(lines, id, caption, lang = nil)
       print '\blockmargin\begin{widepage}'
       list(lines, id, caption, lang)
-      print '\end{widepage}\unblockmargin'
+      print '\end{widepage}\unblockmargin\par'
     end
 
     def emlistw(lines, caption = nil, lang = nil)
       print '\blockmargin\begin{widepage}'
       emlist(lines, caption, lang)
-      print '\end{widepage}\unblockmargin'
+      print '\end{widepage}\unblockmargin\par'
     end
 
     def listnumw(lines, id, caption, lang = nil)
       print '\blockmargin\begin{widepage}'
       listnum(lines, id, caption, lang)
-      print '\end{widepage}\unblockmargin'
+      print '\end{widepage}\unblockmargin\par'
     end
 
     def emlistnumw(lines, caption = nil, lang = nil)
       print '\blockmargin\begin{widepage}'
       emlistnum(lines, caption, lang)
-      puts '\end{widepage}\unblockmargin'
+      puts '\end{widepage}\unblockmargin\par'
     end
 
     def cmdw(lines, caption = nil, lang = nil)
       print '\blockmargin\begin{widepage}'
       cmd(lines, caption, lang)
-      print '\end{widepage}\unblockmargin'
+      print '\end{widepage}\unblockmargin\par'
     end
   end
 end
