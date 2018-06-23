@@ -87,11 +87,12 @@ RUN apk add --update git fontconfig ghostscript imagemagick poppler-utils libc6-
     && find / -executable -type f | xargs file | grep "not stripped" | cut -d":" -f1 | xargs strip \
     && rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts \
     && rm -rf /usr/bin/npm /usr/lib/node_modules/npm \
-    && rm -rf /usr/local/texlive/*/bin/x86_64-linuxmusl/*mpost /usr/local/texlive/*/bin/x86_64-linuxmusl/pdf*tex \
+    && cd  /usr/local/texlive/*/bin/x86_64-linuxmusl/ && rm -rf *mpost pdf*tex teckit_compile xdvi-xaw luatex53 makeindex *mendex && cd / \
+    && cd /usr/local/texlive/*/texmf-dist/ && rm -rf fonts/truetype/public/arphic-ttf/ fonts/map/pdftex/ scripts/ makeindex/ && cd / \
+    && rm -rf /usr/libexec/ \
     && find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf \
     && find / -xtype l | grep -v "/proc/" | xargs rm -rf \
     && rm -rf /usr/x86_64-alpine-linux-musl/ \
-    && rm -rf /usr/local/texlive/2018/bin/x86_64-linuxmusl/*mendex \
     && mkdir -p /usr/local/bin \
     && mv build.rb /usr/local/bin/ \
     && mv colorpicker.js /usr/local/bin/ \
