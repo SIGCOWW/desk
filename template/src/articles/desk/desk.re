@@ -24,6 +24,12 @@ deskは、すでに存在するファイルは上書きしないため、この@
 LaTeXの場合は、原稿リポジトリの@<tt>{src/layouts/layout.tex.erb}および@<tt>{src/layouts/sigcoww.sty}をいじります。
 HTMLの場合は、@<tt>{src/layouts/style.css}をいじります。
 
+== 「第○記事」という表記を変えたい
+@<tt>{src/layouts/locale.yml}を作成します。
+@<tt>{locale.yml}の仕様については、Re:VIEWのドキュメント@<fn>{docl}があります。
+//footnote[docl][@<href>{https://github.com/kmuto/review/blob/master/doc/format.ja.md#%E5%9B%BD%E9%9A%9B%E5%8C%96i18n}]
+
+
 == あのパッケージが使いたい
 Re:VIEW拡張や数式の中で、パッケージを使いたい場合は@<tt>{src/layouts/layout.tex.erb}で@<tt>{\usepackage{\}}します。
 ただ、そもそも@<tt>{.sty}がdeskのコンテナに存在しない場合は使えません。

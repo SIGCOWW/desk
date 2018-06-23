@@ -201,8 +201,8 @@ eof
     header("Preprocessing", 2)
     articles = {}
     newcatalog = {}
-    FileUtils.cp_r(Dir.glob('/extensions/*.*'), './')
-    FileUtils.cp_r(['config.yml', 'layouts/', 'cover.png', 'back.png'].map{|v| "../#{v}"}, './')
+    run('cp -Rn /extensions/*.* ./')
+    run("cp -Rn #{['config.yml', 'layouts/', 'cover.png', 'back.png'].map{|v| "../#{v}"}.join(' ')} ./")
     FileUtils.mv(['locale.yml', 'style.css'].map{|v| "layouts/#{v}"}, './', {:force => true})
     FileUtils.mkdir_p('sty')
     FileUtils.mv(Dir.glob('layouts/*.sty'), 'sty', {:force => true})

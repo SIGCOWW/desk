@@ -1,9 +1,10 @@
-# template
+# SIGCOWW Template
 同人誌のテンプレート。
 サンプル文章として、deskとRe:VIEW文法の紹介が入っている。
 
 
-## 利用方法
+
+## 使い方
 deskのDockerコンテナが実行できる環境が必要になる。
 
 ### Linux
@@ -21,12 +22,13 @@ $ git push origin master
 
 ### その他
 その他のOSは未検証。
-ただ、ビルドは下記のような処理が中止なので、手動で叩けば動きそうではある。
+ただ、ビルドは下記のような処理が中心なので、手動で叩けば動きそうではある。
 ```
 $ docker pull (.circleci/config.yml の images)
 $ docker run -v "(srcのディレクトリ):/work" (いまpullしたイメージ) /bin/ash -c (.circleci/config.yml の run)
 ```
 なお、WindowsのDocker Toolboxなら `(srcのディレクトリ)` を `C:\Users` 配下にすると楽らしい。
+
 
 
 ## ディレクトリ構成
@@ -48,7 +50,9 @@ src/
 ```
 これを作るのは`tree`コマンドが便利。
 
-## `config.yml`
+
+
+## `config.yml` について
 本来のRe:VIEWとは意味を変えている、また独自に追加した項目がある。
 例えば、
 
@@ -65,9 +69,10 @@ src/
 がある。いずれも省略可能。
 
 
+
 ## 注意
 ### こんなファイル・ディレクトリは作らない
-* src/working_temporary_directory/
+* working_temporary_directory/
 * .temporary.diff
 * 移動・削除される可能性がある
 
@@ -78,7 +83,8 @@ src/
   * 本文領域いっぱいに貼り付ける場合は、「1600px x 2977px」程度
 
 ### 文字コードはUTF-8
-* そもそも、それ以外だとGitHubで見たときに文字化けしそうな気もする
+* GitHubで管理するならそうなっているはずだが一応
+
 
 
 ## ライセンス

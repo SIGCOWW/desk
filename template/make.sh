@@ -61,7 +61,9 @@ build() {
 		container="lrks/desk:${CONTAINER_VERSION}"
 	fi
 
-	if [ ! -n "$PAPER_MARGIN" ]; then
+	if [ -n "$PAPER_MARGIN" ]; then
+		PAPER_MARGIN="--margin=${PAPER_MARGIN}"
+	else
 		if [ -f ".circleci/config.yml" ]; then
 			PAPER_MARGIN=$(grep "margin" .circleci/config.yml | head -1 | sed -r 's/.*?(--margin=[0-9]+mm).*/\1/');
 		else
@@ -110,7 +112,21 @@ EOF
 
 	# catalog.yml
 	if [ "$(grep -c "${1}.re" catalog.yml)" -eq 0 ]; then
-		sed -i "s/^CHAPS:$/CHAPS:\\n  - ${1}.re/" catalog.yml
+		chap_num=$(grep 'CHAPS:' catalog.yml -n | cut -d':' -f1)
+		set +u
+		insert_start=$(grep ':' catalog.yml -n | cut -d':' -f1 | while read -r num; do
+			if [ "$num" -gt "$chap_num" ]; then
+				echo "$num"
+				break
+			fi
+		done)
+
+		if [ ! -n "$insert_start" ]; then
+			echo "  - ${1}.re" >> catalog.yml
+		else
+			sed -i "${insert_start}i\\ \\ - ${1}.re" catalog.yml
+		fi
+		set -u
 	fi
 
 	# src/images

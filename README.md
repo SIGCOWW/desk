@@ -3,75 +3,51 @@ Re:VIEWビルド用コンテナです。
 Alpine Linuxをベースとしています。
 
 
-## 利用方法
+
+## 使い方
 ```
 $ docker pull lrks/desk
-$ docker run -v "/home/hoge/book/src/:/work" lrks/desk /bin/ash -c build.rb --proof --pdf4print --pdf4publish --epub --workdir=/work --margin=3mm --verbose
+$ docker run -v "/home/hoge/book/src/:/work" lrks/desk /bin/ash -c \
+      build.rb --proof --pdf4print --pdf4publish --epub --workdir=/work --margin=3mm --verbose
 ```
 実際にはこれをラップした`template/make.sh`を通して使うことが多いはず。
 
 
+
 ## build.rbのオプション
-### `--proof`
-[prh](https://github.com/prh/prh)で校正を行う。
-設定ファイルは、[techbooster.yml](https://github.com/prh/rules/blob/master/media/techbooster.yml)をそのまま利用。
-また、 `src/working_temporary_directory/book-text` 以下に `review-textmaker` によるファイルが出力される。
+* `--proof`
+  * [prh](https://github.com/prh/prh)で校正を行う
+  * 設定ファイルは[techbooster.yml](https://github.com/prh/rules/blob/master/media/techbooster.yml)を利用
+  * prhとは別に、`working_temporary_directory/book-text/` へ `review-textmaker` によるファイルを出力する
 
-### `--pdf4print` / `--margin=Xmm`
-`--pdf4print`で印刷用PDF(honbun.pdf)を作成する。
-`--margin=Xmm` (default:--margin=3mm) で塗り足しサイズを決める。
-templateでは、B5サイズから上下左右に5mm大きく作っており、上限は`--margin=5mm`となる。
-なお、これらに関わらず、Re:VIEW(+ LaTeX)のPDF(original.pdf)は作成される。
-上記のパラメータは、これを印刷用に加工するか否かの設定となる。
+* `--pdf4print` / `--margin=Xmm`
+  * `--pdf4print`で印刷用PDF(honbun.pdf)を作成する
+    * [SIGCOWW templete](https://github.com/SIGCOWW/desk/tree/master/template)の場合、本来よりも上下左右が5mm大きなB5ファイル(origin.pdf)を作成する
+    * なお、この設定に関わらずorigin.pdfは必ず作成する
+	* 上記パラメータは、これを印刷用に加工するか否かの設定となる。
+  * `--margin=Xmm` (default:--margin=3mm) で塗り足しサイズを決める
+    * origin.pdfを削って、上下左右がXmm大きなB5ファイルを出力する
 
-### `---pdf4publish` / `--papersize=X`
-`--pdf4publish`で電子版PDF(publish.pdf)を作成する。
-これによって環境変数に`ONESIDE=1`が設定される。
-`layout.tex.erb`から読めば印刷版と電子版で異なる組版ができる。
-`src/cover.png`と`src/back.png`を配置すれば、それぞれ表紙と背表紙としたPDFが出力される。
-また、`--papersize=X` (default:--papersize=b5`) は、その紙面サイズを決める。
-`src/cover.png`と`src/back.png`を配置するサイズを決めるため、`documentclass`にそのまま渡される。
+* `---pdf4publish` / `--papersize=X`
+  * `--pdf4publish`で電子版PDF(publish.pdf)を作成する
+    * これによって環境変数に`ONESIDE=1`が設定される
+      * `layout.tex.erb`から読めば印刷版と電子版で異なる組版ができる
+    * `src/cover.png`と`src/back.png`を配置すれば、それぞれ表紙と背表紙としたPDFが出力される
+  * `--papersize=X` (default:--papersize=b5`) は、その紙面サイズを決める
+    * `src/cover.png`と`src/back.png`を配置するサイズを決めるため、`documentclass`にそのまま渡される
 
-### `--epub`
-EPUB(publish.epub)を作成する。
-`src/cover.png`から電子書籍ストアの仕様に適合しそうな`epub-cover.png`が自動作成される。
+* `--epub`
+  * EPUB(publish.epub)を作成する
+  * `src/cover.png`から電子書籍ストアの仕様に適合しそうな`epub-cover.png`を作成する
 
-### `--workdir=X` / `--strict` / `--verbose`
-`--workdir=X`で`src/`を指定する。
-`--strict`は、ある原稿ファイルのビルドでエラーが発生したときにそのファイルを外してビルドし直すか否かのフラグ。
-設定するとstrictモードになって、再挑戦しない。
-`--verbose`は、通常出力しないLaTeX処理系や各種ソフトウェアからのメッセージを出力するか否かのフラグ。
-また、`src/working_temporary_directory/`の中身を整理せず、中間作成物をすべて残すか否かのフラグ。
+* `--workdir=X` / `--strict` / `--verbose`
+  * `--workdir=X`で`src/`を指定する。
+  * `--strict`は、ある原稿ファイルでビルドエラーが発生した際の挙動を変えるフラグ
+    * デフォルトでは、そのファイルを外して再度ビルドを試みる
+    * 設定するとstrictモードになって、再挑戦しない
+  * `--verbose`は、通常出力しないLaTeX処理系や各種ソフトウェアからのメッセージを出力するか否かのフラグ
+    * 設定すると、`working_temporary_directory/`の中身を整理せず、中間作成物をすべて残す
 
-
-## 開発方法
-* Dockerが動くLinux環境があればいい
-* GitHub Flowで開発していく
-* `Dockerfile.yml` をいじると思う
-  * `make build` すると `docker/Dockerfile` が作成されて、Dockerイメージができる
-  * `make release` するとRUNをチェインしたDockerfileでイメージを作る
-    * どっちで作ったDockerfileをリポジトリにpushしても問題ない
-      * 開発中は`make build`で作ったほうしかテストしない(単体テスト扱い)
-      * 「リリース準備」とか言ったときに`make release`する(結合テスト扱い)
-  * `make run` するとコンテナ内でシェルを立ち上げる
-* `Dockerfile.yml` に出てくるキーワードの意味
-  * `env` ... 環境変数設定。`ENV` と同じ。Releaseの際はDockerfileの先頭にまとめて出力される。
-  * `apk` ... パッケージインストール。`RUN apk add #{val}` を実行。Releaseの際はDockerfile先頭にまとめて出力。
-  * `dev` ... 開発用パッケージインストール。`RUN apk add #{val}` を実行。Releaseの際はまとめて以下略、あと最後で`apk del`される。
-  * `copy` ... ファイルコピー。`COPY #{val} /` を実行。Releaseの際はまとめ以下略。
-  * `run` ... コマンド実行。`RUN #{val}` を実行
-  * `rmrf` ... ファイル削除。`RUN find #{head} -iname #{name1} -o -iname #{name2} ... | grep -v /proc/ | xargs rm -rf` を実行
-* `template/make.sh`を使うと思う
-  * `make build` (= `make`) したなら、`env CONTAINER_VERSION="debug" ./make.sh build --help`で実行できる
-* テストは簡易でいい
-  * `env CONTAINER_VERSION="debug" ./make.sh build --proof --pdf4print --pdf4publish --epub --strict --verbose` な感じ
-  * ぱっと見でエラーが出ていない、かつ出力が想定どおりならOKでいい
-  * それで問題があったら自動テストを用意する
-
-
-## Contribution
-* fork して pull request してもらえたらと思います。
-* SIGCOWWメンバーなど、既にリポジトリへのWrite権限があれば、forkせず直接ブランチを切ってもらっても構いません。
 
 
 ## License
@@ -128,3 +104,51 @@ Copyright 1995-1999 ASCII Corporation.
 Copyright 1999-2016 Haruhiko Okumura
 Copyright 2016-2018 Japanese TeX Development Community
 ```
+
+
+
+## Contribution
+fork して pull request してもらえたらと思います。
+SIGCOWWメンバーなど、既にリポジトリへのWrite権限があれば、forkせず直接ブランチを切ってもらっても構いません。
+
+開発手順は以下のとおりです。
+
+### 開発環境
+* Dockerが動くLinux環境があればいい
+* GitHub Flowで開発していく
+
+### 仕様紹介
+#### `Dockerfile.yml` について
+* デバッグ用とリリース用でDockerfileを切り替えるためにymlでラップした
+
+* `make build` すると `docker/Dockerfile` が作成されて、Dockerイメージができる
+* `make release` するとRUNをチェインしたDockerfileでイメージを作る
+  * どっちで作ったDockerfileをリポジトリにpushしても問題ない
+    * 開発中は`make build`で作ったほうしかテストしない(単体テスト扱い)
+    * 「リリース準備」とか言ったときに`make release`する(結合テスト扱い)
+* `make run` するとコンテナ内でシェルを立ち上げる
+
+* `Dockerfile.yml` に出てくるキーワードの意味
+  * `env` ... 環境変数設定。`ENV` と同じ。Releaseの際はDockerfileの先頭にまとめて出力される。
+  * `apk` ... パッケージインストール。`RUN apk add #{val}` を実行。Releaseの際はDockerfile先頭にまとめて出力。
+  * `dev` ... 開発用パッケージインストール。`RUN apk add #{val}` を実行。Releaseの際はまとめて以下略、あと最後で`apk del`される。
+  * `copy` ... ファイルコピー。`COPY #{val} /` を実行。Releaseの際はまとめ以下略。
+  * `run` ... コマンド実行。`RUN #{val}` を実行
+  * `rmrf` ... ファイル削除。`RUN find #{head} -iname #{name1} -o -iname #{name2} ... | grep -v /proc/ | xargs rm -rf` を実行
+
+#### `template/make.sh` について
+* Makefile のつもりで書いている
+  * シェルスクリプトなのは、makeコマンドが存在しなくてもビルドできるようにするため
+  * `/bin/sh` で動かすことを目指す
+    * bashが入っていない環境でも動くことを期待
+	* [ShellCheck](https://www.shellcheck.net/) で確認
+
+* 動作
+  * Dockerfileを`make build` (= `make`)で作ると、`lrks/desk:debug`というイメージができる
+  * `env CONTAINER_VERSION="debug" ./make.sh build --help` とすると、そのイメージを使って原稿をビルドする
+
+#### テスト
+* 簡易でいい
+* `env CONTAINER_VERSION="debug" ./make.sh build --proof --pdf4print --pdf4publish --epub --strict --verbose` な感じ
+* ぱっと見でエラーが出ていない、かつ出力が想定どおりならOKでいい
+* それで問題があったら自動テストを用意する
