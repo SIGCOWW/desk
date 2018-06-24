@@ -17,31 +17,31 @@ module ReVIEW
 
   class LATEXBuilder
     def listw(lines, id, caption, lang = nil)
-      print '\blockmargin\begin{widepage}'
+      print '\blockmargin\vspace{\widesubsubsubsubsubsubsubsubsectionskip}\begin{widepage}'
       list(lines, id, caption, lang)
       print '\end{widepage}\unblockmargin\par'
     end
 
     def emlistw(lines, caption = nil, lang = nil)
-      print '\blockmargin\begin{widepage}'
+      print '\blockmargin\vspace{\widesubsubsubsubsubsubsubsubsectionskip}\begin{widepage}'
       emlist(lines, caption, lang)
       print '\end{widepage}\unblockmargin\par'
     end
 
     def listnumw(lines, id, caption, lang = nil)
-      print '\blockmargin\begin{widepage}'
+      print '\blockmargin\vspace{\widesubsubsubsubsubsubsubsubsectionskip}\begin{widepage}'
       listnum(lines, id, caption, lang)
       print '\end{widepage}\unblockmargin\par'
     end
 
     def emlistnumw(lines, caption = nil, lang = nil)
-      print '\blockmargin\begin{widepage}'
+      print '\blockmargin\vspace{\widesubsubsubsubsubsubsubsubsectionskip}\begin{widepage}'
       emlistnum(lines, caption, lang)
       puts '\end{widepage}\unblockmargin\par'
     end
 
     def cmdw(lines, caption = nil, lang = nil)
-      print '\blockmargin\begin{widepage}'
+      print '\blockmargin\vspace{\widesubsubsubsubsubsubsubsubsectionskip}\begin{widepage}'
       cmd(lines, caption, lang)
       print '\end{widepage}\unblockmargin\par'
     end
