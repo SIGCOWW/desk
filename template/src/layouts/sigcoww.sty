@@ -14,6 +14,9 @@
 \renewcommand{\reviewtitlefont}{\headfont}
 \renewcommand{\chaptermark}[1]{\markboth{いやいやいやいや}{これまじ？}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection~#1}{}}
+\renewcommand{\reviewimageref}[2]{\reviewfigurename~\ref{#2}}
+\renewcommand{\reviewtableref}[2]{\reviewtablename~\ref{#1}}
+\renewcommand{\reviewlistref}[1]{\reviewlistname~#1}
 \renewcommand{\topfraction}{1.0}
 \renewcommand{\bottomfraction}{1.0}
 \renewcommand{\dbltopfraction}{1.0}
@@ -28,9 +31,9 @@
   \let#1#2%
   \let#2\@swaptemp}
 \urlstyle{same}
-\renewcommand{\reviewimageref}[2]{\reviewfigurename\nobreak\ref{#2}}
 \let\maxwidth\textwidth
 \setlength{\UnderlineDepth}{3pt}
+\renewcommand\p@subfigure{\thefigure\nobreak\,}
 \renewcommand\thesubfigure{(\alph{subfigure})}
 \def\tightlist{\itemsep1pt\parskip0pt\parsep0pt}
 \sloppy
@@ -372,8 +375,11 @@
   \medskip\color{white}\begin{shadedb}\small\setlength{\baselineskip}{1.2zw}\begin{alltt}}{%
   \end{alltt}\end{shadedb}}
 
-\renewcommand{\reviewlistcaption}[1]{%
-  \medskip{\captionfont\noindent #1}\vspace{-\medskipamount}}
+\newcommand{\widesubsubsubsubsubsubsubsubsectionskip}{0.8\Cvs}
+\newcommand{\subsubsubsubsubsubsubsubsectionskip}{0.2\Cvs}
+\newcommand{\subsubsubsubsubsubsubsubsection}{\@startsection{subparagraph}{5}{\z@}%
+  {\subsubsubsubsubsubsubsubsectionskip}{\z@}{\captionfont}}
+\renewcommand{\reviewlistcaption}[1]{\subsubsubsubsubsubsubsubsection{#1}}
 \renewcommand{\reviewemlistcaption}[1]{\reviewlistcaption{#1}}
 \renewcommand{\reviewcmdcaption}[1]{\reviewlistcaption{#1}}
 

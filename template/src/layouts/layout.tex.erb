@@ -57,6 +57,7 @@
 \usepackage{pdfpages}
 \usepackage{titlesec}
 \usepackage{colortbl}
+\usepackage{indentfirst}
 
 \advance \paperwidth 10truemm
 \advance \paperheight 10truemm
@@ -228,6 +229,7 @@
 \newcommand{\reviewpostchaptername}{<%= escape_latex(@locale_latex["postchaptername"]) %>}
 \newcommand{\reviewfigurename}{<%= escape_latex(I18n.t("image")) %>}
 \newcommand{\reviewtablename}{<%= escape_latex(I18n.t("table")) %>}
+\newcommand{\reviewlistname}{<%= escape_latex(I18n.t("list")) %>}
 \newcommand{\reviewappendixname}{<%= escape_latex(@locale_latex["preappendixname"]) %>}
 
 \ifdefined\prepartname

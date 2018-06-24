@@ -1,5 +1,5 @@
 require './author'
-require './blockw'
+require './codeblock'
 require './imagew'
 require './markdown'
 require './profile'
