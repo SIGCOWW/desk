@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /work
     docker:
-      - image: lrks/desk:garei
+      - image: lrks/desk:hinalogic
     steps:
       - checkout
       - run: build.rb --proof --pdf4print --pdf4publish --epub --workdir=/work/src --margin=3mm --verbose
