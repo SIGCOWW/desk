@@ -68,6 +68,15 @@
   \addtolength{\evensidemargin}{-\textwidth}
   \addtolength{\evensidemargin}{-\oddsidemargin}
   \addtolength{\evensidemargin}{-2truein}
+\if@twoside\else%
+  \newlength{\tmplength}
+  \setlength{\tmplength}{\paperwidth}
+  \addtolength{\tmplength}{-\textwidth}
+  \addtolength{\tmplength}{-\marginparwidth}
+  \addtolength{\tmplength}{-\marginparsep}
+  \setlength{\oddsidemargin}{.5\tmplength}
+  \addtolength{\oddsidemargin}{-1truein}
+\fi
 \setlength{\topmargin}{0pt}
   \addtolength{\topmargin}{5truemm}
   \addtolength{\topmargin}{-1truein}
@@ -83,16 +92,13 @@
 \newcommand{\hashira}[3]{\begin{tikzpicture}[remember picture, overlay]%
   \fill[#1] ($(current page.north west)+(-10pt,-59pt-5mm-\headheight)$) rectangle (current page.north east);%
   \end{tikzpicture}\raisebox{\headinsep}{\textcolor{#2}{#3}}}
-
 \newcommand{\nombre}[3]{\begin{tikzpicture}[remember picture, overlay]%
   \def\@shifttemp{12pt}%
   \fill[#1] ($(current page.south west)+(-10pt,-5mm-\headheight-\@shifttemp)$) rectangle ($(current page.south east)+(0pt,-\@shifttemp)$);%
   \end{tikzpicture}\raisebox{-2\baselineskip}{\textcolor{#2}{#3}}}
-
 \newcommand{\chaphashira}[1]{\begin{tikzpicture}[remember picture, overlay]%
   \fill[#1] ($(current page.north west)+(-10pt,-59pt-5mm-\chapterheight-6pt)$) rectangle (current page.north east);%
   \end{tikzpicture}}
-
 \newcommand{\tume}{\if@mainmatter\if@twoside%
   \checkoddpage\ifoddpage%
     \def\tumewidth@{-5mm-5mm}\def\tumeorigin@{east}%
@@ -107,9 +113,14 @@
   \end{tikzpicture}\fi\fi}
 
 % chapterなし
+\if@twoside\else\fancyfootoffset[RO]{\dimexpr\marginparsep+\marginparwidth\relax}\fi
 \fancyhead{}
-\fancyhead[LE]{\hashira{yryrwhite}{yryrblack}{\sffamily\leftmark}}
-\fancyhead[RO]{\hashira{yryrwhite}{yryrblack}{\sffamily\rightmark}}
+\if@twoside
+  \fancyhead[LE]{\hashira{yryrwhite}{yryrblack}{\sffamily\leftmark}}
+  \fancyhead[RO]{\hashira{yryrwhite}{yryrblack}{\sffamily\rightmark}}
+\else
+  \fancyhead[LO]{\hashira{yryrwhite}{yryrblack}{\sffamily\leftmark}}
+\fi
 \fancyfoot{}
 \fancyfoot[LE]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}\tume}
 \fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}\tume}
@@ -248,7 +259,7 @@
 %
 %
 % 注釈
-\reversemarginpar
+\if@twoside\reversemarginpar\fi
 \renewcommand{\footnote}[1]{\Marginpar{#1}}
 % http://oversleptabit.com/?p=453 を改造
 \newcounter{marginparcnt}[chapter]
@@ -273,8 +284,6 @@
   \if@twoside
     \checkoddpage
     \ifoddpage\hspace*{-\marginparwidth}\hspace*{-\marginparsep}\fi%
-  \else
-    \hspace*{-\marginparwidth}\hspace*{-\marginparsep}%
   \fi\noindent\begin{minipage}[]{\maxtextwidth}}{\end{minipage}}
 \newenvironment{widepage}{\hspace*{-10pt}\begin{widepage*}}{\end{widepage*}}
 
