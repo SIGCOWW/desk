@@ -1,0 +1,3 @@
+rules:
+  - expected: $1 $2
+    pattern: /(.*?)　(.*?)/

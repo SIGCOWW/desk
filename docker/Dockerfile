@@ -66,16 +66,14 @@ RUN apk add libjpeg-turbo-dev
 RUN cd /usr/lib/ && npm install canvas && cd /
 RUN npm install -g colibrijs
 ENV NODE_PATH=/usr/lib/node_modules
-RUN wget -q https://github.com/prh/rules/archive/master.zip -O rules.zip
-RUN unzip -q rules.zip
-RUN mv rules-master/ rules
-RUN rm -rf rules.zip
+RUN wget -q https://github.com/prh/rules/archive/master.zip -O rules.zip && unzip -q rules.zip
+RUN mv rules-master/ rules && rm -rf rules.zip
+COPY rule.yml /
+RUN mv rule.yml rules/languages/ja/ && sed -ie "s/^\(imports:\)\s*$/\1\n  - ..\/languages\/ja\/rule.yml/" /rules/media/techbooster.yml
 RUN gem install diff-lcs --no-rdoc --no-ri
-RUN wget -q https://github.com/faelys/libsoldout/archive/trunk.zip
-RUN unzip trunk.zip
+RUN wget -q https://github.com/faelys/libsoldout/archive/trunk.zip && unzip trunk.zip
 RUN cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/lib/ && mv mkd2html mkd2latex /usr/bin/
-RUN strip `which mkd2html`
-RUN strip `which mkd2latex`
+RUN strip `which mkd2html` && strip `which mkd2latex`
 RUN apk add openssh-client
 RUN gem install gemoji --no-rdoc --no-ri
 RUN apk add file
