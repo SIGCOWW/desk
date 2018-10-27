@@ -1,3 +1,9 @@
 rules:
   - expected: $1 $2
     pattern: /(.*?)　(.*?)/
+#  - expected: ($1)
+#    pattern: /（([\x20-\x7e]*?)）/
+  - expected: $1（
+    pattern: /(.+?)\s（/
+  - expected: ）$1
+    pattern: /）\s(.+?)/

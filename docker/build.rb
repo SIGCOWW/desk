@@ -77,7 +77,9 @@ class Build
                 next unless @is_verbose
                 STDERR.print(str)
               when stdout
-                if m = str.match(/^#{path}\((\d+),(\d+)\): (.+?) → (.+?)$/)
+                if m = str.match(/^#{path}\(\d+,\d+\): \([\x20-\x7e]+\) → （[\x20-\x7e]+）$/)
+                  next
+                elsif m = str.match(/^#{path}\((\d+),(\d+)\): (.+?) → (.+?)$/)
                   old = ''
                   new = ''
                   Diff::LCS.sdiff(m[3], m[4]) do | ctx |
@@ -124,9 +126,14 @@ class Build
 \\end{document}
 EOF
 )
-    run("uplatex honbun-tmp")
-    run("dvipdfmx honbun-tmp")
-    run("gs -sOutputFile=honbun.pdf -sDEVICE=pdfwrite -dPDFX -dBATCH -dNOPAUSE -dNOOUTERSAVE -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -dEmbedAllFonts=true -q honbun-tmp.pdf")
+    [
+      "uplatex honbun-tmp",
+      "dvipdfmx honbun-tmp",
+      "gs -sOutputFile=honbun.pdf -sDEVICE=pdfwrite -dPDFX -dBATCH -dNOPAUSE -dNOOUTERSAVE -sColorConversionStrategy=Gray -dProcessColorModel=/DeviceGray -dEmbedAllFonts=true -q honbun-tmp.pdf"
+    ].each do | cmd |
+      @exitstatuses['pdf'] = run(cmd)
+      return unless @exitstatuses['pdf'] === 0
+    end
   end
 
   def pdf4publish()
@@ -163,9 +170,14 @@ EOF
 \\end{document}
 eof
 )
-    run("uplatex publish-raw")
-    run("dvipdfmx publish-raw")
-    run("gs -sOutputFile=publish-ebook.pdf -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -q -dPDFSETTINGS=/ebook -dDownsampleColorImages=true -dColorImageResolution=300 publish-raw.pdf")
+    [
+      "uplatex publish-raw",
+      "dvipdfmx publish-raw",
+      "gs -sOutputFile=publish-ebook.pdf -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -q -dPDFSETTINGS=/ebook -dDownsampleColorImages=true -dColorImageResolution=300 publish-raw.pdf"
+    ].each do | cmd |
+      @exitstatuses['pdf4publish'] = run(cmd)
+      return unless @exitstatuses['pdf4publish'] === 0
+    end
   end
 
   def epub()
@@ -173,8 +185,17 @@ eof
     header("Making EPUB")
     convert_images('html')
     dummy_image('cover.png', 'COVER')
-    run("convert -resize 590x750 cover.png images/epub-cover.png")
+    @exitstatuses['epub'] = run("convert -resize 590x750 cover.png images/epub-cover.png")
+    return unless @exitstatuses['epub'] === 0
+
+    config = YAML.load_file('config.yml')
+    original = config.to_yaml
+    if config.has_key?('prt')
+      config['prt'] = '電子版につき空欄'
+    end
+    File.write('config.yml', config.to_yaml)
     @exitstatuses['epub'] = compile('epubmaker', 'publish.epub')
+    File.write('config.yml', original)
   end
 
   def clean()
@@ -207,6 +228,7 @@ eof
     FileUtils.mkdir_p('sty')
     run("mv layouts/*.sty sty/")
     run("mv layouts/*.rb ./")
+    FileUtils.mkdir_p('images')
 
     config = YAML.load_file('config.yml')
     if config.has_key?('layout_hash') && FileTest.file?('layouts/layout.tex.erb')
@@ -427,7 +449,7 @@ eof
               if io === stdout
                 STDOUT.print(str) if @is_verbose
               elsif io === stderr
-                [ /^.+\.dvi -> .+\.pdf$/, /^(\[[0-9]+\])+$/, /^[0-9]+ bytes? written$/, /^dvipdfmx:warning: .+? font[ :].+$/ ].each do | pat |
+                [ /^.+\.dvi -> .+\.pdf$/, /^(\[[0-9]+\])+$/, /^[0-9]+ bytes? written$/, /^dvipdfmx:warning: (.+? font[ :].+|Trying to include PDF file with version .+? which is newer than current output PDF setting.+)$/ ].each do | pat |
                   next unless str =~ pat
                   STDERR.print(str) if @is_verbose
                   str = nil
@@ -471,7 +493,7 @@ eof
   def run(cmd)
     cmd += " >/dev/null 2>&1" unless @is_verbose
     system(cmd)
-    return $?
+    return $?.exitstatus
   end
 
   def header(msg, level=1)
