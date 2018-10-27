@@ -187,7 +187,15 @@ eof
     dummy_image('cover.png', 'COVER')
     @exitstatuses['epub'] = run("convert -resize 590x750 cover.png images/epub-cover.png")
     return unless @exitstatuses['epub'] === 0
+
+    config = YAML.load_file('config.yml')
+    original = config.to_yaml
+    if config.has_key?('prt')
+      config['prt'] = '電子版につき空欄'
+    end
+    File.write('config.yml', config.to_yaml)
     @exitstatuses['epub'] = compile('epubmaker', 'publish.epub')
+    File.write('config.yml', original)
   end
 
   def clean()
