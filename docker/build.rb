@@ -207,6 +207,7 @@ eof
     FileUtils.mkdir_p('sty')
     run("mv layouts/*.sty sty/")
     run("mv layouts/*.rb ./")
+    FileUtils.mkdir_p('images')
 
     config = YAML.load_file('config.yml')
     if config.has_key?('layout_hash') && FileTest.file?('layouts/layout.tex.erb')
