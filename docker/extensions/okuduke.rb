@@ -1,3 +1,5 @@
+require 'date'
+
 module ReVIEW
   module PDFMakerOkuduke
     def make_colophon

@@ -14,7 +14,7 @@ Re:VIEWを用いてPDF/EPUBを吐くDockerコンテナとその周辺ツール�
 === Re:VIEW拡張を追加したい
 deskでは、@<tt>{docker/extensions/}内のファイルを原稿リポジトリの@<tt>{src/}へ展開します。
 ここには、@<tt>{review-ext.rb}というファイルが含まれ、これをRe:VIEWが読み込むことで拡張が機能します。
-deskは、すでに存在するファイルは上書きしないため、この@<tt>{review-ext.rb}をお好みで書き換えて配置しておくことで、拡張を自由に制御できます。
+deskは、@<tt>{src/layouts/}にある@<tt>{*.rb}ファイルを@<tt>{src/}へ展開しているため、@<tt>{src/layouts/review-ext.rb}を書き換えておくと、自由に拡張できます。
 
 なお、拡張の仕様についてはRe:VIEWのドキュメント@<fn>{doc}があります。
 実装の際は、@<tt>{LATEXBuilder}、@<tt>{HTMLBuilder}、@<tt>{PLAINTEXTBuilder}向きの定義がないとdeskが落ちるので注意が必要です。
