@@ -262,3 +262,11 @@ hogehoge
 
 == 見出し10
 これは正式な文章の代わりに入れて使うダミーテキストです。
+
+
+== 検証
+=== imageとemlistの隣接
+//emlist{
+HOGE
+//}
+//image[pngimage2][pngimage2][scale=1]
