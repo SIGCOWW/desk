@@ -3,7 +3,7 @@ if __FILE__ == $0
   Dir::chdir(ARGV[0])
   Dir.glob('*.tex').each do | file |
     txt = File.read(file)
-    pat = /(\\begin{reviewsubfig}{.+?})((?:\s|\\subfloat\[.+?\]{.+?}\\hfill)*)\\begin{reviewimage}(?:%%.*?)?\s*(\\includegraphics.+?)\s*\\caption{(.+?)}\s*(\\label{.+?})\s*\\end{reviewimage}/m
+    pat = /(\\begin{reviewsubfig}{\S+?})((?:\s|\\subfloat\[\S+?\]{\S+?}\\hfill)*)\\begin{reviewimage}(?:%%\S*?)?\s*(\\includegraphics\S+?)\s*\\caption{(\S+?)}\s*(\\label{\S+?})\s*\\end{reviewimage}/m
     loop do
       ret = txt.gsub!(pat) { $1 + $2 + '\subfloat[' + $4 + ']{' + $3 + $5 + '}\hfill' }
       break if ret.nil?
