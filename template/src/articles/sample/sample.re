@@ -270,3 +270,6 @@ hogehoge
 HOGE
 //}
 //image[pngimage2][pngimage2][scale=1]
+
+=== seqsplit命令
+こんなの→@<seqsplit>{UPXBf763kW7Stp7NCERcd3BDjJ7EQT4fEcapB2fzRn6H7VupYYLSRCQiQryzTb9P2PFCuYNp5wwNMcG8}←どうでしょうか。
