@@ -64,7 +64,7 @@ src/
 * `container_version` ... deskのバージョン
 * `layout_hash` ... layout.tex.erb のMD5ハッシュ
 * `sty_hash` ... sigcoww.sty のMD5ハッシュ
-* `titlepage_pdf` ... layout/以下にある扉ページのパス
+* `latextitle` ... 扉ページとして挿入するLaTeXコマンド
 
 がある。いずれも省略可能。
 

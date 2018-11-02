@@ -316,8 +316,8 @@
 <%-   end -%>
 <%- end -%>
 
-<%- if @config["titlepage_pdf"] -%>
-\includepdf[offset=-2truemm 2truemm]{../<%= @config["titlepage_pdf"] %>}
+<%- if @config["titlelatex"] -%>
+<%= @config["titlelatex"] %>
 <%- end -%>
 
 \renewcommand{\chaptermark}[1]{{}}

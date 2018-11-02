@@ -135,6 +135,15 @@
 \fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}\tume}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}}
+
+% 扉用
+\fancypagestyle{fancytitle}{%
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[LE]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}}
+\fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}}
 %
 %
 %
@@ -309,6 +318,25 @@
   \ifnum\count@=2{\padding@\padding@}\fi%
   \ifnum\count@=3{\padding@}\fi%
   \fi}
+%
+\newcommand{\sigcowwtitle}{\begin{eyecatch}{0}SIGCOWW\end{eyecatch}}
+\newcommand{\@aftereyecatch}{}
+\newenvironment{eyecatch}[1]{%
+  \clearpage
+  \ifnum#1=0
+	\pagecolor{yryrblack}\color{white}
+  \else
+	\pagecolor{yryrwhite}
+  \fi
+  \ifnum#1=2
+    \renewcommand{\@aftereyecatch}{}
+  \else
+    \renewcommand{\@aftereyecatch}{\vfill}
+  \fi
+  \thispagestyle{fancytitle}\vspace*{\fill}\begin{widepage}
+  \ifnum#1=2\else\centering\headfont\Huge\fi}{%
+    \end{widepage}\@aftereyecatch\newpage\pagecolor{white}\color{black}
+  }
 
 % //lead{...//}
 \newenvironment{leadw}{\begin{widepage}\begin{abstract}}{\end{abstract}\end{widepage}}
