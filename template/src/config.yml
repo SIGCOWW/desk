@@ -1,18 +1,21 @@
-booktitle: "COSMIC L0 Vol.0"                            # 本タイトル
-aut: [ "SIGCOWW" ]                                      # 著者リスト (EPUBで使われる)
-date: "2016-08-16"                                      # 発行日
-history: [["2016-08-16", "2016-12-29"], ["2018-06-11"]] # 「第x版」 省略可
-prt: "同人誌印刷 銀河出版"                              # 印刷所
-pbl: "SIGCOWW"                                          # 発行者
-oth: "https://sigcoww.org/"                             #   Webサイト 省略可
-edt: "sigcoww@sigcoww.org"                              # 連絡先 省略可
-feedback: "https://example.com/"                        #   連絡フォーム 省略可
-msg: "https://sigcoww.org/ で既刊紹介中"                # メッセージ 省略可
+booktitle: "COSMIC L0 Vol.0"                     # 本のタイトル
+aut: [ "SIGCOWW" ]                               # 著者リスト (EPUBで使われる)
+date: "2016-08-16"                               # 発行日
+history: [
+  ["2016-08-16", "2016-12-29"],                  # 「第n版 第m刷」
+  ["2018-06-11", "2018-10-31", "2018-11-03"]]    #         省略可
+prt: "同人誌印刷 銀河出版"                       # 印刷所
+pbl: "SIGCOWW"                                   # 発行者
+oth: "https://sigcoww.org/"                      # Webサイト 省略可
+edt: "sigcoww@sigcoww.org"                       # 連絡先 省略可
+feedback: "https://example.com/"                 # 連絡フォーム 省略可
+msg: "https://sigcoww.org/ で既刊紹介中"         # メッセージ 省略可
 
-container_version: "hinalogic"                          # desk のバージョン 省略可
-layout_hash: "bd74186c6e2ece1f3e5e5b9073acb347"         # layout.tex.erb のMD5ハッシュ 省略可
-sty_hash: "566051c4e0b664374d3b88ce576fe5b2"            # sigcoww.sty のMD5ハッシュ 省略可
-titlelatex: '\sigcowwtitle'                             # 扉ページ 省略可
+container_version: "hinalogic"                   # desk のバージョン 省略可
+layout_hash: "bd74186c6e2ece1f3e5e5b9073acb347"  # layout.tex.erb のMD5ハッシュ 省略可
+sty_hash: "566051c4e0b664374d3b88ce576fe5b2"     # sigcoww.sty のMD5ハッシュ 省略可
+titlelatex: '\sigcowwtitle'                      # 扉ページ 省略可
+download: "https://example.sigcoww.org/?key=%s"  # ダウンロードコード用文字列 省略可
 
 
 debug: true

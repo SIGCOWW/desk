@@ -63,7 +63,7 @@
 - run: 'mv BXcoloremoji*/emoji_images $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
 - run: 'mktexlsr'
 
-- dev: python
+- apk: python
 - dev: pkgconfig
 - dev: cairo-dev
 - dev: pango-dev
@@ -89,6 +89,12 @@
 
 # Emoji
 - run: 'gem install gemoji --no-rdoc --no-ri'
+
+# QR
+- run: 'npm install -g sharp --unsafe-perm'
+- apk: py2-pip
+- apk: py2-pillow
+- run: 'pip install CuteR'
 
 ## Cleaning
 #- dev: 'file'
@@ -203,6 +209,8 @@
 - run: 'mv build.rb /usr/local/bin/'
 - copy: 'colorpicker.js'
 - run: 'mv colorpicker.js /usr/local/bin/'
+- copy: 'qr.js'
+- run: 'mv qr.js /usr/local/bin/'
 - copy: 'pdfcrop.sh'
 - run: 'mv pdfcrop.sh /usr/local/bin/'
 - run: 'mkdir -p /extensions'
