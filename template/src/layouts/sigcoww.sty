@@ -197,7 +197,8 @@
   \fi}
 \renewcommand*{\l@section}{%
   \@tempdima\jsc@tocl@width \advance\@tempdima -1zw
-  \vspace*{-1.5\baselineskip}\@dottedtoclinemod{1}{\@tempdima}{3.683zw}}
+  \ifnum\c@tocdepth>\z@\vspace*{-1.5\baselineskip}\fi
+  \@dottedtoclinemod{1}{\@tempdima}{3.683zw}}
 \def\@dottedtoclinemod#1#2#3#4#5{\ifnum #1>\c@tocdepth \else
   \vskip \z@ \@plus.2\jsc@mpt
   {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
