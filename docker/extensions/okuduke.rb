@@ -26,17 +26,28 @@ module ReVIEW
       end
       rows << ['連絡先', @config["edt"].to_s] if @config.key?('edt')
       rows << ['', @config["feedback"].to_s] if @config.key?('feedback')
-      rows << ['印刷所', @config["prt"].to_s] if (@config.key?('prt') and not(ENV['ONESIDE']))
+      rows << ['印刷所', @config["prt"].to_s] if (@config.key?('prt') && not(ENV['ONESIDE']))
       rows << ['ビルド', t.to_s]
       rows << ['', `review-pdfmaker --version`]
       rows << ['', `uplatex --version | head -n1`]
       rows << ['', "Alpine Linux #{`cat /etc/alpine-release`.strip} (Linux Kernel #{`uname -r`.strip})"]
-      rows << ['', "https://github.com/SIGCOWW/desk ←←←←← 熱烈歓迎Contribution"]
+      rows << ['', "https://github.com/SIGCOWW/desk"]
+
+      if @config.key?('download') and not(ENV['ONESIDE'])
+        list = '12345678abcdefghkmnoprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ'
+        code = @config["download"].to_s % list.split('').sample(12+rand(4)).join('')
+
+        wh = `identify -format "%wx%h" cover.png`
+        system("qr.js cover.png crop.png #{wh.split('x').map!(&:to_i).min}")
+        system("CuteR -o qr.png crop.png #{code}")
+        rows << ['電子版', code]
+        rows << ['', nil, '\hfill\includegraphics[width=0.5\textwidth]{../qr.png}\hfill']
+      end
 
       ret = ''
       rows.each do | r |
         key = r[0].empty? ? '' : "\\underline{\\mathstrut\\bfseries #{r[0]}}"
-        value = "#{escape_latex(r[1])}"
+        value = r[1].nil? ? r[2] : "#{escape_latex(r[1])}"
         ret += "#{key} & #{value} \\\\\n"
       end
       return ret.strip

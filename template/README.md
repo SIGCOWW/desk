@@ -65,6 +65,7 @@ src/
 * `layout_hash` ... layout.tex.erb のMD5ハッシュ
 * `sty_hash` ... sigcoww.sty のMD5ハッシュ
 * `latextitle` ... 扉ページとして挿入するLaTeXコマンド
+* `download` ... ダウンロード用URL。`%s`には乱数が入る。
 
 がある。いずれも省略可能。
 

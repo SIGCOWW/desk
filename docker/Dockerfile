@@ -76,11 +76,17 @@ RUN cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/li
 RUN strip `which mkd2html` && strip `which mkd2latex`
 RUN apk add openssh-client
 RUN gem install gemoji --no-rdoc --no-ri
+RUN npm install -g sharp --unsafe-perm
+RUN apk add py2-pip
+RUN apk add py2-pillow
+RUN pip install CuteR
 RUN mkdir -p /usr/local/bin
 COPY *.rb /
 RUN mv build.rb /usr/local/bin/
 COPY colorpicker.js /
 RUN mv colorpicker.js /usr/local/bin/
+COPY qr.js /
+RUN mv qr.js /usr/local/bin/
 COPY pdfcrop.sh /
 RUN mv pdfcrop.sh /usr/local/bin/
 RUN mkdir -p /extensions
