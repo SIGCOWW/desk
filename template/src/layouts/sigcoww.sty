@@ -364,11 +364,28 @@
     \end{tabular}}
 
 % profile
-\newenvironment{profile}[2]%
-  {\vspace{2\Cvs \@plus.5\Cdp \@minus.2\Cdp}\begin{widepage*}\setlength{\parindent}{1zw}%
-    \noindent\colorbox{yryrblack}{\textcolor{white}{\large\headfont\mathstrut\,#1\,}}%
-    \hspace{0.5zw}\raisebox{0.22pt}{\underline{\small\sffamily\strut\,#2\,}}\vspace{.4\Cvs \@plus.3\Cdp}\par}
-  {\end{widepage*}}
+\newcommand{\@afterprofile}{}
+\newlength{\@profileauthorh}
+\newlength{\@profiletwh}
+\newenvironment{profile}[3]{%
+  \settoheight{\@profileauthorh}{\hbox{\large\headfont#1}}
+  \if\relax\detokenize{#3}\relax\else%
+    \settoheight{\@profiletwh}{\hbox{\large\headfont#3}}%
+    \ifdim\@profiletwh>\@profileauthorh\setlength{\@profileauthorh}{\@profiletwh}\fi\fi%
+  \vspace{2\Cvs \@plus.5\Cdp \@minus.2\Cdp}\begin{widepage*}\setlength{\parindent}{0zw}\noindent%
+  \colorbox{yryrblack}{\textcolor{white}{\large\headfont\mathstrut\rule{0pt}{\@profileauthorh}\,#1\,}}%
+  \if\relax\detokenize{#3}\relax\else%
+    \colorbox{yryrwhite}{\textcolor{black}{\large\headfont\mathstrut\rule{0pt}{\@profileauthorh}\,%
+    \includegraphics[height=\fontcharht\font`\B]{../layouts/twitter.pdf}\,\texttt{#3}\,}}\fi
+  \hspace{0.5zw}\raisebox{0.22pt}{\underline{\small\sffamily\strut\,#2\,}}\vspace{.4\Cvs \@plus.3\Cdp}%
+  \par\if\relax\detokenize{#3}\relax\setlength{\parindent}{1zw}\renewcommand{\@afterprofile}{}\else%
+  \renewcommand{\@afterprofile}{\end{minipage}\\\end{tabular*}}%
+  \setlength{\tabcolsep}{0pt}\vspace{-0.2\baselineskip}\begin{tabular*}{\textwidth}{ll}
+    \begin{minipage}[t]{0.2\textwidth}
+      \vspace{-0.4\baselineskip}
+      \raisebox{\dimexpr-\height+\ht\strutbox}{\includegraphics[width=0.9\textwidth]{../layouts/#3.png}}
+    \end{minipage} & \begin{minipage}[t]{0.8\textwidth}\setlength{\parindent}{1zw}\fi}
+  {\@afterprofile\end{widepage*}}
 
 % subfig
 \newenvironment{reviewsubfig}[1]%

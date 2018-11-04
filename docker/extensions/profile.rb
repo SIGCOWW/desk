@@ -9,15 +9,29 @@ module ReVIEW
 
   class Builder
     def profile(lines, author='', title='')
-      puts author
+      items = author_split(author)
+      puts items['author']
+      puts items['twitter'] if items.key?('twitter')
       puts title
       puts lines
+    end
+
+    private
+    def author_split(str)
+      items = str.split(';')
+      ret = {'author' => items.shift}
+      items.each do | item |
+        tmp = item.split(':', 2)
+        ret[tmp[0]] = tmp[1] || ''
+      end
+      return ret
     end
   end
 
   class LATEXBuilder
     def profile(lines, author='', title='')
-      puts "\\begin{profile}{#{escape(author)}}{#{compile_inline(title)}}"
+      items = author_split(author)
+      puts "\\begin{profile}{#{escape(items['author'])}}{#{compile_inline(title)}}{#{escape(items['twitter'] || '')}}"
       puts lines
       puts '\end{profile}'
     end
@@ -25,7 +39,9 @@ module ReVIEW
 
   class HTMLBuilder
     def profile(lines, author='', title='')
-      puts "<dl><dt>#{escape(author)}</dt><dd>#{lines.join('')}</dd></dl>"
+      items = author_split(author)
+      aut = items.key?('twitter') ? "#{items['author']} (@#{items['twitter']})" : items['author']
+      puts "<dl><dt>#{escape(items['author'])}</dt><dd>#{lines.join('')}</dd></dl>"
     end
   end
 end
