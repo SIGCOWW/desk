@@ -10,8 +10,11 @@ if __FILE__ == $0
     end
 
     txt.gsub!(/(\\end{review(?:list|emlist|cmd|source)})\s(\s*)(\\end{widepage})/m) { $1 + "\n" + $3 + $2 }
-    #txt.gsub!(/\s(\\begin{review(?:list|emlist|cmd|source)})/m) { $1 }
-    #txt.gsub!(/(\\end{review(?:list|emlist|cmd|source)})\s/m) { $1 }
+    loop do
+      ret = txt.gsub!(/(\\textunderscore\{\})(\\textunderscore\{\})/, '\1\kern0.25ex\2')
+      break if ret.nil?
+    end
+
     File.write(file, txt)
   end
 end

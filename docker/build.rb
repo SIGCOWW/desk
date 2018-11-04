@@ -314,13 +314,15 @@ eof
         parts = m[1].rpartition(',')
         parts[0].strip!
         parts[2].strip!
+        author = parts[2].dup
+        parts[2] = parts[2].split(';')[0]
+
         if parts[0].empty?
           emb = parts[2]
         else
           emb = "#{parts[0]},#{parts[2]}"
         end
         txt.sub!(/^=\s+(.+?)$/, '= \1（'+emb+' 著）')
-        author = parts[2]
       end
 
       # //profile
