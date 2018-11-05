@@ -82,6 +82,7 @@ RUN npm install -g sharp --unsafe-perm
 RUN apk add py2-pip
 RUN apk add py2-pillow
 RUN pip install CuteR
+RUN echo lrks/desk > /etc/desk-release
 RUN mkdir -p /usr/local/bin
 COPY *.rb /
 RUN mv build.rb /usr/local/bin/

@@ -195,7 +195,7 @@
     \endgroup
     }\end{widepage}\vskip2\baselineskip
   \fi}
-\renewcommand*{\l@section}{%
+\renewcommand*{\l@section}{\sffamily%
   \@tempdima\jsc@tocl@width \advance\@tempdima -1zw
   \ifnum\c@tocdepth>\z@\vspace*{-1.5\baselineskip}\fi
   \@dottedtoclinemod{1}{\@tempdima}{3.683zw}}
@@ -324,18 +324,12 @@
 \newcommand{\@aftereyecatch}{}
 \newenvironment{eyecatch}[1]{%
   \clearpage
-  \ifnum#1=0
-	\pagecolor{yryrblack}\color{white}
-  \else
-	\pagecolor{yryrwhite}
-  \fi
-  \ifnum#1=2
-    \renewcommand{\@aftereyecatch}{}
-  \else
-    \renewcommand{\@aftereyecatch}{\vfill}
-  \fi
-  \thispagestyle{fancytitle}\vspace*{\fill}\begin{widepage}
-  \ifnum#1=2\else\centering\headfont\Huge\fi}{%
+  \renewcommand{\@aftereyecatch}{}
+  \ifnum#1=0\pagecolor{yryrblack}\color{white}\renewcommand{\@aftereyecatch}{\vfill}\fi
+  \ifnum#1=1\pagecolor{yryrwhite}\renewcommand{\@aftereyecatch}{\vfill}\fi
+  \ifnum#1=2\pagecolor{yryrwhite}\fi
+  \thispagestyle{fancytitle}\ifnum#1=3\else\vspace*{\fill}\fi\begin{widepage}
+  \ifnum#1<2\centering\headfont\Huge\else\sffamily\fi}{%
     \end{widepage}\@aftereyecatch\newpage\pagecolor{white}\color{black}
   }
 
@@ -469,5 +463,5 @@
 }
 
 % kusodeka
-\newcommand{\kusodeka}[1]{\vspace{-\baselineskip}\begin{center}\resizebox{\textwidth}{!}{#1}\end{center}}
+\newcommand{\kusodeka}[1]{\vspace{0.2\baselineskip}\\\vspace{0.075\baselineskip}\hbox{\resizebox{\textwidth}{!}{#1}}}
 \makeatother
