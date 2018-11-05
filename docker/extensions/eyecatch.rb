@@ -1,3 +1,5 @@
+require 'base64'
+
 module ReVIEW
   class Compiler
     defblock :eyecatch, 0..1, true
@@ -10,9 +12,9 @@ module ReVIEW
 
   class LATEXBuilder
     def eyecatch(lines, strength=nil)
-      idx = ['high', 'mid', 'low'].index(strength) || 0
+      idx = ['high', 'mid', 'low', 'urgent'].index(strength) || 0
       puts "\\begin{eyecatch}{#{idx}}"
-      puts lines
+      puts Base64.decode64(lines.join(''))
       puts '\end{eyecatch}'
     end
   end

@@ -10,7 +10,7 @@ require 'shellwords'
 require 'digest/md5'
 
 class Build
-  def initialize(papersize, margin, is_strict, is_verbose)
+  def initialize(papersize, margin, is_strict, is_verbose, container)
     header("Initialization")
     @papersize = papersize
     @margin = margin.delete("^0-9").to_i * 2
@@ -24,6 +24,10 @@ class Build
 
     @is_vm777 = false
     @is_vmclean = false
+
+    File.open('/etc/desk-release', 'w') do |f|
+      f.puts(container)
+    end
   end
 
   def setExperiments(vm777, vmchown, vmclean)
@@ -297,7 +301,7 @@ eof
       txt = File.read("../articles/#{chapid}/#{chapid}.re").gsub(/\r\n/, "\n")
 
       # ~raw
-      txt.gsub!(/^(\/\/(?:tabooularw?|markdown)(?:\[\S+?\])*{\s*)(.+?)(\s*\/\/}\s*)$/m) { $1 + Base64.encode64($2).delete('=') + $3 }
+      txt.gsub!(/^(\/\/(?:tabooularw?|markdown|eyecatch)(?:\[\S+?\])*{\s*)(.+?)(\s*\/\/}\s*)$/m) { $1 + Base64.encode64($2).delete('=') + $3 }
       txt.gsub!(/^\/\/(tabooularw?(?:\[\S+?\])*{\s*)$/) { '//table' + $1 }
 
       # @<author> (+ title)
@@ -510,7 +514,7 @@ end
 
 if __FILE__ == $0
   begin
-    params = ARGV.getopts('', 'proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean')
+    params = ARGV.getopts('', 'proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean', 'container:lrks/desk')
   rescue => e
     puts "#{e}. try \"--help\"."
     exit 1
@@ -521,7 +525,7 @@ if __FILE__ == $0
   FileUtils.rm_rf(dirname)
   FileUtils.mkdir_p(dirname)
   Dir::chdir(dirname) do
-    build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'])
+    build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'], params['container'])
     build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'])
     begin
       build.proof() if params['proof']

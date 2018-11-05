@@ -30,16 +30,16 @@ module ReVIEW
       rows << ['ビルド', t.to_s]
       rows << ['', `review-pdfmaker --version`]
       rows << ['', `uplatex --version | head -n1`]
-      rows << ['', "Alpine Linux #{`cat /etc/alpine-release`.strip} (Linux Kernel #{`uname -r`.strip})"]
-      rows << ['', "https://github.com/SIGCOWW/desk"]
+      rows << ['', "Alpine Linux #{`cat /etc/alpine-release`.strip} (Kernel #{`uname -r`.strip})"]
+      rows << ['', "https://github.com/SIGCOWW/desk (#{`cat /etc/desk-release`.strip})"]
 
       if @config.key?('download') and not(ENV['ONESIDE'])
-        list = '12345678abcdefghkmnoprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ'
-        code = @config["download"].to_s % list.split('').sample(12+rand(4)).join('')
+        list = '12345678abcdefghkmnoprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ'.split('')
+        code = @config["download"].to_s % (0..rand(12..16)).map{list.sample}.join('')
 
         wh = `identify -format "%wx%h" cover.png`
         system("qr.js cover.png crop.png #{wh.split('x').map!(&:to_i).min}")
-        system("CuteR -o qr.png crop.png #{code}")
+        system("CuteR -o qr.png -e Q crop.png #{code}")
         rows << ['電子版', code]
         rows << ['', nil, '\hfill\includegraphics[width=0.5\textwidth]{../qr.png}\hfill']
       end

@@ -206,6 +206,7 @@
 #- run: 'rm -rf /usr/x86_64-alpine-linux-musl/'
 
 # Utility
+- run: 'echo lrks/desk > /etc/desk-release'
 - run: 'mkdir -p /usr/local/bin'
 - copy: '*.rb'
 - run: 'mv build.rb /usr/local/bin/'
