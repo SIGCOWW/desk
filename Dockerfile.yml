@@ -97,6 +97,7 @@
 - apk: py2-pip
 - apk: py2-pillow
 - run: 'pip install CuteR'
+- run: 'tlmgr install qrcode xkeyval'
 
 ## Cleaning
 #- dev: 'file'
