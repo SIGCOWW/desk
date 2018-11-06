@@ -213,6 +213,12 @@ URIのほかに名前も指定できますが、紙面への掲載を考える�
 @<tt>{@}<href>{https://sigcoww.herokuapp.com/}
 //}
 
+なおdesk特有、またLaTeX出力のみの機能として、QRコードの出力を用意しました。
+@<tt>{@}@<tt>{<qrcode>{URI\}}として、URIをQRコードにした画像が出力されます。
+傍注への出力を想定しており、@<tt>{<href>{\}}と合わせてこんな感じ@<fn>{qrcode}になります。
+//footnote[qrcode][@<href>{https://sigcoww.org/}のQRコードは↓だよー。@<qrcode>{https://sigcoww.org/}これ↑だよー。]
+
+
 === 絵文字
 desk特有の機能として、絵文字@<emoji>{sushi}が出力できます。
 記述@<emoji>{notebook}は、@<tt>{@}@<tt>{<emoji>{エイリアス\}}です。
