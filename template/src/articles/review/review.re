@@ -6,6 +6,13 @@ Re:VIEWの文法、およびlrks/deskで拡張した文法を基本編と応用�
 これであなたもRe:VIEW（with desk）マスター！
 //}
 
+== はじめに
+この辺見るといいかも知れません。
+
+* https://github.com/kmuto/review/blob/master/doc/format.ja.md
+* https://review-knowledge-ja.readthedocs.io/ja/latest/index.html
+
+
 == 基本文法
 執筆にあたってそこそこ使いそうな文法を紹介します。
 
