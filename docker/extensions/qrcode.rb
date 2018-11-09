@@ -5,6 +5,7 @@ module ReVIEW
 
   class Builder
     def inline_qrcode(str)
+      return ''
     end
   end
 

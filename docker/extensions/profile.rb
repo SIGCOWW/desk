@@ -41,7 +41,7 @@ module ReVIEW
     def profile(lines, author='', title='')
       items = author_split(author)
       aut = items.key?('twitter') ? "#{items['author']} (@#{items['twitter']})" : items['author']
-      puts "<dl><dt>#{escape(items['author'])}</dt><dd>#{lines.join('')}</dd></dl>"
+      puts "<dl><dt>#{escape(aut)}</dt><dd>#{lines.join('')}</dd></dl>"
     end
   end
 end

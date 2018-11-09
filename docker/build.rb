@@ -410,8 +410,9 @@ eof
         when 'latex.pdf'
           run("pdfcrop.sh #{src} #{dst}.pdf")
         when 'html.pdf'
-          run("convert -antialias -density 300 #{src} #{dst}.png")
-          run("mogrify -trim +repage #{dst}.png")
+          run("pdfcrop.sh #{src} #{dst}-crop.pdf")
+          run("gs -sOutputFile=#{dst}.png -sDEVICE=pngalpha -dBATCH -dNOPAUSE -q -r300 #{dst}-crop.pdf")
+          run("rm -f #{dst}-crop.pdf")
           resize("#{dst}.png")
         when 'latex.png'
           run("convert #{src} \\( +clone -alpha opaque -fill white -colorize 100% \\) +swap -geometry +0+0 -compose Over -composite -alpha off #{dst}.png")
