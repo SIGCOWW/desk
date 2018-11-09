@@ -46,7 +46,7 @@ module ReVIEW
 
       ret = ''
       rows.each do | r |
-        key = r[0].empty? ? '' : "\\underline{\\mathstrut\\bfseries #{r[0]}}"
+        key = r[0].empty? ? '' : "\\rule{0pt}{3ex}\\underline{\\mathstrut\\bfseries #{r[0]}}"
         value = r[1].nil? ? r[2] : "#{escape_latex(r[1])}"
         ret += "#{key} & #{value} \\\\\n"
       end
