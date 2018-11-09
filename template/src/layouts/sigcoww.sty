@@ -465,3 +465,8 @@
 % kusodeka
 \newcommand{\kusodeka}[1]{\vspace{0.5\textfloatsep}\\\vspace{0.4\textfloatsep}\hbox{\resizebox{\textwidth}{!}{#1}}\\}
 \makeatother
+
+% QRコード
+\newcommand{\reviewqr}[1]{\vspace{0.5\baselineskip}\\{%
+  \setlength\lineskiplimit{0pt}\setlength\normallineskiplimit{0pt}%
+  \qrcode[tight,height=\marginparwidth]{#1}}\vspace{0.5\baselineskip}\\}
