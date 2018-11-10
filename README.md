@@ -152,3 +152,6 @@ SIGCOWWメンバーなど、既にリポジトリへのWrite権限があれば�
 * `env CONTAINER_VERSION="debug" ./make.sh build --proof --pdf4print --pdf4publish --epub --strict --verbose` な感じ
 * ぱっと見でエラーが出ていない、かつ出力が想定どおりならOKでいい
 * それで問題があったら自動テストを用意する
+
+#### Tips
+* `du -b ./* | sort -rn | numfmt --to=iec --suffix=B --padding=5 | head`

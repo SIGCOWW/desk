@@ -186,7 +186,7 @@
     \addpenalty{-\@highpenalty}%
     \addvspace{1.0em \@plus\jsc@mpt}
     \begingroup
-      \parindent\z@\rightskip\@tocrmarg\parfillskip-\rightskip\leavevmode\bfseries
+      \parindent\z@\rightskip\@tocrmarg\parfillskip-\rightskip\leavevmode\normalfont\bfseries
       \setlength\@lnumwidth{\jsc@tocl@width}\advance\@lnumwidth 2.683zw
       \advance\leftskip\@lnumwidth \hskip-\leftskip
       \let\@sigcowwtoc\@customtoc#1\let\@sigcowwtoc\@defaulttoc\hspace{5pt}%
@@ -463,5 +463,10 @@
 }
 
 % kusodeka
-\newcommand{\kusodeka}[1]{\vspace{0.2\baselineskip}\\\vspace{0.075\baselineskip}\hbox{\resizebox{\textwidth}{!}{#1}}\\}
+\newcommand{\kusodeka}[1]{\vspace{0.5\textfloatsep}\\\vspace{0.4\textfloatsep}\hbox{\resizebox{\textwidth}{!}{#1}}\\}
 \makeatother
+
+% QRコード
+\newcommand{\reviewqr}[1]{\vspace{0.5\baselineskip}\\{%
+  \setlength\lineskiplimit{0pt}\setlength\normallineskiplimit{0pt}%
+  \qrcode[tight,height=\marginparwidth]{#1}}\vspace{0.5\baselineskip}\\}
