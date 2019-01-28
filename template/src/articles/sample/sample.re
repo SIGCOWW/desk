@@ -196,9 +196,9 @@ hogehoge
 //image[subb1][検証中B1][scale=0.1]
 //}
 これは正式な文章の代わりに入れて使うダミーテキストです。
-//subfig[連続subfigのテスト2]{
-//image[suba2][検証中A2][scale=0.1]
-//image[subb2][検証中B2][scale=0.1]
+//subfig[連続subfig 空白 のテスト2 です]{
+//image[suba2][検証中 A2][scale=0.1]
+//image[subb2][検証中 B2][scale=0.1]
 //}
 これは正式な文章の代わりに入れて使うダミーテキストです。
 //image[pdfimage][はい画像][scale=1]

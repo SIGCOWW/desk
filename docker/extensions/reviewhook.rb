@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
+require 'uri'
+
 if __FILE__ == $0
   Dir::chdir(ARGV[0])
   Dir.glob('*.tex').each do | file |
     txt = File.read(file)
-    pat = /(\\begin{reviewsubfig}{\S+?})((?:\s|\\subfloat\[\S+?\]{\S+?}\\hfill)*)\\begin{reviewimage}(?:%%\S*?)?\s*(\\includegraphics\S+?)\s*\\caption{(\S+?)}\s*(\\label{\S+?})\s*\\end{reviewimage}/m
+    pat = /(\\begin{reviewsubfig}{[^\t\r\n\f\v]+?})((?:\s|\\subfloat\[[^\t\r\n\f\v]+?\]{\S+?}\\hfill)*)\\begin{reviewimage}(?:%%\S*?)?\s*(\\includegraphics\S+?)\s*\\caption{([^\t\r\n\f\v]+?)}\s*(\\label{\S+?})\s*\\end{reviewimage}/m
     loop do
       ret = txt.gsub!(pat) { $1 + $2 + '\subfloat[' + $4 + ']{' + $3 + $5 + '}\hfill' }
       break if ret.nil?
@@ -15,6 +17,7 @@ if __FILE__ == $0
       break if ret.nil?
     end
 
+    #txt.gsub!(URI.decode('%C2%A9'), 'AAAAAAAAAA')
     File.write(file, txt)
   end
 end

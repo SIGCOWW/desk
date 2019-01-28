@@ -357,7 +357,7 @@ tabooularでは、セルの結合や文字揃えをそこそこ直感的な記�
  //}
 //}
 //footnote[demo][@<href>{https://lrks.github.io/tabooular/}]
-//tabooular[tabooular-table][tabooularの出力]{
+//tabooular[tabooular-table][tabooular 出力例]{
 ; セミコロン以降はコメント
 GID  | Name   & Age & Gender  ; ヘッダ。中央揃えになる。
 =====|<======= ====>&======== ; 本体との境界。<=>で揃え方、|で線、空白か&で列を指定
