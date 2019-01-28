@@ -11,9 +11,9 @@
 #
 # ex1) $ ./make.sh install HOGE
 # HOGE章を追加する
-#  * src/articles/HOGE/HOGE.re を作成        (HOGE.re が存在しない場合)
+#  * src/articles/HOGE/HOGE.re を作成		 (HOGE.re が存在しない場合)
 #  * src/catalog.yml の CHAPS へ HOGE を追加 (HOGE が存在しない場合)
-#  * src/articles/HOGE/images/ を作成        (src/images/HOGE が存在しない場合)
+#  * src/articles/HOGE/images/ を作成		 (src/images/HOGE が存在しない場合)
 #
 # ex1) $ ./make.sh remote
 # リモートで ./make.sh build を実行する
@@ -27,10 +27,10 @@
 build() {
 	set +u
 	ENV_VER=$CONTAINER_VERSION
-	CFG_VER=$(grep "^\\s*container_version:" src/config.yml | head -1 | sed -r "s/.*?[\"'](.*?)[\"'].*/\\1/")
+	CFG_VER=$(grep "^\\s*container_version:" src/config.yml | head -1 | grep -oE "[\"'].+[\"']" | sed "s/[\"']//g")
 	CI_VER=""
 	if [ -f ".circleci/config.yml" ]; then
-		CI_VER=$(grep "image:" .circleci/config.yml | head -1 | sed -r 's/.*?lrks\/desk:(.+?)\s*/\1/')
+		CI_VER=$(grep "image:" .circleci/config.yml | head -1 | grep -oE "lrks/desk:.+" | sed 's/lrks\/desk://')
 	fi
 
 	# array is undefined in POSIX
@@ -65,15 +65,14 @@ build() {
 		PAPER_MARGIN="--margin=${PAPER_MARGIN}"
 	else
 		if [ -f ".circleci/config.yml" ]; then
-			PAPER_MARGIN=$(grep "margin" .circleci/config.yml | head -1 | sed -r 's/.*?(--margin=[0-9]+mm).*/\1/');
+			PAPER_MARGIN=$(grep "margin" .circleci/config.yml | head -1 | grep -oE '\-\-margin=\d+mm' | sed 's/--margin=//');
 		else
 			PAPER_MARGIN=""
 		fi
 	fi
 	set -u
 
-
-	cmd="build.rb ${*} --workdir=/work ${PAPER_MARGIN} --container=${container}"
+	cmd="build.rb $* --workdir=/work ${PAPER_MARGIN} --container=${container}"
 	echo "\\033[35mcmd: [ ${cmd} ]\\033[m"
 	set +e
 	ret=$(id -Gn | grep "docker")
@@ -122,9 +121,15 @@ EOF
 		done)
 
 		if [ ! -n "$insert_start" ]; then
-			echo "  - ${1}.re" >> catalog.yml
+			echo "	- ${1}.re" >> catalog.yml
 		else
+			set +e
 			sed -i "${insert_start}i\\ \\ - ${1}.re" catalog.yml
+            r="$?"
+            set -e
+			if [ "$r" -ne 0]; then
+				sed -i'' "${insert_start}i\\ \\ - ${1}.re" catalog.yml
+			fi
 		fi
 		set -u
 	fi

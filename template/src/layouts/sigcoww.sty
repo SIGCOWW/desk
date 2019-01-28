@@ -361,7 +361,7 @@
 \newcommand{\@afterprofile}{}
 \newlength{\@profileauthorh}
 \newlength{\@profiletwh}
-\newenvironment{profile}[3]{%
+\newenvironment{profile}[4]{%
   \settoheight{\@profileauthorh}{\hbox{\large\headfont#1}}
   \if\relax\detokenize{#3}\relax\else%
     \settoheight{\@profiletwh}{\hbox{\large\headfont#3}}%
@@ -376,8 +376,8 @@
   \renewcommand{\@afterprofile}{\end{minipage}\\\end{tabular*}}%
   \setlength{\tabcolsep}{0pt}\vspace{-0.2\baselineskip}\begin{tabular*}{\textwidth}{ll}
     \begin{minipage}[t]{0.2\textwidth}
-      \vspace{-0.4\baselineskip}
-      \raisebox{\dimexpr-\height+\ht\strutbox}{\includegraphics[width=0.9\textwidth]{../layouts/#3.png}}
+      \vspace{-0.5\baselineskip}
+      \raisebox{\dimexpr-\height+\ht\strutbox}{\includegraphics[width=0.9\textwidth]{../layouts/#4.png}}
     \end{minipage} & \begin{minipage}[t]{0.8\textwidth}\setlength{\parindent}{1zw}\fi}
   {\@afterprofile\end{widepage*}}
 
@@ -470,3 +470,5 @@
 \newcommand{\reviewqr}[1]{\vspace{0.5\baselineskip}\\{%
   \setlength\lineskiplimit{0pt}\setlength\normallineskiplimit{0pt}%
   \qrcode[tight,height=\marginparwidth]{#1}}\vspace{0.5\baselineskip}\\}
+
+\renewcommand{\copyright}{\textcopyright}

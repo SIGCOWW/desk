@@ -31,7 +31,7 @@ module ReVIEW
   class LATEXBuilder
     def profile(lines, author='', title='')
       items = author_split(author)
-      puts "\\begin{profile}{#{escape(items['author'])}}{#{compile_inline(title)}}{#{escape(items['twitter'] || '')}}"
+      puts "\\begin{profile}{#{escape(items['author'])}}{#{compile_inline(title)}}{#{escape(items['twitter'] || '')}}{#{items['twitter'] || ''}}"
       puts lines
       puts '\end{profile}'
     end
