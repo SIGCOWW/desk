@@ -121,7 +121,7 @@ EOF
 		done)
 
 		if [ ! -n "$insert_start" ]; then
-			echo "	- ${1}.re" >> catalog.yml
+			echo "  - ${1}.re" >> catalog.yml
 		else
 			set +e
 			sed -i "${insert_start}i\\ \\ - ${1}.re" catalog.yml
