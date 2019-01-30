@@ -96,8 +96,6 @@ class Build
                     new += "\033[30;42m#{ctx.new_element}\033[m" if !ctx.new_element.nil?
                   end
                   puts "L#{m[1].rjust(3)}: #{old} → #{new}"
-                else
-                  STDOUT.print(str)
                 end
               end
             end
