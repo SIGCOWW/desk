@@ -28,7 +28,7 @@ module ReVIEW
       if @book.config["footnotetext"]
         macro("footnotemark[#{@chapter.footnote(id).number}]", "")
       else
-        '\nobreak' + macro('footnote', compile_inline(@chapter.footnote(id).content.strip))
+        '\nolinebreak' + macro('footnote', compile_inline(@chapter.footnote(id).content.strip))
       end
     end
 
