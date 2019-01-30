@@ -294,3 +294,37 @@ HOGE
 これは正式な文章の代わりに入れて使うダミーテキストです。
 これは正式な文章の代わりに入れて使うダミーテキストです。
 これは正式な文章の代わりに入れて使うダミーテキストです。
+
+=== footnote落ちる問題
+あいうえお
+@<fn>{aiueo1}
+@<fn>{aiueo2}
+@<fn>{aiueo3}
+@<fn>{aiueo4}
+@<fn>{aiueo5}
+@<fn>{aiueo6}
+@<fn>{aiueo7}
+@<fn>{aiueo8}
+@<fn>{aiueo9}
+@<fn>{aiueo10}
+@<fn>{aiueo11}
+@<fn>{aiueo12}
+//footnote[aiueo1][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo2][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo3][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo4][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo5][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo6][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo7][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo8][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo9][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo10][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo11][これは正式な文章の代わりに入れて使うダミーテキストです。]
+//footnote[aiueo12][これは正式な文章の代わりに入れて使うダミーテキストです。]
+
+Squareでは決済用のSDKやAPIが提供@<fn>{open}されており、簡単に連携を行えます。
+SIGCOWWでは、オフライン決済用に提供される「Point of Sale API」@<fn>{pos-api}を用いています。
+Point of Sale APIとは、Custom URL Schemeを利用してSquareの決済アプリと連携するための機能です。
+これにより、Webブラウザや自作のアプリから特定のURLを踏むとSquareの決済アプリが起動して処理を行うことができます。
+//footnote[open][嬉しいことに、仕様は誰でも閲覧可能です。]
+//footnote[pos-api][@<href>{https://docs.connect.squareup.com/payments/pos/overview}]
