@@ -103,6 +103,15 @@ class Build
         rescue IOError
         end
       end
+
+      dpi = 350
+      n = @papersize[1..-1].to_f
+      mm = (([1189, 1456][(@papersize[0] == 'a') ? 0 : 1]) / Math.sqrt(2 - (n % 2))) / (2 ** (1 + (n-1)/2))
+      proper_len = (dpi / 25.4) * (mm - 20)
+      Dir.glob("../articles/#{chapid}/images/*").each do | file |
+        next unless (file.end_with?('.jpg') || file.end_with?('.png'))
+        pp dpi, mm, proper_len, file
+      end
     end
 
     compile('textmaker -n', nil)
