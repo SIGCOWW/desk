@@ -216,6 +216,7 @@ eof
     result = @exitstatuses.values.inject(:+)
     msg = @exitstatuses.select{|k, v| v != 0 }.keys.join(', ')
     File.write(".exitstatus", "#{result}\n#{msg}\n")
+    return result
   end
 
 
@@ -534,7 +535,7 @@ if __FILE__ == $0
     rescue RuntimeError => e
       STDERR.puts "#{e.backtrace.first}: #{e.message} (#{e.class})"
     ensure
-      build.clean()
+      exit build.clean()
     end
   end
 end
