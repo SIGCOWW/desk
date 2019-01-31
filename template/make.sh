@@ -76,13 +76,13 @@ build() {
 	echo "\\033[35mcmd: [ ${cmd} ]\\033[m"
 	set +e
 	ret=$(id -Gn | grep "docker")
-	set -e
 	if [ "$ret" ]; then
 		docker run --rm -v "$(pwd)/src/:/work" "$container" /bin/ash -c "$cmd"
 	else
 		sudo docker run --rm -v "$(pwd)/src/:/work" "$container" /bin/ash -c "$cmd"
 	fi
 	exitstatus=$?
+	set -e
 
 	if [ -d "src/working_temporary_directory" ]; then
 		exitstatus=$(sed -n 1P src/working_temporary_directory/.exitstatus)
