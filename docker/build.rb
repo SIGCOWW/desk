@@ -103,6 +103,25 @@ class Build
         rescue IOError
         end
       end
+
+
+      match = File.read(path).scan(%r@^\s*//imagew?\[(.+?)\].+scale=([.\d]+).+?@)
+      scales = match.nil? ? {} : match.map{|v| [v[0], v[1].to_f]}.to_h
+
+      dpi = 350
+      n = @papersize[1..-1].to_f
+      mm = (([1189, 1456][(@papersize[0] == 'a') ? 0 : 1]) / Math.sqrt(2 - (n % 2))) / (2 ** (1 + (n-1)/2))
+      proper_len = (dpi / 25.4) * (mm - 20)
+      Dir.glob("../articles/#{chapid}/images/*").each do | file |
+        next unless (file.end_with?('.jpg') || file.end_with?('.png'))
+        width = Open3.capture3('identify', '-format', '%[height],%[width]', file)[0].split(',')[1].to_i
+        next if width >= proper_len
+
+        proper_scale = width/proper_len
+        scale = scales[File.basename(file, '.*')] || 1.0
+        next if scale <= proper_scale
+        puts "Low-res img: \033[33m#{File.basename(file)}\033[m[\033[31mscale=#{scale}\033[m] → \033[32mscale=#{proper_scale.round(2)}\033[m or less."
+      end
     end
 
     compile('textmaker -n', nil)
@@ -382,7 +401,7 @@ eof
 
   def convert_images(builder)
     def resize(path)
-      tmp = Open3.capture3('identify', '-format' '%[height],%[width]', path)[0].split(',')
+      tmp = Open3.capture3('identify', '-format', '%[height],%[width]', path)[0].split(',')
       area = tmp[0].to_i * tmp[1].to_i
       if area >= 4000000
         scale = (Math.sqrt(4000000.0 / area) * 100).floor
@@ -532,7 +551,7 @@ if __FILE__ == $0
       build.pdf(params['pdf4print'])
       build.pdf4publish() if params['pdf4publish']
       build.epub() if params['epub']
-    rescue RuntimeError => e
+    rescue StandardError => e
       STDERR.puts "#{e.backtrace.first}: #{e.message} (#{e.class})"
     ensure
       exit build.clean()
