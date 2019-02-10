@@ -533,7 +533,7 @@ end
 
 if __FILE__ == $0
   begin
-    params = ARGV.getopts('', 'proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean', 'container:lrks/desk')
+    params = ARGV.getopts('', 'no-proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean', 'container:lrks/desk')
   rescue => e
     puts "#{e}. try \"--help\"."
     exit 1
@@ -547,7 +547,7 @@ if __FILE__ == $0
     build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'], params['container'])
     build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'])
     begin
-      build.proof() if params['proof']
+      build.proof() unless params['no-proof']
       build.pdf(params['pdf4print'])
       build.pdf4publish() if params['pdf4publish']
       build.epub() if params['epub']
