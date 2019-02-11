@@ -57,17 +57,8 @@ RUN mv BXcoloremoji*/*.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcolore
 RUN mv BXcoloremoji*/LICENSE $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
 RUN mv BXcoloremoji*/emoji_images $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
 RUN mktexlsr
-RUN apk add python
-RUN apk add pkgconfig
-RUN apk add cairo-dev
-RUN apk add pango-dev
 RUN apk add make
 RUN apk add g++
-RUN apk add libjpeg-turbo-dev
-RUN cd /usr/lib/ && npm install canvas && cd /
-RUN npm install -g colibrijs
-RUN npm install -g canvas@1.6.13 --unsafe-perm
-ENV NODE_PATH=/usr/lib/node_modules
 RUN wget -q https://github.com/prh/rules/archive/master.zip -O rules.zip && unzip -q rules.zip
 RUN mv rules-master/ rules && rm -rf rules.zip
 COPY rule.yml /
@@ -78,17 +69,15 @@ RUN cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/li
 RUN strip `which mkd2html` && strip `which mkd2latex`
 RUN apk add openssh-client
 RUN gem install gemoji --no-rdoc --no-ri
-RUN npm install -g sharp --unsafe-perm
-RUN apk add py2-pip
-RUN apk add py2-pillow
-RUN pip install CuteR
-RUN wget https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto
+RUN apk add ruby-rmagick
+RUN gem install cuterb -N
+RUN wget -q https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto
 RUN chmod +x /usr/bin/phonto
 RUN apk add file
-RUN rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile \ /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl \ /usr/local/texlive/20*/release-texlive.txt \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/ \ /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf \
+RUN rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl /usr/local/texlive/20*/release-texlive.txt /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/ /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf
 RUN cd /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ && rm -f ipaexm.ttf && ln -s ipaexg.ttf ipaexm.ttf && cd /
 RUN cd /usr/share/ghostscript/*/Resource/CIDFSubst/ && rm -f DroidSansFallback.ttf && ln -s /usr/share/fonts/ipaexg.ttf DroidSansFallback.ttf && cd /
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm \ /usr/local/texlive/20*/texmf-dist/fonts/misc \ /usr/local/texlive/20*/texmf-dist/fonts/opentype \ trunk.zip libsoldout-trunk/ BXcoloremoji* \ /usr/local/texlive/20*/texmf-dist/fonts/map/dvips \ /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm \ /usr/local/texlive/20*/texmf-dist/fonts/source \ /usr/local/texlive/20*/texmf-dist/dvips/ \ /usr/local/texlive/20*/texmf-dist/fonts/tfm/ptex-fonts/standard/
+RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm /usr/local/texlive/20*/texmf-dist/fonts/misc /usr/local/texlive/20*/texmf-dist/fonts/opentype trunk.zip libsoldout-trunk/ BXcoloremoji* /usr/local/texlive/20*/texmf-dist/fonts/map/dvips /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm /usr/local/texlive/20*/texmf-dist/fonts/source /usr/local/texlive/20*/texmf-dist/dvips/ /usr/local/texlive/20*/texmf-dist/fonts/tfm/ptex-fonts/standard/
 RUN find /usr/local/texlive/20*/texmf-dist/ -iname "*korea*" -o -iname "*chinese*" | grep -v '/proc/' | xargs rm -rf
 RUN find /usr/local/texlive/20*/texmf-dist/fonts/ -iname "times" -o -iname "cm-super" -o -iname "courier" -o -iname "ncntrsbk" -o -iname "avantgar" -o -iname "bookman" -o -iname "zapfchan" -o -iname "tex-gyre" -o -iname "charter" -o -iname "utopia" | grep -v '/proc/' | xargs rm -rf
 RUN rm -rf /usr/share/gtk-doc/ /usr/lib/ruby/gems/*/cache/ /usr/share/X11 /usr/share/alsa
@@ -103,14 +92,12 @@ RUN cd  /usr/local/texlive/*/bin/x86_64-linuxmusl/ && rm -rf *mpost pdf*tex teck
 RUN cd /usr/local/texlive/*/texmf-dist/ && rm -rf fonts/truetype/public/arphic-ttf/ fonts/map/pdftex/ scripts/ makeindex/ && cd /
 RUN find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf
 RUN find / -xtype l | grep -v "/proc/" | xargs rm -rf
-RUN rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/lib/python3.6 /usr/local/texlive/texmf-local/fonts/source
+RUN rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/local/texlive/texmf-local/fonts/source
 RUN echo lrks/desk > /etc/desk-release
 RUN mkdir -p /usr/local/bin
 COPY *.rb /
-COPY colorpicker.js /
-COPY qr.js /
 COPY pdfcrop.sh /
-RUN mv build.rb colorpicker.js qr.js pdfcrop.sh /usr/local/bin/
+RUN mv build.rb pdfcrop.sh /usr/local/bin/
 RUN mkdir -p /extensions
 COPY extensions/*.rb /
 COPY locale.yml /

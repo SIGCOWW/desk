@@ -137,7 +137,6 @@ class Build
       end
     end
 
-    exit 1
     compile('textmaker -n', nil)
   end
 
@@ -181,14 +180,14 @@ EOF
 
     dummy_image('cover.png', 'COVER')
     dummy_image('back.png', 'BACK')
-    defcolor = `colorpicker.js cover.png`
-
+    bcolor = `convert cover.png -format %c -colors 256 -depth 8 'histogram:info:' | sort -rn | head -n1 | grep -o '#......' | sed 's/#//'`.strip
     File.write('publish-raw.tex', <<eof
 \\documentclass[uplatex,dvipdfmx,#{@papersize}paper,oneside]{jsbook}
 \\usepackage{pdfpages}
 \\pagestyle{empty}
 \\usepackage{xcolor}
-#{defcolor}
+\\definecolor{bcolor}{HTML}{#{bcolor}}
+\\colorlet{fcolor}{-bcolor}
 \\newcommand{\\blankpage}{%
     \\pagecolor{bcolor}
     %%%%\\color{fcolor}{TEXT}
@@ -547,7 +546,7 @@ end
 
 if __FILE__ == $0
   begin
-    params = ARGV.getopts('', 'no-proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean', 'container:lrks/desk')
+    params = ARGV.getopts('', 'skip-proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean', 'container:lrks/desk')
   rescue => e
     puts "#{e}. try \"--help\"."
     exit 1
@@ -561,7 +560,7 @@ if __FILE__ == $0
     build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'], params['container'])
     build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'])
     begin
-      build.proof() unless params['no-proof']
+      build.proof() unless params['skip-proof']
       build.pdf(params['pdf4print'])
       build.pdf4publish() if params['pdf4publish']
       build.epub() if params['epub']

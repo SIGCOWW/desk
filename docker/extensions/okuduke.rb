@@ -36,10 +36,7 @@ module ReVIEW
       if @config.key?('download') and not(ENV['ONESIDE'])
         list = '12345678abcdefghkmnoprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ'.split('')
         code = @config["download"].to_s % (0..rand(12..16)).map{list.sample}.join('')
-
-        wh = `identify -format "%wx%h" cover.png`
-        system("qr.js cover.png crop.png #{wh.split('x').map!(&:to_i).min}")
-        system("CuteR -o qr.png -e Q crop.png #{code}")
+        system("cuterb #{code} cover.png qr.png")
         rows << ['電子版', code]
         rows << ['', nil, '\hfill\includegraphics[width=0.5\textwidth]{../qr.png}\hfill']
       end
