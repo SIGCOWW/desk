@@ -98,28 +98,32 @@
 - apk: py2-pillow
 - run: 'pip install CuteR'
 
+# Phonto
+- run: 'wget https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto'
+- run: 'chmod +x /usr/bin/phonto'
+
 ## Cleaning
 - dev: 'file'
-- run: 'rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile'
-- run: 'rm -rf /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl'
-- run: 'rm -rf /usr/local/texlive/20*/release-texlive.txt'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf'
+- run: 'rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile \
+          /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl \
+          /usr/local/texlive/20*/release-texlive.txt \
+          /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/ \
+          /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit \
+          /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf \
+          /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf \
+          /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf \
+          /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf \'
 - run: 'cd /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ && rm -f ipaexm.ttf && ln -s ipaexg.ttf ipaexm.ttf && cd /'
 - run: 'cd /usr/share/ghostscript/*/Resource/CIDFSubst/ && rm -f DroidSansFallback.ttf && ln -s /usr/share/fonts/ipaexg.ttf DroidSansFallback.ttf && cd /'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/misc'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/opentype'
-- run: 'rm -rf trunk.zip libsoldout-trunk/ BXcoloremoji*'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/map/dvips'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/source'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/dvips/'
-- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/tfm/ptex-fonts/standard/'
+- run: 'rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm \
+          /usr/local/texlive/20*/texmf-dist/fonts/misc \
+          /usr/local/texlive/20*/texmf-dist/fonts/opentype \
+          trunk.zip libsoldout-trunk/ BXcoloremoji* \
+          /usr/local/texlive/20*/texmf-dist/fonts/map/dvips \
+          /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm \
+          /usr/local/texlive/20*/texmf-dist/fonts/source \
+          /usr/local/texlive/20*/texmf-dist/dvips/ \
+          /usr/local/texlive/20*/texmf-dist/fonts/tfm/ptex-fonts/standard/'
 - rmrf:
   - '/usr/local/texlive/20*/texmf-dist/'
   - name: '*korea*'
@@ -136,9 +140,7 @@
   - name: 'tex-gyre'
   - name: 'charter'
   - name: 'utopia'
-- run: 'rm -rf /usr/share/gtk-doc/'
-- run: 'rm -rf /usr/lib/ruby/gems/*/cache/'
-- run: 'rm -rf /usr/share/X11 /usr/share/alsa'
+- run: 'rm -rf /usr/share/gtk-doc/ /usr/lib/ruby/gems/*/cache/ /usr/share/X11 /usr/share/alsa'
 - rmrf:
   - '/'
   - name: '*.log'
@@ -191,14 +193,12 @@
 - run: "find / -name '*.cls' -type f | grep -v jsbook | grep -v jsarticle | xargs rm -rf"
 - run: 'find /usr/ -empty -type d | xargs rm -rf'
 - run: 'find / -executable -type f | xargs file | grep "not stripped" | cut -d":" -f1 | xargs strip'
-- run: 'rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts'
-- run: 'rm -rf /usr/bin/npm /usr/lib/node_modules/npm'
+- run: 'rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts /usr/bin/npm /usr/lib/node_modules/npm'
 - run: 'cd  /usr/local/texlive/*/bin/x86_64-linuxmusl/ && rm -rf *mpost pdf*tex teckit_compile xdvi-xaw luatex53 makeindex *mendex && cd /'
 - run: 'cd /usr/local/texlive/*/texmf-dist/ && rm -rf fonts/truetype/public/arphic-ttf/ fonts/map/pdftex/ scripts/ makeindex/ && cd /'
 - run: 'find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf'
 - run: 'find / -xtype l | grep -v "/proc/" | xargs rm -rf'
-- run: 'rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/lib/python3.6'
-- run: 'rm -rf /usr/local/texlive/texmf-local/fonts/source'
+- run: 'rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/lib/python3.6 /usr/local/texlive/texmf-local/fonts/source'
 
 # Utility
 - run: 'echo lrks/desk > /etc/desk-release'

@@ -82,46 +82,28 @@ RUN npm install -g sharp --unsafe-perm
 RUN apk add py2-pip
 RUN apk add py2-pillow
 RUN pip install CuteR
+RUN wget https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto
+RUN chmod +x /usr/bin/phonto
 RUN apk add file
-RUN rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile
-RUN rm -rf /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl
-RUN rm -rf /usr/local/texlive/20*/release-texlive.txt
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf
+RUN rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile \ /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl \ /usr/local/texlive/20*/release-texlive.txt \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/ \ /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf \ /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf \
 RUN cd /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ && rm -f ipaexm.ttf && ln -s ipaexg.ttf ipaexm.ttf && cd /
 RUN cd /usr/share/ghostscript/*/Resource/CIDFSubst/ && rm -f DroidSansFallback.ttf && ln -s /usr/share/fonts/ipaexg.ttf DroidSansFallback.ttf && cd /
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/misc
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/opentype
-RUN rm -rf trunk.zip libsoldout-trunk/ BXcoloremoji*
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/map/dvips
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/source
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/dvips/
-RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/tfm/ptex-fonts/standard/
+RUN rm -rf /usr/local/texlive/20*/texmf-dist/fonts/afm \ /usr/local/texlive/20*/texmf-dist/fonts/misc \ /usr/local/texlive/20*/texmf-dist/fonts/opentype \ trunk.zip libsoldout-trunk/ BXcoloremoji* \ /usr/local/texlive/20*/texmf-dist/fonts/map/dvips \ /usr/local/texlive/20*/texmf-dist/fonts/pk/ljfour/public/cm \ /usr/local/texlive/20*/texmf-dist/fonts/source \ /usr/local/texlive/20*/texmf-dist/dvips/ \ /usr/local/texlive/20*/texmf-dist/fonts/tfm/ptex-fonts/standard/
 RUN find /usr/local/texlive/20*/texmf-dist/ -iname "*korea*" -o -iname "*chinese*" | grep -v '/proc/' | xargs rm -rf
 RUN find /usr/local/texlive/20*/texmf-dist/fonts/ -iname "times" -o -iname "cm-super" -o -iname "courier" -o -iname "ncntrsbk" -o -iname "avantgar" -o -iname "bookman" -o -iname "zapfchan" -o -iname "tex-gyre" -o -iname "charter" -o -iname "utopia" | grep -v '/proc/' | xargs rm -rf
-RUN rm -rf /usr/share/gtk-doc/
-RUN rm -rf /usr/lib/ruby/gems/*/cache/
-RUN rm -rf /usr/share/X11 /usr/share/alsa
+RUN rm -rf /usr/share/gtk-doc/ /usr/lib/ruby/gems/*/cache/ /usr/share/X11 /usr/share/alsa
 RUN find / -iname "*.log" -o -iname "*.html" -o -iname "*.md" -o -iname "*.ini" -o -iname "*.example" -o -iname "*.lua" -o -iname "*.c" -o -iname "*.h" -o -iname "*.ins" -o -iname "*.gif" -o -iname "*.jpg" -o -iname "*.ico" -o -iname "*.zip" -o -iname "*.exe" -o -iname "*.*gz" -o -iname "*README*" -o -iname "*hiramin*" -o -iname "*hirakaku*" -o -iname "*hiramaru*" -o -iname "*.svg" -o -iname "doc" -o -iname "*sample*" -o -iname "*example*" -o -iname "*manual*" -o -iname "*beamer*" -o -iname "demo" -o -iname "tests" -o -iname "debian" -o -iname "lua*tex" -o -iname "ptex" -o -iname "uptex" -o -iname "xe*tex" -o -iname "images" -o -iname "VLGothic" -o -iname "*.png" -o -iname "*.lock" -o -iname "*.git" -o -iname "test.js" -o -iname "test" -o -iname "Makefile" -o -iname "*jlreq*" -o -iname "*.pl" | grep -v '/proc/' | xargs rm -rf
 RUN find / -name '*.pdf' -type f | grep -v BXcoloremoji | xargs rm -rf
 RUN find /usr/local/texlive/ -iname "*.ps" -o -iname "*.eps" | grep -v '/proc/' | xargs rm -rf
 RUN find / -name '*.cls' -type f | grep -v jsbook | grep -v jsarticle | xargs rm -rf
 RUN find /usr/ -empty -type d | xargs rm -rf
 RUN find / -executable -type f | xargs file | grep "not stripped" | cut -d":" -f1 | xargs strip
-RUN rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts
-RUN rm -rf /usr/bin/npm /usr/lib/node_modules/npm
+RUN rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts /usr/bin/npm /usr/lib/node_modules/npm
 RUN cd  /usr/local/texlive/*/bin/x86_64-linuxmusl/ && rm -rf *mpost pdf*tex teckit_compile xdvi-xaw luatex53 makeindex *mendex && cd /
 RUN cd /usr/local/texlive/*/texmf-dist/ && rm -rf fonts/truetype/public/arphic-ttf/ fonts/map/pdftex/ scripts/ makeindex/ && cd /
 RUN find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf
 RUN find / -xtype l | grep -v "/proc/" | xargs rm -rf
-RUN rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/lib/python3.6
-RUN rm -rf /usr/local/texlive/texmf-local/fonts/source
+RUN rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/lib/python3.6 /usr/local/texlive/texmf-local/fonts/source
 RUN echo lrks/desk > /etc/desk-release
 RUN mkdir -p /usr/local/bin
 COPY *.rb /
