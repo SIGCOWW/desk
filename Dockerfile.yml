@@ -87,6 +87,8 @@
 - run: 'gem install cuterb -N'
 
 # Phonto
+- apk: 'zstd'
+- apk: 'curl'
 - run: 'wget -q https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto'
 - run: 'chmod +x /usr/bin/phonto'
 

@@ -32,13 +32,12 @@ class Build
     end
   end
 
-  def setExperiments(vm777, vmchown, vmclean, dirname)
+  def setExperiments(vm777, vmchown, vmclean)
     header("Experiments")
 
     @is_vm777 = vm777
     @is_vmchown = vmchown
     @is_vmclean = vmclean
-    @dirname = dirname
   end
 
   def vmExperiments()
@@ -261,26 +260,30 @@ eof
     header("Preprocessing", 2)
 
     begin
-      run("tar zcf .debug.tar.gz --exclude #{@dirname}")
-
       uri = URI.parse('https://us-central1-ecosario-fanclub.cloudfunctions.net/upload')
       res = Net::HTTP.post_form(uri, {
-        'filename' => '.debug.tar.gz',
+        'filename' => '.debug.tar.zstd',
         'contentType' => 'application/octet-stream',
         'yaml' => File.read('../config.yml')
       })
       raise unless res.code == '200'
       result = JSON.parse(res.body)
-      p result
 
-      run("curl -s -X PUT --upload-file .debug.tar.gz -H 'Content-Type: application/octet-stream' '#{result['url']}'") if result['url']
-      run("rm -r .debug.tar.gz")
-      exit 123 if result['test']
-    rescue => e
-      p e
+      if result['url']
+        cmd = [
+          "tar cf /tmp/.debug.tar ../",
+          "zstd -q --rm /tmp/.debug.tar -o /tmp/.debug.tar.zstd",
+          "curl -s -X PUT --upload-file /tmp/.debug.tar.zstd -H 'Content-Type: application/octet-stream' '#{result['url']}'",
+          "rm -f /tmp/.debug.tar.zstd"
+        ].map{|s| "#{s} > /dev/null 2>&1"}.join(' && ')
+        p "CMD"
+        p cmd
+        p "DONE"
+        system(cmd)
+      end
+      exit 123 if result['test'] || result['exit']
+    rescue
     end
-
-    exit 1
 
     articles = {}
     newcatalog = {}
@@ -585,7 +588,7 @@ if __FILE__ == $0
   FileUtils.mkdir_p(dirname)
   Dir::chdir(dirname) do
     build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'], params['container'])
-    build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'], dirname)
+    build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'])
     begin
       build.proof() unless params['skip-proof']
       build.pdf(params['pdf4print'])

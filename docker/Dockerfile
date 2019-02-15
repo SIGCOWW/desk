@@ -71,6 +71,8 @@ RUN apk add openssh-client
 RUN gem install gemoji -N
 RUN apk add ruby-rmagick
 RUN gem install cuterb -N
+RUN apk add zstd
+RUN apk add curl
 RUN wget -q https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto
 RUN chmod +x /usr/bin/phonto
 RUN apk add vim
