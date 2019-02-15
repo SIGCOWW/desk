@@ -55,7 +55,7 @@ build() {
 
 	if [ ${#CONTAINER_VERSION} -eq 64 ]; then
 		container="lrks/desk@sha256:${CONTAINER_VERSION}"
-	elif [ ! -n "$CONTAINER_VERSION" ]; then
+	elif [ -z "$CONTAINER_VERSION" ]; then
 		container="lrks/desk"
 	else
 		container="lrks/desk:${CONTAINER_VERSION}"
@@ -76,7 +76,7 @@ build() {
 	echo "\\033[35mcmd: [ ${cmd} ]\\033[m"
 	set +e
 	ret=$(id -Gn | grep "docker")
-	if [ "$ret" ]; then
+	if [ -n "$ret" ]; then
 		docker run --rm -v "$(pwd)/src/:/work" "$container" /bin/ash -c "$cmd"
 	else
 		sudo docker run --rm -v "$(pwd)/src/:/work" "$container" /bin/ash -c "$cmd"
@@ -120,14 +120,14 @@ EOF
 			fi
 		done)
 
-		if [ ! -n "$insert_start" ]; then
+		if [ -z "$insert_start" ]; then
 			echo "  - ${1}.re" >> catalog.yml
 		else
 			set +e
 			sed -i "${insert_start}i\\ \\ - ${1}.re" catalog.yml
-            r="$?"
-            set -e
-			if [ "$r" -ne 0]; then
+			r="$?"
+			set -e
+			if [ "$r" -ne 0 ]; then
 				sed -i'' "${insert_start}i\\ \\ - ${1}.re" catalog.yml
 			fi
 		fi
@@ -174,6 +174,8 @@ if [ $# -eq 0 ]; then
 fi
 
 set -eu
+export LC_ALL=C
+export LANG=C
 cd "$(dirname "$0")" || return
 cmd=$1
 shift

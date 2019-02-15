@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.9
 RUN apk --update stats
 ENV LANG=ja_JP.UTF-8
 ENV PATH=$PATH:/usr/local/texlive/2018/bin/x86_64-linuxmusl
@@ -22,10 +22,10 @@ RUN ./install-tl-*/install-tl -profile texlive.profile
 COPY jumoline.sty /
 RUN mv jumoline.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/local/
 RUN mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/fonts/opentype
-RUN wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/OTF/Japanese/SourceHanSans-Medium.otf?raw=true" -O SourceHanSans-Medium.otf
-RUN wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/OTF/Japanese/SourceHanSans-Bold.otf?raw=true" -O SourceHanSans-Bold.otf
+RUN wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/SubsetOTF/JP/SourceHanSansJP-Medium.otf?raw=true" -O SourceHanSans-Medium.otf
+RUN wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/SubsetOTF/JP/SourceHanSansJP-Bold.otf?raw=true" -O SourceHanSans-Bold.otf
 RUN wget -q "https://github.com/adobe-fonts/source-han-sans/raw/master/LICENSE.txt" -O SourceHanSans-LICENSE.txt
-RUN wget -q "https://github.com/adobe-fonts/source-han-serif/blob/release/OTF/Japanese/SourceHanSerif-Regular.otf?raw=true" -O SourceHanSerif-Regular.otf
+RUN wget -q "https://github.com/adobe-fonts/source-han-serif/blob/release/SubsetOTF/JP/SourceHanSerifJP-Regular.otf?raw=true" -O SourceHanSerif-Regular.otf
 RUN wget -q "https://github.com/adobe-fonts/source-han-serif/raw/master/LICENSE.txt" -O SourceHanSerif-LICENSE.txt
 RUN mv SourceHan*.otf SourceHan*.txt $(kpsewhich -var-value TEXMFLOCAL)/fonts/opentype/
 RUN mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/fonts/map/dvipdfmx
@@ -43,36 +43,37 @@ RUN fc-cache -fv
 RUN apk add ruby
 RUN apk add zip
 RUN apk add ruby-json
-RUN gem install review -v 2.5.0 --no-rdoc --no-ri
+RUN gem install review -v 2.5.0 -N
 RUN apk add nodejs
 RUN apk add nodejs-npm
 RUN npm install -g tabooular
 RUN npm install -g prh
 RUN tlmgr update --self
 RUN tlmgr install seqsplit caption bigfoot xcolor framed multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox mathtools calrsfs calligra cancel mathcomp doublestroke lm anyfontsize etoolbox kastrup ec ucs environ trimspaces palatino helvetic mathpazo pdfpages titlesec qrcode xkeyval
-RUN wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.6.zip -O BXcoloremoji.zip
+RUN wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.7.zip -O BXcoloremoji.zip
 RUN unzip -q BXcoloremoji.zip
 RUN mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
 RUN mv BXcoloremoji*/*.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
 RUN mv BXcoloremoji*/LICENSE $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
 RUN mv BXcoloremoji*/emoji_images $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji
 RUN mktexlsr
-RUN apk add make
-RUN apk add g++
 RUN wget -q https://github.com/prh/rules/archive/master.zip -O rules.zip && unzip -q rules.zip
 RUN mv rules-master/ rules && rm -rf rules.zip
 COPY rule.yml /
 RUN mv rule.yml rules/languages/ja/ && sed -ie "s/^\(imports:\)\s*$/\1\n  - ..\/languages\/ja\/rule.yml/" /rules/media/techbooster.yml
-RUN gem install diff-lcs --no-rdoc --no-ri
+RUN gem install diff-lcs -N
+RUN apk add make
+RUN apk add g++
 RUN wget -q https://github.com/faelys/libsoldout/archive/trunk.zip && unzip trunk.zip
 RUN cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/lib/ && mv mkd2html mkd2latex /usr/bin/
 RUN strip `which mkd2html` && strip `which mkd2latex`
 RUN apk add openssh-client
-RUN gem install gemoji --no-rdoc --no-ri
+RUN gem install gemoji -N
 RUN apk add ruby-rmagick
 RUN gem install cuterb -N
 RUN wget -q https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto
 RUN chmod +x /usr/bin/phonto
+RUN apk add vim
 RUN apk add file
 RUN rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl /usr/local/texlive/20*/release-texlive.txt /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/ /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipagp.ttf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipamp.ttf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipam.ttf /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ipag.ttf
 RUN cd /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/ipaex/ && rm -f ipaexm.ttf && ln -s ipaexg.ttf ipaexm.ttf && cd /
@@ -90,9 +91,14 @@ RUN find / -executable -type f | xargs file | grep "not stripped" | cut -d":" -f
 RUN rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts /usr/bin/npm /usr/lib/node_modules/npm
 RUN cd  /usr/local/texlive/*/bin/x86_64-linuxmusl/ && rm -rf *mpost pdf*tex teckit_compile xdvi-xaw luatex53 makeindex *mendex && cd /
 RUN cd /usr/local/texlive/*/texmf-dist/ && rm -rf fonts/truetype/public/arphic-ttf/ fonts/map/pdftex/ scripts/ makeindex/ && cd /
-RUN find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf
+RUN find / -executable -type f | xargs -L1 -I{} ldd {} 2>&1 1>/dev/null | grep "symbol not found" | cut -d":" -f1 | cut -d" " -f3 | uniq | xargs rm -rf
 RUN find / -xtype l | grep -v "/proc/" | xargs rm -rf
-RUN rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/local/texlive/texmf-local/fonts/source
+RUN rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/local/texlive/texmf-local/fonts/source /usr/share/fonts/Type1
+RUN apk add python
+RUN apk add py-pip
+RUN pip install fonttools
+RUN find / -name '*.ttf' -type f -o -name '*.otf' -type f | xargs -L1 -I{} sh -c 'pyftsubset {} --unicodes=U+0000-04FF,U+1E00-243F,U+2460-27BF,U+2900-29FF,U+2B00-2BFF,U+2E80-2FDF,U+3000-30FF,U+3190-319F,U+31F0-4DBF,U+4E00-9FFF,U+E000-FB4F,U+FE10-FE1F,U+FE30-FE4F,U+FF00-FFEF,U+1F100-1F2FF,U+20000-2A6DF,U+2A700-2B81F,U+2F800-2FA1F --output-file=/tmp/$(basename {}); mv /tmp/$(basename {}) {}'
+RUN pip freeze > /tmp/freeze.txt; yes | pip uninstall -r /tmp/freeze.txt; rm -f /tmp/freeze.txt
 RUN echo lrks/desk > /etc/desk-release
 RUN mkdir -p /usr/local/bin
 COPY *.rb /
