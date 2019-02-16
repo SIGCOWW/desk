@@ -15,8 +15,8 @@ $ docker run -v "/home/hoge/book/src/:/work" lrks/desk /bin/ash -c \
 
 
 ## build.rbのオプション
-* `--proof`
-  * [prh](https://github.com/prh/prh)で校正を行う
+* `--skip-proof`
+  * [prh](https://github.com/prh/prh)による校正を行わない
   * 設定ファイルは[techbooster.yml](https://github.com/prh/rules/blob/master/media/techbooster.yml)を利用
   * prhとは別に、`working_temporary_directory/book-text/` へ `review-textmaker` によるファイルを出力する
 

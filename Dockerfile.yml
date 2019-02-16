@@ -1,7 +1,6 @@
-- alpine:3.8
+- alpine:3.9
 - env: LANG=ja_JP.UTF-8
 - env: PATH=$PATH:/usr/local/texlive/2018/bin/x86_64-linuxmusl
-
 
 # Core
 - apk: git
@@ -24,10 +23,10 @@
 - copy: jumoline.sty
 - run: 'mv jumoline.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/local/'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/fonts/opentype'
-- run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/OTF/Japanese/SourceHanSans-Medium.otf?raw=true" -O SourceHanSans-Medium.otf'
-- run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/OTF/Japanese/SourceHanSans-Bold.otf?raw=true" -O SourceHanSans-Bold.otf'
+- run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/SubsetOTF/JP/SourceHanSansJP-Medium.otf?raw=true" -O SourceHanSans-Medium.otf'
+- run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/blob/release/SubsetOTF/JP/SourceHanSansJP-Bold.otf?raw=true" -O SourceHanSans-Bold.otf'
 - run: 'wget -q "https://github.com/adobe-fonts/source-han-sans/raw/master/LICENSE.txt" -O SourceHanSans-LICENSE.txt'
-- run: 'wget -q "https://github.com/adobe-fonts/source-han-serif/blob/release/OTF/Japanese/SourceHanSerif-Regular.otf?raw=true" -O SourceHanSerif-Regular.otf'
+- run: 'wget -q "https://github.com/adobe-fonts/source-han-serif/blob/release/SubsetOTF/JP/SourceHanSerifJP-Regular.otf?raw=true" -O SourceHanSerif-Regular.otf'
 - run: 'wget -q "https://github.com/adobe-fonts/source-han-serif/raw/master/LICENSE.txt" -O SourceHanSerif-LICENSE.txt'
 - run: 'mv SourceHan*.otf SourceHan*.txt $(kpsewhich -var-value TEXMFLOCAL)/fonts/opentype/'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/fonts/map/dvipdfmx'
@@ -46,7 +45,7 @@
 - apk: ruby
 - apk: zip
 - apk: ruby-json
-- run: 'gem install review -v 2.5.0 --no-rdoc --no-ri'
+- run: 'gem install review -v 2.5.0 -N'
 - apk: nodejs
 - dev: nodejs-npm
 - run: 'npm install -g tabooular'
@@ -56,7 +55,7 @@
     multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox
     mathtools calrsfs calligra cancel mathcomp doublestroke lm anyfontsize etoolbox
     kastrup ec ucs environ trimspaces palatino helvetic mathpazo pdfpages titlesec qrcode xkeyval'
-- run: 'wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.6.zip -O BXcoloremoji.zip'
+- run: 'wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.7.zip -O BXcoloremoji.zip'
 - run: 'unzip -q BXcoloremoji.zip'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
 - run: 'mv BXcoloremoji*/*.sty $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
@@ -64,14 +63,14 @@
 - run: 'mv BXcoloremoji*/emoji_images $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
 - run: 'mktexlsr'
 
-- dev: make
-- dev: g++
 - run: 'wget -q https://github.com/prh/rules/archive/master.zip -O rules.zip && unzip -q rules.zip'
 - run: 'mv rules-master/ rules && rm -rf rules.zip'
 - copy: 'rule.yml'
 - run: 'mv rule.yml rules/languages/ja/ && sed -ie "s/^\(imports:\)\s*$/\1\n  - ..\/languages\/ja\/rule.yml/" /rules/media/techbooster.yml'
-- run: 'gem install diff-lcs --no-rdoc --no-ri'
+- run: 'gem install diff-lcs -N'
 
+- dev: make
+- dev: g++
 - run: 'wget -q https://github.com/faelys/libsoldout/archive/trunk.zip && unzip trunk.zip'
 - run: 'cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/lib/ && mv mkd2html mkd2latex /usr/bin/'
 - run: 'strip `which mkd2html` && strip `which mkd2latex`'
@@ -81,17 +80,20 @@
 - apk: openssh-client
 
 # Emoji
-- run: 'gem install gemoji --no-rdoc --no-ri'
+- run: 'gem install gemoji -N'
 
 # CuteRB
 - apk: 'ruby-rmagick'
 - run: 'gem install cuterb -N'
 
 # Phonto
+- apk: 'zstd'
+- apk: 'curl'
 - run: 'wget -q https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto'
 - run: 'chmod +x /usr/bin/phonto'
 
 ## Cleaning
+- dev: 'vim'
 - dev: 'file'
 - run: 'rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile
           /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl
@@ -185,9 +187,16 @@
 - run: 'rm -rf /root/.ash_history /root/.config /root/.gem /root/.node-gyp /root/.npm /root/.wget-hsts /usr/bin/npm /usr/lib/node_modules/npm'
 - run: 'cd  /usr/local/texlive/*/bin/x86_64-linuxmusl/ && rm -rf *mpost pdf*tex teckit_compile xdvi-xaw luatex53 makeindex *mendex && cd /'
 - run: 'cd /usr/local/texlive/*/texmf-dist/ && rm -rf fonts/truetype/public/arphic-ttf/ fonts/map/pdftex/ scripts/ makeindex/ && cd /'
-- run: 'find / -executable -type f | xargs grep "__rawmemchr" | cut -d":" -f1 | xargs rm -rf'
+- run: 'find / -executable -type f | xargs -L1 -I{} ldd {} 2>&1 1>/dev/null | grep "symbol not found" | cut -d":" -f1 | cut -d" " -f3 | uniq | xargs rm -rf'
 - run: 'find / -xtype l | grep -v "/proc/" | xargs rm -rf'
-- run: 'rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/local/texlive/texmf-local/fonts/source'
+- run: 'rm -rf /usr/libexec/ /usr/x86_64-alpine-linux-musl/ /usr/local/texlive/texmf-local/fonts/source /usr/share/fonts/Type1'
+- dev: 'python'
+- dev: 'py-pip'
+- run: 'pip install fonttools'
+- run: "find / -name '*.ttf' -type f -o -name '*.otf' -type f | xargs -L1 -I{} sh -c 'pyftsubset {} --unicodes=U+0000-04FF,U+1E00-243F,U+2460-27BF,U+2900-29FF,U+2B00-2BFF,U+2E80-2FDF,U+3000-30FF,U+3190-319F,U+31F0-4DBF,U+4E00-9FFF,U+E000-FB4F,U+FE10-FE1F,U+FE30-FE4F,U+FF00-FFEF,U+1F100-1F2FF,U+20000-2A6DF,U+2A700-2B81F,U+2F800-2FA1F --layout-features-='valt','vert','vkrn','vpal','vrt2','frac','numr','dnom','ljmo','vjmo','tjmo','abvs','blws','abvm','blwm','nukt','akhn','rphf','rkrf','pref','blwf','half','abvf','pstf','cfar','vatu','cjct','init','pres','abvs','blws','psts','haln','dist','abvm','blwm','init','medi','fina','isol','med2','fin2','fin3','cswh','mset','stch' --output-file=/tmp/$(basename {}); mv /tmp/$(basename {}) {}'"
+- run: "rm -rf /root/.cache/ /usr/lib/python2.7 /usr/bin/pyft* /usr/bin/fonttools"
+- run: "ls -1d /usr/local/texlive/2018/texmf-dist/fonts/map/dvipdfmx/ptex-fontmaps/* | grep -v ipa | xargs rm -rf"
+- run: "rm -rf /usr/local/texlive/2018/texmf-dist/fonts/map/dvipdfmx/morisawa /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/morisawa /usr/local/texlive/2018/texmf-dist/fonts/vf/public/morisawa /usr/local/texlive/2018/texmf-dist/tex/latex/morisawa"
 
 # Utility
 - run: 'echo lrks/desk > /etc/desk-release'
