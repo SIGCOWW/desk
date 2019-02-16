@@ -193,8 +193,10 @@
 - dev: 'python'
 - dev: 'py-pip'
 - run: 'pip install fonttools'
-- run: "find / -name '*.ttf' -type f -o -name '*.otf' -type f | xargs -L1 -I{} sh -c 'pyftsubset {} --unicodes=U+0000-04FF,U+1E00-243F,U+2460-27BF,U+2900-29FF,U+2B00-2BFF,U+2E80-2FDF,U+3000-30FF,U+3190-319F,U+31F0-4DBF,U+4E00-9FFF,U+E000-FB4F,U+FE10-FE1F,U+FE30-FE4F,U+FF00-FFEF,U+1F100-1F2FF,U+20000-2A6DF,U+2A700-2B81F,U+2F800-2FA1F --output-file=/tmp/$(basename {}); mv /tmp/$(basename {}) {}'"
-- run: 'pip freeze > /tmp/freeze.txt; yes | pip uninstall -r /tmp/freeze.txt; rm -f /tmp/freeze.txt'
+- run: "find / -name '*.ttf' -type f -o -name '*.otf' -type f | xargs -L1 -I{} sh -c 'pyftsubset {} --unicodes=U+0000-04FF,U+1E00-243F,U+2460-27BF,U+2900-29FF,U+2B00-2BFF,U+2E80-2FDF,U+3000-30FF,U+3190-319F,U+31F0-4DBF,U+4E00-9FFF,U+E000-FB4F,U+FE10-FE1F,U+FE30-FE4F,U+FF00-FFEF,U+1F100-1F2FF,U+20000-2A6DF,U+2A700-2B81F,U+2F800-2FA1F --layout-features-='valt','vert','vkrn','vpal','vrt2','frac','numr','dnom','ljmo','vjmo','tjmo','abvs','blws','abvm','blwm','nukt','akhn','rphf','rkrf','pref','blwf','half','abvf','pstf','cfar','vatu','cjct','init','pres','abvs','blws','psts','haln','dist','abvm','blwm','init','medi','fina','isol','med2','fin2','fin3','cswh','mset','stch' --output-file=/tmp/$(basename {}); mv /tmp/$(basename {}) {}'"
+- run: "rm -rf /root/.cache/ /usr/lib/python2.7 /usr/bin/pyft* /usr/bin/fonttools"
+- run: "ls -1d /usr/local/texlive/2018/texmf-dist/fonts/map/dvipdfmx/ptex-fontmaps/* | grep -v ipa | xargs rm -rf"
+- run: "rm -rf /usr/local/texlive/2018/texmf-dist/fonts/map/dvipdfmx/morisawa /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/morisawa /usr/local/texlive/2018/texmf-dist/fonts/vf/public/morisawa /usr/local/texlive/2018/texmf-dist/tex/latex/morisawa"
 
 # Utility
 - run: 'echo lrks/desk > /etc/desk-release'

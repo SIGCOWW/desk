@@ -513,7 +513,7 @@ eof
               if io === stdout
                 STDOUT.print(str) if @is_verbose
               elsif io === stderr
-                [ /^.+\.dvi -> .+\.pdf$/, /^(\[[0-9]+\])+$/, /^[0-9]+ bytes? written$/, /^dvipdfmx:warning: (.+? font[ :].+|Trying to include PDF file with version .+? which is newer than current output PDF setting.+)$/ ].each do | pat |
+                [ /^.+\.dvi -> .+\.pdf$/, /^(\[[0-9]+\])+$/, /^[0-9]+ bytes? written$/, /^dvipdfmx:warning: (.+? font[ :].+|Trying to include PDF file with version .+? which is newer than current output PDF setting.+|Removed.+)$/ ].each do | pat |
                   next unless str =~ pat
                   STDERR.print(str) if @is_verbose
                   str = nil

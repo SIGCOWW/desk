@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: /work
     docker:
-      - image: lrks/desk:infinitestratos
+      - image: lrks/desk:jewelpet
     steps:
       - checkout
       - run: build.rb --pdf4print --pdf4publish --epub --workdir=/work/src --margin=3mm --verbose --container=infinitestratos
