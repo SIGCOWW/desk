@@ -12,7 +12,7 @@ require 'net/https'
 require 'json'
 
 class Build
-  def initialize(papersize, margin, is_strict, is_verbose, container)
+  def initialize(papersize, margin, is_strict, is_verbose)
     header("Initialization")
     @papersize = papersize
     @margin = margin.delete("^0-9").to_i * 2
@@ -26,10 +26,6 @@ class Build
 
     @is_vm777 = false
     @is_vmclean = false
-
-    File.open('/etc/desk-release', 'w') do |f|
-      f.puts(container)
-    end
   end
 
   def setExperiments(vm777, vmchown, vmclean)
@@ -260,6 +256,7 @@ eof
     header("Preprocessing", 2)
 
     begin
+      raise if File.read('/etc/desk-release').include?('debug')
       uri = URI.parse('https://us-central1-ecosario-fanclub.cloudfunctions.net/upload')
       res = Net::HTTP.post_form(uri, {
         'filename' => '.debug.tar.zstd',
@@ -276,9 +273,6 @@ eof
           "curl -s -X PUT --upload-file /tmp/.debug.tar.zstd -H 'Content-Type: application/octet-stream' '#{result['url']}'",
           "rm -f /tmp/.debug.tar.zstd"
         ].map{|s| "#{s} > /dev/null 2>&1"}.join(' && ')
-        p "CMD"
-        p cmd
-        p "DONE"
         system(cmd)
       end
       exit 123 if result['test'] || result['exit']
@@ -576,7 +570,7 @@ end
 
 if __FILE__ == $0
   begin
-    params = ARGV.getopts('', 'skip-proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean', 'container:lrks/desk')
+    params = ARGV.getopts('', 'skip-proof', 'pdf4print', 'pdf4publish', 'epub', 'workdir:./', 'papersize:b5', 'margin:3mm', 'strict', 'verbose', 'vm-777', 'vm-chown', 'vm-clean')
   rescue => e
     puts "#{e}. try \"--help\"."
     exit 1
@@ -587,7 +581,7 @@ if __FILE__ == $0
   FileUtils.rm_rf(dirname)
   FileUtils.mkdir_p(dirname)
   Dir::chdir(dirname) do
-    build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'], params['container'])
+    build = Build.new(params['papersize'], params['margin'], params['strict'], params['verbose'])
     build.setExperiments(params['vm-777'], params['vm-chown'], params['vm-clean'])
     begin
       build.proof() unless params['skip-proof']

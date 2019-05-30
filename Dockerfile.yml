@@ -1,6 +1,6 @@
 - alpine:3.9
 - env: LANG=ja_JP.UTF-8
-- env: PATH=$PATH:/usr/local/texlive/2018/bin/x86_64-linuxmusl
+- env: PATH=$PATH:/usr/local/texlive/2019/bin/x86_64-linuxmusl
 
 # Core
 - apk: git
@@ -11,7 +11,7 @@
 - dev: coreutils
 - apk: fontconfig
 - apk: ghostscript
-- apk: imagemagick
+- apk: imagemagick6
 - apk: poppler-utils
 - dev: binutils
 - dev: findutils
@@ -55,6 +55,9 @@
     multirow cases pgf ifoddpage jknapltx rsfs pxpgfmark subfig marginfix tcolorbox
     mathtools calrsfs calligra cancel mathcomp doublestroke lm anyfontsize etoolbox
     kastrup ec ucs environ trimspaces palatino helvetic mathpazo pdfpages titlesec qrcode xkeyval'
+- run: 'mkdir -p $(kpsewhich -var-value TEXMFSYSVAR)/web2c/euptex
+    && mktexfmt uplatex
+    && mv $(kpsewhich -var-value TEXMFVAR)/web2c/euptex/uplatex.fmt $(kpsewhich -var-value TEXMFSYSVAR)/web2c/euptex/'
 - run: 'wget -q https://github.com/zr-tex8r/BXcoloremoji/archive/v0.7.zip -O BXcoloremoji.zip'
 - run: 'unzip -q BXcoloremoji.zip'
 - run: 'mkdir -p $(kpsewhich -var-value TEXMFLOCAL)/tex/latex/BXcoloremoji'
@@ -83,8 +86,11 @@
 - run: 'gem install gemoji -N'
 
 # CuteRB
-- apk: 'ruby-rmagick'
-- run: 'gem install cuterb -N'
+#- apk: 'ruby-rmagick'
+- dev: 'ruby-dev'
+- dev: 'imagemagick6-dev'
+- run: "find /usr/bin/ -name '*-6' | xargs -L1 -I{} sh -c 'mv {} $(echo {} | sed s/-6//)'"
+- run: 'gem install cuterb -v 0.2.1 -N'
 
 # Phonto
 - apk: 'zstd'
@@ -92,11 +98,11 @@
 - run: 'wget -q https://github.com/lrks/phonto/releases/download/v0.0.3/phonto -O /usr/bin/phonto'
 - run: 'chmod +x /usr/bin/phonto'
 
-## Cleaning
+# Cleaning
 - dev: 'vim'
 - dev: 'file'
 - run: 'rm -rf $(kpsewhich -var-value TEXMFLOCAL)/install-tl* /install-tl* /texlive.profile
-          /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl
+          /root/.texlive*/ /usr/local/texlive/20*/tlpkg/ /usr/local/texlive/20*/install-tl
           /usr/local/texlive/20*/release-texlive.txt
           /usr/local/texlive/20*/texmf-dist/fonts/truetype/public/baekmuk/
           /usr/local/texlive/20*/texmf-dist/scripts/tlcockpit
@@ -195,11 +201,11 @@
 - run: 'pip install fonttools'
 - run: "find / -name '*.ttf' -type f -o -name '*.otf' -type f | xargs -L1 -I{} sh -c 'pyftsubset {} --unicodes=U+0000-04FF,U+1E00-243F,U+2460-27BF,U+2900-29FF,U+2B00-2BFF,U+2E80-2FDF,U+3000-30FF,U+3190-319F,U+31F0-4DBF,U+4E00-9FFF,U+E000-FB4F,U+FE10-FE1F,U+FE30-FE4F,U+FF00-FFEF,U+1F100-1F2FF,U+20000-2A6DF,U+2A700-2B81F,U+2F800-2FA1F --layout-features-='valt','vert','vkrn','vpal','vrt2','frac','numr','dnom','ljmo','vjmo','tjmo','abvs','blws','abvm','blwm','nukt','akhn','rphf','rkrf','pref','blwf','half','abvf','pstf','cfar','vatu','cjct','init','pres','abvs','blws','psts','haln','dist','abvm','blwm','init','medi','fina','isol','med2','fin2','fin3','cswh','mset','stch' --output-file=/tmp/$(basename {}); mv /tmp/$(basename {}) {}'"
 - run: "rm -rf /root/.cache/ /usr/lib/python2.7 /usr/bin/pyft* /usr/bin/fonttools"
-- run: "ls -1d /usr/local/texlive/2018/texmf-dist/fonts/map/dvipdfmx/ptex-fontmaps/* | grep -v ipa | xargs rm -rf"
-- run: "rm -rf /usr/local/texlive/2018/texmf-dist/fonts/map/dvipdfmx/morisawa /usr/local/texlive/2018/texmf-dist/fonts/tfm/public/morisawa /usr/local/texlive/2018/texmf-dist/fonts/vf/public/morisawa /usr/local/texlive/2018/texmf-dist/tex/latex/morisawa"
+- run: "ls -1d /usr/local/texlive/*/texmf-dist/fonts/map/dvipdfmx/ptex-fontmaps/* | grep -v ipa | xargs rm -rf"
+- run: "rm -rf /usr/local/texlive/*/texmf-dist/fonts/map/dvipdfmx/morisawa /usr/local/texlive/*/texmf-dist/fonts/tfm/public/morisawa /usr/local/texlive/*/texmf-dist/fonts/vf/public/morisawa /usr/local/texlive/*/texmf-dist/tex/latex/morisawa"
 
 # Utility
-- run: 'echo lrks/desk > /etc/desk-release'
+- run: 'echo lrks/desk:kancolle > /etc/desk-release'
 - run: 'mkdir -p /usr/local/bin'
 - copy: '*.rb'
 - copy: 'pdfcrop.sh'

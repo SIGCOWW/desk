@@ -90,24 +90,26 @@
 % 柱 / ノンブル / ツメ
 \pagestyle{fancy}
 \newcommand{\hashira}[3]{\begin{tikzpicture}[remember picture, overlay]%
-  \fill[#1] ($(current page.north west)+(-10pt,-59pt-5mm-\headheight)$) rectangle (current page.north east);%
-  \end{tikzpicture}\raisebox{\headinsep}{\textcolor{#2}{#3}}}
+  \begin{scope}[shift={(current page.north west)}]%
+    \fill[#1] (-100pt, 100pt) rectangle (\paperwidth, -\headheight-9.5pt);
+  \end{scope}\end{tikzpicture}\raisebox{\headinsep}{\textcolor{#2}{#3}}}
 \newcommand{\nombre}[3]{\begin{tikzpicture}[remember picture, overlay]%
-  \def\@shifttemp{12pt}%
-  \fill[#1] ($(current page.south west)+(-10pt,-5mm-\headheight-\@shifttemp)$) rectangle ($(current page.south east)+(0pt,-\@shifttemp)$);%
-  \end{tikzpicture}\raisebox{-2\baselineskip}{\textcolor{#2}{#3}}}
+  \begin{scope}[shift={(current page.south west)}]%
+    \fill[#1] (-100pt, 0pt) rectangle (\paperwidth, \headheight+20.5pt);
+  \end{scope}\end{tikzpicture}\raisebox{-2\baselineskip}{\textcolor{#2}{#3}}}
 \newcommand{\chaphashira}[1]{\begin{tikzpicture}[remember picture, overlay]%
-  \fill[#1] ($(current page.north west)+(-10pt,-59pt-5mm-\chapterheight-6pt)$) rectangle (current page.north east);%
-  \end{tikzpicture}}
+  \begin{scope}[shift={(current page.north west)}]%
+    \fill[#1] (-100pt, 100pt) rectangle (\paperwidth, -\chapterheight-16pt);
+  \end{scope}\end{tikzpicture}}
 \newcommand{\tume}{\if@mainmatter\if@twoside%
   \checkoddpage\ifoddpage%
     \def\tumewidth@{-5mm-5mm}\def\tumeorigin@{east}%
   \else%
     \def\tumewidth@{5mm+5mm}\def\tumeorigin@{west}%
   \fi%
-  \count@\value{chapter}\advance\count@ by -1%
+  \count@\value{chapter}%\advance\count@ by -1%
   \begin{tikzpicture}[remember picture, overlay]\begin{scope}[shift={($%
-    (current page.north \tumeorigin@)+(-6pt,-59pt-5mm-\chapterheight-6pt-10mm)+\count@*(0,-10mm)$)}]%
+    (current page.north \tumeorigin@)+(-6pt,-\chapterheight-16pt)+\count@*(0,-10mm)$)}]%
       \fill[yryrblack] (0, 0) rectangle (\tumewidth@, -10mm);%
     \end{scope}%
   \end{tikzpicture}\fi\fi}

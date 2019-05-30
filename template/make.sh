@@ -72,7 +72,7 @@ build() {
 	fi
 	set -u
 
-	cmd="build.rb $* --workdir=/work ${PAPER_MARGIN} --container=${container}"
+	cmd="build.rb $* --workdir=/work ${PAPER_MARGIN}"
 	echo "\\033[35mcmd: [ ${cmd} ]\\033[m"
 	set +e
 	ret=$(id -Gn | grep "docker")
