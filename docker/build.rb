@@ -427,9 +427,8 @@ eof
 
       # 箇条書き
       txt.gsub!(/^(\d+\.|\*+)(?= )/, ' \1')
-
-
       txt.gsub!(/[\u0000-\u0008\u000E-\u001F\u007F-\u0084\u0086-\u009F\u000B\u000C\u0085\u2028\u2029]/, '')
+      txt.gsub!(/(`{2,})(.*?)('{2,})/, '@<texquote>{\1}\2@<texquote>{\3}')
       File.write("#{chapid}.re", txt)
       run("review-preproc --replace #{Shellwords.escape(chapid)}.re")
     end
