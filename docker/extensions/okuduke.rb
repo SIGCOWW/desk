@@ -11,12 +11,33 @@ module ReVIEW
       if not(@config.key?('history')) || (@config.key?('history') && @config['history'] == 1 && @config['history'][0].length <= 1)
         rows << ['発行日', Date.parse(@config["date"]).strftime("%Y年%-m月%-d日")]
       else
+        dates = []
         @config['history'].each_with_index do | val, idx |
-          rows << [idx == 0 ? '発行日' : '', Date.parse(val[0]).strftime("%Y年%-m月%-d日") + "　第#{idx+1}版 第1刷"]
+          d = Date.parse(val[0])
+          dates << [d.strftime("%Y年"), d.strftime("%-m月"), d.strftime("%-d日"), "　第#{idx+1}版 第1刷"]
         end
         tmp = @config['history'].last
         if tmp.length > 1
-          rows << ['', Date.parse(tmp.last).strftime("%Y年%-m月%-d日") + "　第#{@config['history'].length}版 第#{tmp.length}刷"]
+          d = Date.parse(tmp.last)
+          dates << [d.strftime("%Y年"), d.strftime("%-m月"), d.strftime("%-d日"), "　第#{tmp.length}刷"]
+        end
+
+        macro_def = ''
+        (0..3).each do | i |
+          macro_def += "\\newlength{\\strw#{(i+97).chr}}\\settowidth{\\strw#{(i+97).chr}}{}\\newlength{\\tmpstrw#{(i+97).chr}}"
+        end
+
+        macro_calc = ''
+        dates.each do | v |
+          (0..3).each do | i |
+            macro_calc += "\\settowidth{\\tmpstrw#{(i+97).chr}}{#{v[i]}}"
+            macro_calc += "\\ifdim\\tmpstrw#{(i+97).chr}>\\strw#{(i+97).chr}\\setlength{\\strw#{(i+97).chr}}{\\tmpstrw#{(i+97).chr}}\\fi"
+          end
+        end
+
+        dates.each_with_index do | val, idx |
+          ymd = [*0..3].map{|i| "\\hbox to \\strw#{(i+97).chr}{{\\hfill}#{val[i]}}"}.join('~')
+          rows << [idx == 0 ? '発行日' : '', nil, "#{idx == 0 ? macro_def : ''}#{macro_calc}#{ymd}"]
         end
       end
 
