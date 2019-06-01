@@ -68,6 +68,8 @@ RUN apk add g++
 RUN wget -q https://github.com/faelys/libsoldout/archive/trunk.zip && unzip trunk.zip
 RUN cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/lib/ && mv mkd2html mkd2latex /usr/bin/
 RUN strip `which mkd2html` && strip `which mkd2latex`
+RUN apk add pngquant
+RUN apk add jpegoptim
 RUN apk add openssh-client
 RUN gem install gemoji -N
 RUN apk add ruby-dev
@@ -112,6 +114,6 @@ COPY *.rb /
 COPY pdfcrop.sh /
 RUN mv build.rb pdfcrop.sh /usr/local/bin/
 RUN mkdir -p /extensions
-COPY extensions/*.rb /
+COPY extensions/*.* /
 COPY locale.yml /
-RUN mv *.rb locale.yml /extensions
+RUN mv *.rb twitter.pdf locale.yml /extensions

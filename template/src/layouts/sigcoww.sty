@@ -373,7 +373,8 @@
   \if\relax\detokenize{#3}\relax\else%
     \colorbox{yryrwhite}{\textcolor{black}{\large\headfont\mathstrut\rule{0pt}{\@profileauthorh}\,%
     \includegraphics[height=\fontcharht\font`\B]{../layouts/twitter.pdf}\,\texttt{#3}\,}}\fi
-  \hspace{0.5zw}\raisebox{0.22pt}{\underline{\small\sffamily\strut\,#2\,}}\vspace{.4\Cvs \@plus.3\Cdp}%
+  \hspace{0.5zw}\raisebox{0.22pt}{%
+    \if\relax\detokenize{#2}\relax\else\underline{\small\sffamily\strut\,#2\,}\fi}\vspace{.4\Cvs \@plus.3\Cdp}%
   \par\if\relax\detokenize{#3}\relax\setlength{\parindent}{1zw}\renewcommand{\@afterprofile}{}\else%
   \renewcommand{\@afterprofile}{\end{minipage}\\\end{tabular*}}%
   \setlength{\tabcolsep}{0pt}\vspace{-0.2\baselineskip}\begin{tabular*}{\textwidth}{ll}
@@ -384,6 +385,7 @@
   {\@afterprofile\end{widepage*}}
 
 % subfig
+\newcommand{\sigcowwfill}{\hfill}
 \newenvironment{reviewsubfig}[1]%
   {\def\@tempcaption{#1}\begin{reviewimage}}%
   {\caption{\@tempcaption}\end{reviewimage}}
