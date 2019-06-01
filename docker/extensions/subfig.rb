@@ -1,14 +1,16 @@
 module ReVIEW
   class Compiler
-    defsingle :beginsubfig, 2
+    defsingle :beginsubfig, 2..3
     defsingle :endsubfig, 0
     definline :newline
+    defsingle :hfill, 0
   end
 
   class Builder
     def beginsubfig(env, caption) '' end
     def endsubfig() '' end
     def inline_newline(str) '' end
+    def hfill() '' end
   end
 
   class LATEXBuilder
@@ -29,6 +31,10 @@ module ReVIEW
         puts '\swap\endreviewsubfig\endreviewsubfigw'
       end
       @subfigenv = nil
+    end
+
+    def hfill()
+      puts '\\sigcowwfill'
     end
   end
 end

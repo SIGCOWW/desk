@@ -418,9 +418,11 @@ eof
       end
 
       # subfig
-      txt.gsub!(/^\/\/(subfigw?)\[(.+?)\]{\s*(.+?)\s*\/\/}/m) { '//beginsubfig[' + $1 + '][' + $2 + "]\n" + $3 + "\n" + '//endsubfig' }
+      txt.gsub!(/^\/\/l(imagew?(?:\[[^\r\n\f]+?\])+)/, '//hfill' + "\n" + '//\1')
+      txt.gsub!(/^\/\/r(imagew?(?:\[[^\r\n\f]+?\])+)/, '//\1' + "\n" + '//hfill')
+      txt.gsub!(/^\/\/(subfigw?)\[([^\r\n\f]+?)\]{\s*(.+?)\s*\/\/}/m) { '//beginsubfig[' + $1 + '][' + $2 + "]\n" + $3 + "\n" + '//endsubfig' }
       input_output = []
-      txt.scan(/\/\/beginsubfig\[.+?\].*?\/\/endsubfig/m).each do | s |
+      txt.scan(/\/\/beginsubfig\[[^\r\n\f]+?\].*?\/\/endsubfig/m).each do | s |
         input_output << [ s, s.gsub(/^\s*$/, '@<newline>{}') ]
       end
       input_output.each do | io |
