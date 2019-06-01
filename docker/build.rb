@@ -21,7 +21,6 @@ class Build
 
     @articles, @catalog = preprocess()
     convert_articles()
-    @imgcache = nil
     @exitstatuses = {}
 
     @is_vm777 = false
@@ -109,10 +108,7 @@ class Build
 
       match = File.read(path).scan(%r@^\s*//imagew?\[(.+?)\].+scale=([.\d]+).+?@)
       scales = match.nil? ? {} : match.map{|v| [v[0], v[1].to_f]}.to_h
-      dpi = 350
-      n = @papersize[1..-1].to_f
-      mm = (([1189, 1456][(@papersize[0] == 'a') ? 0 : 1]) / Math.sqrt(2 - (n % 2))) / (2 ** (1 + (n-1)/2))
-      proper_len = (dpi / 25.4) * (mm - 20)
+      proper_len = satisfy_length()
       imgs.each do | file |
         next if file.end_with?('.pdf')
         width = Open3.capture3('identify', '-format', '%[height],%[width]', file)[0].split(',')[1].to_i
@@ -172,7 +168,7 @@ EOF
   def pdf4publish()
     vmExperiments()
     header("Making PDF for Publishment")
-    convert_images('latex')
+    convert_images('latex', true)
     ENV['ONESIDE'] = '1'
     @exitstatuses['pdf4publish'] = compile('pdfmaker', 'publish-tmp-tmp.pdf')
     ENV.delete('ONESIDE')
@@ -216,7 +212,7 @@ eof
   def epub()
     vmExperiments()
     header("Making EPUB")
-    convert_images('html')
+    convert_images('html', true)
     dummy_image('cover.png', 'COVER')
     @exitstatuses['epub'] = run("convert -resize 590x750 cover.png images/epub-cover.png")
     return unless @exitstatuses['epub'] === 0
@@ -439,8 +435,8 @@ eof
     end
   end
 
-  def convert_images(builder)
-    def resize(path)
+  def convert_images(builder, optimize=false)
+    def epubresize(path)
       tmp = Open3.capture3('identify', '-format', '%[height],%[width]', path)[0].split(',')
       area = tmp[0].to_i * tmp[1].to_i
       if area >= 4000000
@@ -449,9 +445,16 @@ eof
       end
     end
 
+    def dpiresize(path, dpi=150)
+      proper_len = satisfy_length(dpi)
+      tmp = Open3.capture3('identify', '-format', '%[height],%[width]', path)[0].split(',')
+      if tmp[1].to_i > proper_len
+        scale = ((proper_len / tmp[1].to_i) * 100).floor
+        run("mogrify -unsharp 1.5x1+0.7+0.02 -resize #{scale}% #{path}")
+      end
+    end
+
     header("Converting Images for #{builder}", 2)
-    return if builder === @imgcache
-    @imgcache = builder
     FileUtils.rm_rf("images")
     @articles.each do | chapid, imgs |
       next if imgs.nil? || imgs.empty?
@@ -471,18 +474,31 @@ eof
           run("pdfcrop.sh #{src} #{dst}-crop.pdf")
           run("gs -sOutputFile=#{dst}.png -sDEVICE=pngalpha -dBATCH -dNOPAUSE -q -r300 #{dst}-crop.pdf")
           run("rm -f #{dst}-crop.pdf")
-          resize("#{dst}.png")
+          epubresize("#{dst}.png")
+          ext = ".png"
         when 'latex.png'
           run("convert #{src} \\( +clone -alpha opaque -fill white -colorize 100% \\) +swap -geometry +0+0 -compose Over -composite -alpha off #{dst}.png")
           run("mogrify -trim +repage #{dst}.png")
         when 'html.png'
           run("convert -trim +repage #{src} #{dst}.png")
-          resize("#{dst}.png")
+          epubresize("#{dst}.png")
         when 'latex.jpg'
           run("convert -auto-orient -strip #{src} #{dst}.jpg")
         when 'html.jpg'
           run("convert -auto-orient -strip #{src} #{dst}.jpg")
-          resize("#{dst}.jpg")
+          epubresize("#{dst}.jpg")
+        end
+
+        if optimize
+          if ext == '.png'
+            dpiresize("#{dst}#{ext}")
+            run("pngquant --skip-if-larger --strip --ext .png --force --speed 1 #{dst}#{ext}")
+          end
+
+          if ext == '.jpg'
+            dpiresize("#{dst}#{ext}")
+            run("jpegoptim --strip-all -m90 #{dst}#{ext}")
+          end
         end
       end
     end
@@ -568,6 +584,12 @@ eof
 
   def warning(msg)
     puts "\033[33m\033[41m#{msg}\033[m\033[m"
+  end
+
+  def satisfy_length(dpi=350)
+    n = @papersize[1..-1].to_f
+    mm = (([1189, 1456][(@papersize[0] == 'a') ? 0 : 1]) / Math.sqrt(2 - (n % 2))) / (2 ** (1 + (n-1)/2))
+    return (dpi / 25.4) * (mm - 20)
   end
 end
 

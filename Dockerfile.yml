@@ -77,7 +77,8 @@
 - run: 'wget -q https://github.com/faelys/libsoldout/archive/trunk.zip && unzip trunk.zip'
 - run: 'cd libsoldout-trunk/ && make mkd2latex mkd2html && mv libsoldout.so* /usr/lib/ && mv mkd2html mkd2latex /usr/bin/'
 - run: 'strip `which mkd2html` && strip `which mkd2latex`'
-
+- apk: pngquant
+- apk: jpegoptim
 
 # Circle CI
 - apk: openssh-client
