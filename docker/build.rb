@@ -386,7 +386,7 @@ eof
       end
 
       # //profile
-      pat = /^(\/\/profile)(\[[^\r\n\f]+?\])?(\[[^\r\n\f]+?\])?({\s*.+?\s*\/\/}\s*)$/m
+      pat = /^(\/\/profile)(\[[^\r\n\f]+?\])?(\[[^\r\n\f]*?\])?({\s*.+?\s*\/\/}\s*)$/m
       m = txt.match(pat)
       txt.gsub!(pat, '')
       unless m.nil?
