@@ -211,6 +211,6 @@
 - copy: 'pdfcrop.sh'
 - run: 'mv build.rb pdfcrop.sh /usr/local/bin/'
 - run: 'mkdir -p /extensions'
-- copy: 'extensions/*.rb'
+- copy: 'extensions/*.*'
 - copy: 'locale.yml'
-- run: 'mv *.rb locale.yml /extensions'
+- run: 'mv *.rb twitter.pdf locale.yml /extensions'
