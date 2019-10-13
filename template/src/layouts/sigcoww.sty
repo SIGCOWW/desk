@@ -468,7 +468,6 @@
 
 % kusodeka
 \newcommand{\kusodeka}[1]{\vspace{0.5\textfloatsep}\\\vspace{0.4\textfloatsep}\hbox{\resizebox{\textwidth}{!}{#1}}\\}
-\makeatother
 
 % QRコード
 \newcommand{\reviewqr}[1]{\vspace{0.5\baselineskip}\\{%
@@ -476,3 +475,26 @@
   \qrcode[tight,height=\marginparwidth]{#1}}\vspace{0.5\baselineskip}\\}
 
 \renewcommand{\copyright}{\textcopyright}
+
+% chat
+\newenvironment{chat}[2]{\vspace{0.5\textfloatsep}%
+  \begin{tcbraster}[raster columns=6,raster equal height,raster before skip=0mm,raster after skip=0mm,raster column skip=0.5\textfloatsep]
+    \begin{tcolorbox}[empty, top=0mm, bottom=0mm, left=0mm, right=0mm, boxrule=0mm, boxsep=0mm, halign=center]
+      \if\relax\detokenize{#1}\relax\else\begin{tikzpicture}
+        \node[circle, draw, very thick, color=yryrwhite, minimum size=\textwidth, fill overzoom image=#1]{};
+      \end{tikzpicture}\fi\end{tcolorbox}
+    \begin{tcolorbox}[enhanced, colback=yryrwhite,colframe=yryrwhite,boxrule=0mm,top=.5zw,left=.5zw,bottom=.5zw,right=.5zw,raster multicolumn=5, fontupper=\sffamily, frame code={\begin{scope}[shift={(interior.north west)}]
+      \fill[fill=yryrwhite] (0pt, -10pt)--(-5pt, -15pt)--(0pt, -20pt)--cycle;
+      \end{scope}}]}
+  {\end{tcolorbox}\end{tcbraster}\vspace{0.5\textfloatsep}}
+\newcommand{\@afterrchat}{}
+\newenvironment{rchat}[2]{\renewcommand{\@afterrchat}{#1}\vspace{0.5\textfloatsep}\begin{tcbraster}[raster columns=6,raster equal height,raster before skip=0mm,raster after skip=0mm,raster column skip=0.5\textfloatsep]
+  \begin{tcolorbox}[enhanced, colback=yryrwhite,colframe=yryrwhite,boxrule=0mm,top=.5zw,left=.5zw,bottom=.5zw,right=.5zw,raster multicolumn=5, fontupper=\sffamily, frame code={\begin{scope}[shift={(interior.north east)}]
+    \fill[fill=yryrwhite] (0pt, -10pt)--(5pt, -15pt)--(0pt, -20pt)--cycle;
+    \end{scope}}]}
+  {\end{tcolorbox}\begin{tcolorbox}[empty, top=0mm, bottom=0mm, left=0mm, right=0mm, boxrule=0mm, boxsep=0mm, halign=center]
+    \if\relax\detokenize{\@afterrchat}\relax\else\begin{tikzpicture}
+      \node[circle, draw, very thick, color=yryrwhite, minimum size=\textwidth, fill overzoom image=\@afterrchat]{};
+    \end{tikzpicture}\fi
+    \end{tcolorbox}\end{tcbraster}\vspace{0.5\textfloatsep}}
+\makeatother
