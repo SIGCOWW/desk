@@ -116,4 +116,4 @@ RUN mv build.rb pdfcrop.sh /usr/local/bin/
 RUN mkdir -p /extensions
 COPY extensions/*.* /
 COPY locale.yml /
-RUN mv *.rb twitter.pdf locale.yml /extensions
+RUN mv *.rb *.pdf locale.yml /extensions
