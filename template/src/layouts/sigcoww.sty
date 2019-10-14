@@ -88,6 +88,20 @@
 %
 %
 % 柱 / ノンブル / ツメ
+% noukin
+\newcommand{\noukin}{
+  \ifdefined\enabletallymark
+    \count@\value{page}%
+    \loop\ifnum\count@>4
+      \includegraphics[height=\fontcharht\font`2]{../layouts/five-white.pdf}
+      \advance\count@ by -5
+    \repeat
+    \ifnum\count@=1{\includegraphics[height=\fontcharht\font`2]{../layouts/one-white.pdf}}\fi
+    \ifnum\count@=2{\includegraphics[height=\fontcharht\font`2]{../layouts/two-white.pdf}}\fi
+    \ifnum\count@=3{\includegraphics[height=\fontcharht\font`2]{../layouts/three-white.pdf}}\fi
+    \ifnum\count@=4{\includegraphics[height=\fontcharht\font`2]{../layouts/four-white.pdf}}\fi
+  \else\thepage\fi}
+
 \pagestyle{fancy}
 \newcommand{\hashira}[3]{\begin{tikzpicture}[remember picture, overlay]%
   \begin{scope}[shift={(current page.north west)}]%
@@ -124,8 +138,8 @@
   \fancyhead[LO]{\hashira{yryrwhite}{yryrblack}{\sffamily\leftmark}}
 \fi
 \fancyfoot{}
-\fancyfoot[LE]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}\tume}
-\fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}\tume}
+\fancyfoot[LE]{\nombre{yryrblack}{yryrwhite}{\sffamily\noukin}\tume}
+\fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\noukin}\tume}
 \renewcommand{\footrulewidth}{0pt}
 \renewcommand{\headrulewidth}{0pt}
 
@@ -133,8 +147,8 @@
 \fancypagestyle{plainhead}{%
 \fancyhead{\chaphashira{yryrblack}}
 \fancyfoot{}
-\fancyfoot[LE]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}\tume}
-\fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}\tume}
+\fancyfoot[LE]{\nombre{yryrblack}{yryrwhite}{\sffamily\noukin}\tume}
+\fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\noukin}\tume}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}}
 
@@ -142,8 +156,8 @@
 \fancypagestyle{fancytitle}{%
 \fancyhead{}
 \fancyfoot{}
-\fancyfoot[LE]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}}
-\fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\thepage}}
+\fancyfoot[LE]{\nombre{yryrblack}{yryrwhite}{\sffamily\noukin}}
+\fancyfoot[RO]{\nombre{yryrblack}{yryrwhite}{\sffamily\noukin}}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}}
 %

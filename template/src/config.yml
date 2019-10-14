@@ -16,7 +16,7 @@ layout_hash: "6fd9409306cd76f85ff807b2dad53af5"  # layout.tex.erb のMD5ハッ�
 sty_hash: "68f40bfda6ec9ddc19ff9b4331f83656"     # sigcoww.sty のMD5ハッシュ 省略可
 titlelatex: '\sigcowwtitle'                      # 扉ページ 省略可
 download: "https://example.sigcoww.org/?key=%s"  # ダウンロードコード用文字列 省略可
-
+tallymark: false                                 # ページ数を正の字で表現する 省略可
 
 debug: true
 language: ja

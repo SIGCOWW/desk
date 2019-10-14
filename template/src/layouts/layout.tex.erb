@@ -268,6 +268,10 @@
 }
 \makeatother
 
+<%- if @config["tallymark"] -%>
+\newcommand{\enabletallymark}{}
+<%- end -%>
+
 <%- if @config["texstyle"] -%>
 <%-   [@config["texstyle"]].flatten.each do |x| -%>
 \usepackage{<%= x %>}

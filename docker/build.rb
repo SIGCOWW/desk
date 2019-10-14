@@ -283,7 +283,7 @@ eof
     FileUtils.mkdir_p('sty')
     run("mv layouts/*.sty sty/")
     run("mv layouts/*.rb ./")
-    run("yes n | mv -i twitter.pdf layouts/")
+    run("yes n | mv -i *.pdf layouts/")
     FileUtils.mkdir_p('images')
 
     config = YAML.load_file('config.yml')

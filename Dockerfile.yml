@@ -214,4 +214,4 @@
 - run: 'mkdir -p /extensions'
 - copy: 'extensions/*.*'
 - copy: 'locale.yml'
-- run: 'mv *.rb twitter.pdf locale.yml /extensions'
+- run: 'mv *.rb *.pdf locale.yml /extensions'
