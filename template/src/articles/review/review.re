@@ -1,5 +1,5 @@
 = Re:VIEW（with desk）文法集
-@<author>{Re:VIEW (, desk) の文法なら任せろー, 分峰 太郎;twitter:hoge}
+@<author>{Re:VIEW (, desk) の文法なら任せろー, hogetaro;twitter:hoge}
 //lead{
 Re:VIEWの文法、およびlrks/deskで拡張した文法を基本編と応用編に分けて紹介します。
 また、開発に役立つ情報も載せます。
