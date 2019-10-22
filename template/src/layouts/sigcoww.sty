@@ -59,7 +59,7 @@
 \setlength{\marginposadjustment}{2pt}
 \definecolor{yryrblack}{gray}{0.1}
 \definecolor{yryrwhite}{gray}{0.9}
-\definecolor{tumeblack}{gray}{0.25}
+\definecolor{yryrblackblack}{gray}{0.15}
 %\flushbottom% ... marginparと相性が悪い
 \addtolength{\oddsidemargin}{-1truein}
   \addtolength{\oddsidemargin}{\marginparwidth}
@@ -125,7 +125,7 @@
   \count@\value{chapter}%
   \begin{tikzpicture}[remember picture, overlay]\begin{scope}[shift={($%
     (current page.north \tumeorigin@)+(-6pt,-\chapterheight-10pt)+\count@*(0,-10mm)$)}]%
-      \fill[tumeblack] (0, 0) rectangle (\tumewidth@, 10mm);%
+      \fill[yryrblackblack] (0, 0) rectangle (\tumewidth@, 10mm);%
     \end{scope}%
   \end{tikzpicture}\fi\fi}
 
@@ -168,19 +168,24 @@
 %
 % 見出し
 % 通常版 \chapter{}
+\newlength{\@chapterauthorh}
+\newlength{\@chapterkatagakih}
 \def\@makechapterhead#1{\begin{widepage}%
   {\parindent \z@ \raggedright \normalfont
     \vspace*{-\headsep}\vspace*{-\headheight}\vbox to\chapterheight{\vfill%
     \interlinepenalty\@M
     \parbox[c]{\textwidth}{\Huge\headfont\textcolor{yryrblack}{#1}}\par\nobreak
-	\ifnum\authorenable=0\else\ifnum \c@secnumdepth >\m@ne
-      \if@mainmatter
-        \vskip 0.75\Cvs
-        \colorbox{yryrblack}{\textcolor{white}{
-          \LARGE\headfont\,\katagakiname\authorname\,
-		}}\par\nobreak
-      \fi
-    \fi\fi\vfill}%
+    \ifnum\authorenable=0\else\ifnum \c@secnumdepth >\m@ne\if@mainmatter
+      \settoheight{\@chapterauthorh}{\hbox{\authorname}}
+      \ifnum\katagakienable=1%
+        \settoheight{\@chapterkatagakih}{\hbox{\katagakiname}}%
+        \ifdim\@chapterkatagakih>\@chapterauthorh\setlength{\@chapterauthorh}{\@chapterkatagakih}\fi%
+      \fi\vskip 0.75\Cvs
+      \hfill\ifnum\katagakienable=1%
+        \colorbox{white}{\textcolor{yryrblack}{\mathstrut\rule{0pt}{\@chapterauthorh}\katagakiname}}%
+      \fi\colorbox{yryrblack}{\textcolor{white}{\mathstrut\rule{0pt}{\@chapterauthorh}\authorname}}%
+      \par\nobreak
+    \fi\fi\fi\vfill}%
     \vspace*{2\Cvs}}%
   \end{widepage}}
 
@@ -342,10 +347,11 @@
 
 % @<author>{...}
 \newcommand{\authorname}{}
-\newcommand{\authorsub}[1]{\large#1}
+\newcommand{\authorsub}[1]{\headfont\,{\large#1}\,}
 \newcommand{\katagakiname}{}
-\newcommand{\katagakisub}[1]{\large#1\hspace{1zw}}
+\newcommand{\katagakisub}[1]{\headfont\,{\large#1}\,}
 \newcommand{\authorenable}{0}
+\newcommand{\katagakienable}{0}
 
 % //image , //imagew
 \renewenvironment{reviewimage}%
@@ -417,7 +423,7 @@
 \renewenvironment{shaded}{%
  \begin{tcolorbox}[colback=yryrwhite,colframe=yryrwhite,boxrule=1pt,top=.5zw,left=.5zw,bottom=.5zw,right=.5zw]}{\end{tcolorbox}}
 \renewenvironment{shadedb}{%
- \begin{tcolorbox}[colback=yryrblack,colframe=yryrblack,colupper=white,boxrule=1pt,top=.5zw,left=.5zw,bottom=.5zw,right=.5zw]}{\end{tcolorbox}}
+ \begin{tcolorbox}[colback=yryrblackblack,colframe=yryrblackblack,colupper=white,boxrule=1pt,top=.5zw,left=.5zw,bottom=.5zw,right=.5zw]}{\end{tcolorbox}}
 
 \renewenvironment{reviewemlist}{%
   \medskip\begin{shaded}\small\setlength{\baselineskip}{1.2zw}\begin{alltt}}{%
