@@ -91,7 +91,7 @@
 - dev: 'ruby-dev'
 - dev: 'imagemagick6-dev'
 - run: "find /usr/bin/ -name '*-6' | xargs -L1 -I{} sh -c 'mv {} $(echo {} | sed s/-6//)'"
-- run: 'gem install cuterb -v 0.2.1 -N'
+- run: 'gem install cuterb -v 0.2.2 -N'
 
 # Phonto
 - apk: 'zstd'
@@ -183,7 +183,7 @@
   - name: 'Makefile'
   - name: '*jlreq*'
   - name: '*.pl'
-- run: "find / -name '*.pdf' -type f | grep -v BXcoloremoji | xargs rm -rf"
+- run: "find / -mindepth 2 -name '*.pdf' -type f | grep -v BXcoloremoji | xargs rm -rf"
 - rmrf:
   - '/usr/local/texlive/'
   - name: '*.ps'
