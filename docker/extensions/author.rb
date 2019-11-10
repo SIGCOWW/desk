@@ -30,6 +30,8 @@ module ReVIEW
         puts macro('renewcommand', '\\authorname', author)
         puts macro('renewcommand', '\\katagakiname', katagaki)
       end
+      puts macro('renewcommand', '\\authorenable', (level != 1 or @author.nil?) ? '0' : '1')
+      puts macro('renewcommand', '\\katagakienable', @katagaki.nil? ? '0' : '1')
       super
     end
   end

@@ -59,6 +59,7 @@
 \usepackage{colortbl}
 \usepackage{indentfirst}
 \usepackage{qrcode}
+\usepackage{refcount}
 
 \advance \paperwidth 10truemm
 \advance \paperheight 10truemm
@@ -271,7 +272,7 @@
 <%- if @config["tallymark"] -%>
 \newcommand{\enabletallymark}{}
 <%- end -%>
-
+\newcommand{\sigcowwtitle}{<%= escape_latex(@config.name_of("booktitle")) %>}
 <%- if @config["texstyle"] -%>
 <%-   [@config["texstyle"]].flatten.each do |x| -%>
 \usepackage{<%= x %>}
